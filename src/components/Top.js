@@ -11,7 +11,7 @@ const useStyles = makeStyles(theme => ({
     flexGrow: 1,
   },
   AppBarColor: {
-    backgroundColor: '#606060',
+    backgroundColor: '#505050',
   },
   menuButton: {
     marginRight: theme.spacing(2),
@@ -24,10 +24,9 @@ const useStyles = makeStyles(theme => ({
 
 function Header() {
     const classes = useStyles();
-  
     return (
-      <div className={classes.root}>
-        <AppBar position="static" classes={{colorPrimary: classes.AppBarColor}}>
+      <div className="navbar">
+        <AppBar position="fixed" color="transparent">
           <Toolbar>
             <Typography variant="h6" className={classes.title}>
               Home
@@ -47,9 +46,10 @@ function Header() {
 
 export default function Top() {
     return (
-        <div id="topview">
-            <Header/>
-            hogehoge
+        <div id="topview" >
+            <div class="gradient">
+                <Header />
+            </div>
         </div>
     )
 }
