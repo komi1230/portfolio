@@ -33,6 +33,30 @@ code {
   line-height: 1.7;
 }
 
+#topview header {
+  position: fixed;
+  width: 100%;
+}
+
+#topview ul.topnav {
+  list-style-type: none;
+  margin: 0;
+  padding: 0;
+  overflow: hidden;
+}
+
+#topview ul.topnav li {
+  float: left;
+}
+
+#topview ul.topnav li a {
+  display: inline-block;
+  color: #ffffff;
+  text-align: center;
+  padding: 14px 16px;
+  transition: 2s;
+}
+
 #topview .navbar {
   transition: background 0.5s ease-in-out, padding 0.5s ease-in-out;
 }

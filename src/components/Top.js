@@ -1,55 +1,70 @@
-import React from 'react'
-import { makeStyles } from '@material-ui/core/styles'
-import AppBar from '@material-ui/core/AppBar';
-import Toolbar from '@material-ui/core/Toolbar';
-import Typography from '@material-ui/core/Typography';
+import React, { useEffect, useState } from 'react'
 import "../index.css"
 
 
-const useStyles = makeStyles(theme => ({
-  root: {
-    flexGrow: 1,
-  },
-  AppBarColor: {
-    backgroundColor: '#505050',
-  },
-  menuButton: {
-    marginRight: theme.spacing(2),
-  },
-  title: {
-    flexGrow: 0.05,
-  },
-}));
+const scrollTop = () => {
+  return Math.max(
+    window.pageYOffset, 
+    document.documentElement.scrollTop, 
+    document.body.scrollTop
+  );
+};
 
+export const NavBar = () => {
+  const [colorGradient, setColorGradient] = useState(0);
 
-function Header() {
-    const classes = useStyles();
-    return (
-      <div className="navbar">
-        <AppBar position="fixed" color="transparent">
-          <Toolbar>
-            <Typography variant="h6" className={classes.title}>
-              Home
-            </Typography>
-            <Typography variant="h6" className={classes.title}>
-              About
-            </Typography>
-            <Typography variant="h6" className={classes.title}>
-              Biography
-            </Typography>
-          </Toolbar>
-        </AppBar>
-      </div>
-    );
+  const onScroll = () => {
+    const position = scrollTop();
+    console.log(position)
+    if (position >= 450) {
+      setColorGradient(1);
+    } else {
+      setColorGradient(position/450);
+    }
+  };
+
+  useEffect(() => {
+    document.addEventListener("scroll", onScroll);
+    return () => document.removeEventListener("scroll", onScroll);
+  });
+
+  const colorR = String(126 - 76 * colorGradient);
+  const colorG = String(123 - 73 * colorGradient);
+  const colorB = String(215 - 165 * colorGradient);
+  const colorA = String(0.2 + 0.8 * colorGradient);
+  const  scrollStyle = {
+    backgroundColor: "rgba(" + colorR + "," + colorG + "," + colorB + "," + colorA + ")"
   }
+
+  return (
+    <header style={scrollStyle}>
+      <ul class="topnav">
+        <li><a href="#home">Home</a></li>
+        <li><a href="#about">About</a></li>
+        <li><a href="#skills">Skills</a></li>
+        <li><a href="#works">Works</a></li>
+      </ul>
+    </header>
+  );
+};
 
 
 export default function Top() {
     return (
         <div id="topview" >
-            <div class="gradient">
-                <Header />
-            </div>
+            
+            <NavBar/>
+            <br/><br/><br/><br/><br/><br/><br/><br/><br/>
+            <br/><br/><br/><br/><br/><br/><br/><br/><br/>
+            <br/><br/><br/><br/><br/><br/><br/><br/><br/>
+            <br/><br/><br/><br/><br/><br/><br/><br/><br/>
+            <br/><br/><br/><br/><br/><br/><br/><br/><br/>
+            <br/><br/><br/><br/><br/><br/><br/><br/><br/>
+            <br/><br/><br/><br/><br/><br/><br/><br/><br/>
+            <br/><br/><br/><br/><br/><br/><br/><br/><br/>
+            <br/><br/><br/><br/><br/><br/><br/><br/><br/>
+            <br/><br/><br/><br/><br/><br/><br/><br/><br/>
+            hogehogeho
         </div>
     )
 }
