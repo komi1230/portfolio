@@ -11,3 +11,55 @@ code {
   font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
     monospace;
 }
+
+#topview .view {
+  background-image: url("./components/images/background.jpg");
+  background-repeat: no-repeat;
+  background-size: cover;
+  background-position: center center;
+  height: 100vh;
+}
+
+#topview .gradient {
+  background: -webkit-linear-gradient(
+    45deg,
+    rgba(0, 0, 0, 0.7),
+    rgba(72, 15, 144, 0.4) 100%
+  );
+  background: -webkit-gradient(
+    linear,
+    45deg,
+    from(rgba(0, 0, 0, 0.7), rgba(72, 15, 144, 0.4) 100%)
+  );
+  background: linear-gradient(
+    45deg,
+    rgba(0, 0, 0, 0.7),
+    rgba(72, 15, 144, 0.4) 100%
+  );
+}
+
+#topview .card {
+  background-color: rgba(126, 123, 215, 0.2);
+}
+
+#topview h6 {
+  line-height: 1.7;
+}
+
+#topview .navbar {
+  transition: background 0.5s ease-in-out, padding 0.5s ease-in-out;
+}
+
+#topview .top-nav-collapse {
+  background: #424f95 !important;
+}
+
+@media (max-width: 768px) {
+  #topview .navbar:not(.top-nav-collapse) {
+    background: #424f95 !important;
+  }
+}
+
+#topview label {
+  color: #fff !important;
+}
