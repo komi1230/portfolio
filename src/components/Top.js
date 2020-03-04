@@ -59,7 +59,7 @@ const TopCard = () => {
           Yusuke Kominami
         </div>
         <div className="elseBottom">
-          Last Updated: March/03/2020
+          Last Updated: March/3rd/2020
         </div>
       </div>
     </section>

@@ -54,13 +54,26 @@ code {
   text-align: center;
 }
 
-#topview .card-child {
-  display: inline-block;
-  margin: 20% auto;
-  border: 4px double rgba(255, 255, 255, 0.25);
-  border-width: 4px 0;
-  color: #dddddd;
-  letter-spacing: 0.1em;
+@media (max-width: 768px) {
+  #topview .card-child {
+    display: inline-block;
+    margin: 40% auto;
+    border: 4px double rgba(255, 255, 255, 0.25);
+    border-width: 4px 0;
+    color: #dddddd;
+    letter-spacing: 0.1em;
+  }
+}
+
+@media (min-width: 769px) {
+  #topview .card-child {
+    display: inline-block;
+    margin: 20% auto;
+    border: 4px double rgba(255, 255, 255, 0.25);
+    border-width: 4px 0;
+    color: #dddddd;
+    letter-spacing: 0.1em;
+  }
 }
 
 #topview .elseTop {
