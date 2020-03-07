@@ -51,7 +51,7 @@ export default function About() {
                         >
                             <Grid xs={12} item>
                                 <div className={classes.aboutPhoto}>
-                                    <img src={meImg} width="70%" alt="My Photo" />
+                                    <img src={meImg} width="70%" alt="me" />
                                 </div>
                             </Grid>
                             <Grid xs={12} item>
@@ -93,7 +93,7 @@ export default function About() {
                             About software engineering, I love Lisp (especially Common Lisp). It is a perfect programming language, I think.
                             <br />
                             My expertise ranges from HTML/CSS/JavaScript to Low-level programming.
-                            Furthermore, I have strongly deep knowledge on machine learning and data science based on mathematics.
+                            Furthermore, I have solid knowledge on machine learning and data science based on mathematics.
                             <br /><br />
                             Outside of computer, I love watching documentary movies and working out.
                             <br /><br />
