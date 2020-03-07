@@ -1,6 +1,7 @@
 import React from 'react';
 import Top from './components/Top'
 import About from './components/About'
+import History from './components/History'
 
 
 function App() {
@@ -8,6 +9,7 @@ function App() {
     <div>
       <Top />
       <About />
+      <History />
     </div>
   );
 }

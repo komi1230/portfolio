@@ -41,6 +41,7 @@ const NavBar = () => {
       <ul className="topnav">
         <li><a href="#home">Home</a></li>
         <li><a href="#about">About</a></li>
+        <li><a href="#history">History</a></li>
         <li><a href="#works">Works</a></li>
         <li><a href="#links">Links</a></li>
       </ul>
