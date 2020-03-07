@@ -7,11 +7,8 @@ body {
   -moz-osx-font-smoothing: grayscale;
 }
 
-code {
-  font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
-    monospace;
-}
 
+/* Page Top */
 #topview {
   background: linear-gradient(
                 45deg,
@@ -23,6 +20,7 @@ code {
   background-size: cover;
   background-position: center center;
   height: 100vh;
+  width: 100%;
 }
 
 #topview header {
@@ -90,24 +88,89 @@ code {
   padding-bottom: 0.5em;
 }
 
-#topview h6 {
-  line-height: 1.7;
-}
 
-#topview .navbar {
-  transition: background 0.5s ease-in-out, padding 0.5s ease-in-out;
-}
-
-#topview .top-nav-collapse {
-  background: #505050 !important;
-}
-
-@media (max-width: 768px) {
-  #topview .navbar:not(.top-nav-collapse) {
-    background: #505050 !important;
+/* About Page */
+/* ボタン全体 */
+.flowbtn17{
+  border-radius:50%;
+  position:relative;
+  display:inline-block;
+  width:50px;
+  height:50px;
+  font-size:30px;
+  text-decoration:none;
+  transition:.5s;
+  background-color:#444;
+  color:#fff;
   }
-}
-
-#topview label {
-  color: #fff !important;
-}
+  /* ボタンマウスホバー時のテキスト指定 */
+  .flowbtn17:hover{
+  text-decoration:none;
+  }
+  /* アイコンをど真ん中に */
+  .flowbtn17 i{
+  position:absolute;
+  top:50%;
+  left:50%;
+  -ms-transform:translate(-50%,-50%);
+  -webkit-transform:translate(-50%,-50%);
+  transform:translate(-50%,-50%);
+  }
+  /* Twitterマウスホバー時 */
+  .flowbtn17.fl_tw2:hover{
+  background:linear-gradient(135deg, #13f1fc 0%,#0470dc 100%);
+  }
+  /* Instagramマウスホバー時 */
+  .flowbtn17.insta_btn2:hover{
+  background:-webkit-linear-gradient(135deg, #427eff 0%, #f13f79 70%) no-repeat;
+  background:linear-gradient(135deg, #427eff 0%, #f13f79 70%) no-repeat;		
+  }
+  /* Facebookマウスホバー時 */
+  .flowbtn17.fl_fb2:hover{
+  background:-webkit-linear-gradient(top, #5c80c6 0%, #34528c 74%);	
+  background:linear-gradient(to bottom, #5c80c6 0%, #34528c 74%);
+  }
+  /* Feedlyマウスホバー時 */
+  .flowbtn17.fl_fd2:hover{
+  background:linear-gradient(135deg, #b1ea4d 0%,#459522 100%);
+  font-size:28px;
+  }
+  /* Pocketマウスホバー時 */
+  .flowbtn17.fl_pk2:hover{
+  background:linear-gradient(135deg, #f36265 0%,#dd4f68 100%);
+  }
+  /* はてブアイコンのサイズ */
+  .flowbtn17.fl_hb2{
+  font-size:25px;
+  }
+  /* はてブマウスホバー時 */
+  .flowbtn17.fl_hb2:hover{
+  background:-webkit-linear-gradient(top, #1fbccd 0%, #1c91d4 84%);	
+  background:linear-gradient(to bottom, #1fbccd 0%, #1c91d4 84%);
+  }
+  /* YouTubeマウスホバー時 */
+  .flowbtn17.fl_yu2:hover{
+  background:linear-gradient(135deg, #f5515f 0%,#c9293c 100%);
+  }
+  /* LINEマウスホバー時 */
+  .flowbtn17.fl_li2:hover{
+  background: linear-gradient(135deg, #3a9278 0%,#00c300 100%);
+  }
+  /* お問い合わせマウスホバー時 */
+  .flowbtn17.fl_ma2:hover{
+  background:linear-gradient(135deg, #fad961 0%,#f76b1c 100%);
+  }
+  /* ulタグの内側余白を０にする */
+  ul.snsbtniti2{
+  padding:0!important;
+  }
+  /* ボタン全体の位置 */
+  .snsbtniti2{
+  display:flex;
+  flex-flow:row wrap;
+  }
+  /* ボタン同士の余白 */
+  .snsbtniti2 li{
+  flex:0 0 48%;
+  text-align:center !important;
+  }
