@@ -70,10 +70,13 @@ export default function About() {
                                             <i style={{ paddingLeft: "30px" }} class="fa fa-linkedin fa-2x"></i>
                                         </a>
                                         <a href="https://twitter.com/komi_edtr_1230">
-                                            <i style={{ paddingLeft: "30px" }}class="fa fa-twitter fa-2x"></i>
+                                            <i style={{ paddingLeft: "30px" }} class="fa fa-twitter fa-2x"></i>
                                         </a>
                                         <a href="https://www.facebook.com/1230komi">
-                                            <i style={{ paddingLeft: "30px" }}class="fa fa-facebook fa-2x"></i>
+                                            <i style={{ paddingLeft: "30px" }} class="fa fa-facebook-f fa-2x"></i>
+                                        </a>
+                                        <a href="https://komi.hatenadiary.com/">
+                                            <i style={{ paddingLeft: "30px" }} class="fa fa-pencil fa-2x"></i>
                                         </a>
                                     </div>
                                 </div>
@@ -88,7 +91,7 @@ export default function About() {
                             <br />
                             And I work at SoftBank as a machine learning engineer and at Aiful as a technical adviser.
                             <br /><br />
-                            I graduated from the faculty of Science in Kyoto University, majored Biology at Takada Lab.
+                            I graduated from the faculty of Science in Kyoto University, majored Biology at <a href="http://theory.biophys.kyoto-u.ac.jp/">Takada Lab</a>.
                             <br /><br />
                             About software engineering, I love Lisp (especially Common Lisp). It is a perfect programming language, I think.
                             <br />
@@ -97,7 +100,9 @@ export default function About() {
                             <br /><br />
                             Outside of computer, I love watching documentary movies and working out.
                             <br /><br />
-                            You can find me on Twitter.
+                            You can find me on <a href="https://twitter.com/komi_edtr_1230">Twitter</a>.
+                            <br /><br />
+                            And I often write articles in <a href="https://komi.hatenadiary.com/">Hatena Blog</a>.
                         </div>
                     </Grid>
                 </Grid>

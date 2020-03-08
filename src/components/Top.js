@@ -43,7 +43,6 @@ const NavBar = () => {
         <li><a href="#about">About</a></li>
         <li><a href="#history">History</a></li>
         <li><a href="#works">Works</a></li>
-        <li><a href="#links">Links</a></li>
       </ul>
     </header>
   );
