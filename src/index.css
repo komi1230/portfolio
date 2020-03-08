@@ -17,8 +17,9 @@ body {
               ),
               url("./components/images/background.jpg");
   background-repeat: no-repeat;
-  background-size: cover;
+  background-size: auto;
   background-position: center center;
+  width: 100%;
   height: 100vh;
 }
 
