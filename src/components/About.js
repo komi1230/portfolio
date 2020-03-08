@@ -7,6 +7,7 @@ import "../index.css"
 
 const useStyles = makeStyles(theme => ({
     aboutTitle: {
+        marginTop: '50px',
         textAlign: 'center',
     },
     aboutPhoto: {
@@ -31,7 +32,7 @@ export default function About() {
             container
             direction="column"
             justify="center"
-            spacing={2}
+            spacing={6}
         >
             <Grid xs={12} item>
                 <h1 className={classes.aboutTitle}>About</h1>
