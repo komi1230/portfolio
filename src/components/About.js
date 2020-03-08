@@ -35,7 +35,7 @@ export default function About() {
             spacing={6}
         >
             <Grid xs={12} item>
-                <h1 className={classes.aboutTitle}>About</h1>
+                <h1 className={classes.aboutTitle} id="about">About</h1>
             </Grid>
             <Grid xs={12} item>
                 <Grid

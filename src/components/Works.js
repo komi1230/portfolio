@@ -9,12 +9,14 @@ const useStyles = makeStyles(theme => ({
         textAlign: "center",
     },
     worksListTitle: {
-        marginTop: '50px',
+        marginTop: '20px',
+        marginBottom: '30px',
         padding: "0 10px",
         textAlign: "center",
     },
     worksListDescription: {
-        marginTop: '50px',
+        marginTop: '20px',
+        marginBottom: '30px',
         padding: "0 10px",
         lineHeight: '25px',
     },
@@ -30,7 +32,7 @@ export default function Works() {
             justify="center"
         >
             <Grid item>
-                <h1 className={classes.worksTitle} >Works</h1>
+                <h1 className={classes.worksTitle} id="works">Works</h1>
             </Grid>
             <Grid container>
                 <Grid

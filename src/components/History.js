@@ -41,7 +41,7 @@ export default function History() {
             justify="center"
         >
             <Grid item>
-                <h1 className={classes.historyTitle}>History</h1>
+                <h1 className={classes.historyTitle} id="history">History</h1>
             </Grid>
             <Grid item container>
                 <Grid 
