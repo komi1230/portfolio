@@ -52,7 +52,9 @@ export default function Works() {
                         <div className={classes.worksListDescription}>
                             High-level plotting library for Common Lisp.
                             <br/>
-                            Main Project
+                            Kai is one of the most advanced plotter libraries in Common Lisp.
+                            <br/>
+                            
                         </div>
                     </Grid>
                 </Grid>
