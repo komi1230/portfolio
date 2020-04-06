@@ -31,9 +31,34 @@ export default function Works() {
             direction="column"
             justify="center"
         >
+            {/* title */}
             <Grid item>
                 <h1 className={classes.worksTitle} id="works">Works</h1>
             </Grid>
+
+            {/* Portfolio */}
+            <Grid container>
+                <Grid
+                    container
+                    direction="row"
+                    justify="center"
+                >
+                    <Grid item container xs={4} md={3}>
+                        <a href="https://github.com/komi1230/kai" className={classes.worksListTitle}>
+                            Kai
+                        </a>
+                    </Grid>
+                    <Grid item container xs={8} md={6}>
+                        <div className={classes.worksListDescription}>
+                            High-level plotting library for Common Lisp.
+                            <br/>
+                            Main Project
+                        </div>
+                    </Grid>
+                </Grid>
+            </Grid>
+
+            {/* Portfolio */}
             <Grid container>
                 <Grid
                     container
@@ -54,6 +79,8 @@ export default function Works() {
                     </Grid>
                 </Grid>
             </Grid>
+
+            {/* Article Classifier */}
             <Grid container>
                 <Grid
                     container
@@ -81,6 +108,8 @@ export default function Works() {
                     </Grid>
                 </Grid>
             </Grid>
+
+            {/* Book */}
             <Grid container>
                 <Grid
                     container

@@ -1,13 +1,8 @@
 import React, { useEffect, useState } from 'react'
-import { animateScroll as scroll } from 'react-scroll';
 import "../index.css"
 
 
 const NavBar = () => {
-  const scrollToTop = () => {
-    scroll.scrollToTop(); 
-  };
-
   const scrollTop = () => {
     return Math.max(
       window.pageYOffset, 
