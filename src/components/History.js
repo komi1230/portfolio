@@ -189,7 +189,7 @@ export default function History() {
                                 <div className={classes.historyDescription}>
                                     <h3>EPFL - faculty of Computer Science</h3>
                                     <h4>Exchange Student</h4>
-                                    <p>April/1st/2016 - March/31st/2020</p>
+                                    <p>August/16th/2018 - December/20th/2018</p>
                                 </div>
                             </Grid>
                         </Grid>
