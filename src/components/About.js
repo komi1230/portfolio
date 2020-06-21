@@ -58,10 +58,10 @@ export default function About() {
                             <Grid xs={12} item>
                                 <div className={classes.aboutTitles}>
                                     <li style={{ listStyleType: "none", paddingBottom: "5px" }}>
-                                        Machine Learning Engineer at SoftBank
+                                        Machine Learning Engineer
                                     </li>
                                     <li style={{ listStyleType: "none" }}>
-                                        Technical Adviser at Aiful
+                                        Technical Adviser
                                     </li>
                                     <div id="social-icon" style={{ paddingTop: "20px" }}>
                                         <a href="https://github.com/komi1230">
