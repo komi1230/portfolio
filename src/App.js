@@ -10,7 +10,6 @@ function App() {
     <>
       <Top />
       <About />
-      <History />
       <Works />
     </>
   );

@@ -41,7 +41,6 @@ const NavBar = () => {
       <ul className="topnav">
         <li><a href="#home" >Home</a></li>
         <li><a href="#about" >About</a></li>
-        <li><a href="#history" >History</a></li>
         <li><a href="#works" >Works</a></li>
       </ul>
     </header>
@@ -53,13 +52,13 @@ const TopCard = () => {
     <section id="home" className="card-parent">
       <div className="card-child">
         <div className="elseTop">
-          Machine Learning and Lisp Engineer
+          Machine Learning and Rust Engineer
         </div>
         <div className="title">
           Yusuke Kominami
         </div>
         <div className="elseBottom">
-          Last Updated: May/12nd/2020
+          Last Updated: June/20th/2020
         </div>
       </div>
     </section>
