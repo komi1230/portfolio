@@ -1,1 +1,19 @@
-<?xml version="1.0" encoding="utf-8" standalone="yes"?><urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9" xmlns:xhtml="http://www.w3.org/1999/xhtml"><url><loc>http://komi.dev/categories/blog/</loc><lastmod>2020-08-31T00:00:00+00:00</lastmod></url><url><loc>http://komi.dev/categories/</loc><lastmod>2020-08-31T00:00:00+00:00</lastmod></url><url><loc>http://komi.dev/tags/github/</loc><lastmod>2020-08-31T00:00:00+00:00</lastmod></url><url><loc>http://komi.dev/tags/github-pages/</loc><lastmod>2020-08-31T00:00:00+00:00</lastmod></url><url><loc>http://komi.dev/tags/hugo/</loc><lastmod>2020-08-31T00:00:00+00:00</lastmod></url><url><loc>http://komi.dev/</loc><lastmod>2020-08-31T00:00:00+00:00</lastmod></url><url><loc>http://komi.dev/post/</loc><lastmod>2020-08-31T00:00:00+00:00</lastmod></url><url><loc>http://komi.dev/tags/</loc><lastmod>2020-08-31T00:00:00+00:00</lastmod></url><url><loc>http://komi.dev/categories/tech/</loc><lastmod>2020-08-31T00:00:00+00:00</lastmod></url><url><loc>http://komi.dev/2020/08/%E5%88%9D%E3%82%81%E3%81%A6%E3%81%AE%E6%8A%95%E7%A8%BF/</loc><lastmod>2020-08-31T00:00:00+00:00</lastmod></url><url><loc>http://komi.dev/top/about/</loc></url><url><loc>http://komi.dev/top/</loc></url></urlset>
+<?xml version="1.0" encoding="UTF-8"?>
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+    <url>
+        <loc>https://komi.dev/</loc>
+    </url>
+    <url>
+        <loc>https://komi.dev/about/</loc>
+    </url>
+    <url>
+        <loc>https://komi.dev/content/</loc>
+        <lastmod>2019-07-09</lastmod>
+    </url>
+    <url>
+        <loc>https://komi.dev/page/1/</loc>
+    </url>
+    <url>
+        <loc>https://komi.dev/pages/</loc>
+    </url>
+</urlset>
