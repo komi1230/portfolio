@@ -8,12 +8,20 @@
     </url>
     <url>
         <loc>https://komi.dev/hello-world/</loc>
-        <lastmod>2019-07-09</lastmod>
+        <lastmod>2020-09-02</lastmod>
+    </url>
+    <url>
+        <loc>https://komi.dev/opengl-from-slime/</loc>
+        <lastmod>2019-12-01</lastmod>
     </url>
     <url>
         <loc>https://komi.dev/page/1/</loc>
     </url>
     <url>
         <loc>https://komi.dev/pages/</loc>
+    </url>
+    <url>
+        <loc>https://komi.dev/unix-command-from-common-lisp/</loc>
+        <lastmod>2019-12-23</lastmod>
     </url>
 </urlset>
