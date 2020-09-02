@@ -1,2 +1,2 @@
 User-agent: *
-Sitemap: komi.dev/sitemap.xml
+Sitemap: https://komi.dev/sitemap.xml

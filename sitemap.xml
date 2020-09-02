@@ -1,19 +1,19 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
     <url>
-        <loc>komi.dev/</loc>
+        <loc>https://komi.dev/</loc>
     </url>
     <url>
-        <loc>komi.dev/about/</loc>
+        <loc>https://komi.dev/about/</loc>
     </url>
     <url>
-        <loc>komi.dev/hello-world/</loc>
+        <loc>https://komi.dev/hello-world/</loc>
         <lastmod>2019-07-09</lastmod>
     </url>
     <url>
-        <loc>komi.dev/page/1/</loc>
+        <loc>https://komi.dev/page/1/</loc>
     </url>
     <url>
-        <loc>komi.dev/pages/</loc>
+        <loc>https://komi.dev/pages/</loc>
     </url>
 </urlset>
