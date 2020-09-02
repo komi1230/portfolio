@@ -7,10 +7,13 @@
         <loc>https://komi.dev/about/</loc>
     </url>
     <url>
-        <loc>https://komi.dev/pages/</loc>
+        <loc>https://komi.dev/hello-world/</loc>
+        <lastmod>2019-07-09</lastmod>
     </url>
     <url>
-        <loc>https://komi.dev/posts/hello-world/</loc>
-        <lastmod>2019-07-09</lastmod>
+        <loc>https://komi.dev/page/1/</loc>
+    </url>
+    <url>
+        <loc>https://komi.dev/pages/</loc>
     </url>
 </urlset>
