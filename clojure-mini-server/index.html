@@ -1,0 +1,268 @@
+<!DOCTYPE html>
+<html lang="en">
+
+  <head>
+    
+    <!-- Global site tag (gtag.js) - Google Analytics -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=UA-177061519-1"></script>
+    <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag(){dataLayer.push(arguments);}
+      gtag('js', new Date());
+      gtag('config', 'UA-177061519-1');
+    </script>
+    
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta name="description" content="Yusuke Kominami's Blog">
+    <meta name="author" content="Yusuke Kominami">
+    <meta property="og:title" content="Launch Today" />
+    <meta property="og:description" content="Yusuke Kominami's Blog" />
+    <meta property="og:image" content="https://komi.dev/img/home-bg.jpg" />
+    <meta property="og:locale" content="ja_JP" />
+    <meta property="og:site_name" content="Launch Today" />
+    <meta property="og:url" content="https://komi.dev" />
+    <meta name="twitter:site" content="@komi_edtr_1230" />
+    <meta name="twitter:card" content="summary_large_image">
+
+    <title>Launch Today</title>
+
+    <link rel="icon" href="https://komi.dev/img/favicon.ico" />
+
+    <!-- Bootstrap core CSS -->
+    <link rel="stylesheet" href="https:&#x2F;&#x2F;komi.dev&#x2F;css&#x2F;bootstrap.min.css">
+    <!-- Custom fonts for this template -->
+    <link href=" https:&#x2F;&#x2F;komi.dev&#x2F;css&#x2F;all.min.css" rel=" stylesheet" type="text/css">
+    <link href='https://fonts.googleapis.com/css?family=Lora:400,700,400italic,700italic' rel='stylesheet'
+          type='text/css'>
+    <link
+      href='https://fonts.googleapis.com/css?family=Open+Sans:300italic,400italic,600italic,700italic,800italic,400,300,600,700,800'
+      rel='stylesheet' type='text/css'>
+
+    <!-- Custom styles for this template -->
+    <link rel="stylesheet" href="https:&#x2F;&#x2F;komi.dev&#x2F;clean-blog.css">
+
+  </head>
+
+  <body>
+
+    <!-- Navigation -->
+    <nav class="navbar navbar-expand-lg navbar-light fixed-top" id="mainNav">
+      <div class="container">
+        <a class="navbar-brand" href="/">Launch Today</a>
+        <button class="navbar-toggler navbar-toggler-right" type="button" data-toggle="collapse"
+                data-target="#navbarResponsive" aria-controls="navbarResponsive" aria-expanded="false"
+                aria-label="Toggle navigation">
+          Menu
+          <i class="fas fa-bars"></i>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarResponsive">
+          <ul class="navbar-nav ml-auto">
+            
+            <li class="nav-item">
+              <a class="nav-link"
+                 href="https:&#x2F;&#x2F;komi.dev">Home</a>
+            </li>
+            
+            <li class="nav-item">
+              <a class="nav-link"
+                 href="https:&#x2F;&#x2F;komi.dev&#x2F;about">About</a>
+            </li>
+            
+          </ul>
+        </div>
+      </div>
+    </nav>
+
+    <!-- Page Header -->
+    
+<!-- Page Header -->
+<header class="masthead" style="background-image: url('https:&#x2F;&#x2F;komi.dev&#x2F;img&#x2F;post-bg.jpg')">
+  <div class="overlay"></div>
+  <div class="container">
+    <div class="row">
+      <div class="col-lg-8 col-md-10 mx-auto">
+        <div class="post-heading">
+          
+<h1>Clojureで超絶極小サーバーを立てる</h1>
+<span class="meta">Posted on 28 October 2019</span>
+
+        </div>
+      </div>
+    </div>
+  </div>
+</header>
+
+
+    
+<!-- Post Content -->
+<article>
+  <div class="container">
+    <div class="row">
+      <div class="col-lg-8 col-md-10 mx-auto">
+        <p>先日の奨学金返金エントリーに対して辛辣なコメントが飛び交っており心を痛めている今日この頃。</p>
+<p>このエントリーは返納までの期日が超絶短期間に設定されたことを問題視したものだったのだけれど、返金することになったことへの批判と擁護が予想以上に飛んできて色々想定外で<b>いやそうじゃないんだよなぁ</b>という感情しかなかったのでいくつか追記しておいた。</p>
+<p>多分もう大丈夫だと思われる。</p>
+<p>さて、前置きという名のボヤキはここらへんにしておいて、最近もちまちまとClojureの勉強を進めている。</p>
+<p>今日はClojureのサーバーの立て方とその周りの云々やっていて、その際に色々つまづいたものをここでテキトーにまとめておこうと思う。</p>
+<h3 id="gai-yao">概要</h3>
+<p>Pythonでサーバーを立てる場合、ターミナル上で</p>
+<pre style="background-color:#2b303b;">
+<code><span style="color:#c0c5ce;">$ python -m http.server 8080
+</span></code></pre>
+<p>としたり、もしくはソースコードとして</p>
+<pre style="background-color:#2b303b;">
+<code><span style="color:#b48ead;">import </span><span style="color:#c0c5ce;">http.server
+</span><span style="color:#b48ead;">import </span><span style="color:#c0c5ce;">socketserver
+
+</span><span style="color:#bf616a;">PORT </span><span style="color:#c0c5ce;">= </span><span style="color:#d08770;">8000
+</span><span style="color:#c0c5ce;">Handler = http.server.SimpleHTTPRequestHandler
+
+</span><span style="color:#b48ead;">with </span><span style="color:#c0c5ce;">socketserver.</span><span style="color:#bf616a;">TCPServer</span><span style="color:#c0c5ce;">((&quot;&quot;, </span><span style="color:#bf616a;">PORT</span><span style="color:#c0c5ce;">), Handler) </span><span style="color:#b48ead;">as </span><span style="color:#c0c5ce;">httpd:
+    </span><span style="color:#96b5b4;">print</span><span style="color:#c0c5ce;">(&quot;</span><span style="color:#a3be8c;">serving at port</span><span style="color:#c0c5ce;">&quot;, </span><span style="color:#bf616a;">PORT</span><span style="color:#c0c5ce;">)
+    httpd.</span><span style="color:#bf616a;">serve_forever</span><span style="color:#c0c5ce;">()
+</span></code></pre>
+<p>と書いてこれを実行することでサーバーを立てることができる。</p>
+<p>PythonにはWSGI(Web Server Gateway Interface, ウィズギーと呼ぶらしい)というWebアプリケーションとWebサーバーの間をなすインターフェースがあり、WebアプリケーションとWebサーバーの実装を切り離すことで柔軟なアーキテクチャ設計ができるようになっている。</p>
+<p>そんなアプリケーションとサーバーの間のクッションだが、JavaではそのインターフェースとしてJava Servlet APIがあり、そしてClojureの場合は<b>Ring</b>というものがその役割を果たしている。</p>
+<h3 id="puroziekutowoli-tishang-geru">プロジェクトを立ち上げる</h3>
+<p>さて、概要はなんとなく掴んだのでいざ実装。</p>
+<p>ClojureのプロジェクトはLeiningenを使ってビルドしていくので、まずプロジェクトを立ち上げる。</p>
+<pre style="background-color:#2b303b;">
+<code><span style="color:#c0c5ce;">$ lein new app mini-server
+$ cd mini-server
+</span></code></pre>
+<p>これで<code>app</code>をベースとしたプロジェクトディレクトリができる(デフォルトでは<code>library</code>をベースとしている)</p>
+<p>ClojureはPythonと違ってREPLに入ったあとに自由にモジュールをimportできるわけではなく、最初にプロジェクトファイルに何のモジュールを使うか書いておく必要があるのでこれを記述する(別にプロジェクトファイルに書かずとも何とかなる方法はあるが割愛)</p>
+<p><code>project.clj</code>にて<code>dependencies</code>にRingを追記する。</p>
+<pre style="background-color:#2b303b;">
+<code><span style="color:#c0c5ce;">(</span><span style="color:#b48ead;">defproject </span><span style="color:#8fa1b3;">mini-server </span><span style="color:#c0c5ce;">&quot;</span><span style="color:#a3be8c;">0.1.0-SNAPSHOT</span><span style="color:#c0c5ce;">&quot;
+  </span><span style="color:#d08770;">:description </span><span style="color:#c0c5ce;">&quot;</span><span style="color:#a3be8c;">FIXME: write description</span><span style="color:#c0c5ce;">&quot;
+  </span><span style="color:#d08770;">:url </span><span style="color:#c0c5ce;">&quot;</span><span style="color:#a3be8c;">http://example.com/FIXME</span><span style="color:#c0c5ce;">&quot;
+  </span><span style="color:#d08770;">:license </span><span style="color:#c0c5ce;">{</span><span style="color:#d08770;">:name </span><span style="color:#c0c5ce;">&quot;</span><span style="color:#a3be8c;">EPL-2.0 OR GPL-2.0-or-later WITH Classpath-exception-2.0</span><span style="color:#c0c5ce;">&quot;
+            </span><span style="color:#d08770;">:url </span><span style="color:#c0c5ce;">&quot;</span><span style="color:#a3be8c;">https://www.eclipse.org/legal/epl-2.0/</span><span style="color:#c0c5ce;">&quot;}
+  </span><span style="color:#d08770;">:dependencies </span><span style="color:#c0c5ce;">[[org.clojure/clojure &quot;</span><span style="color:#a3be8c;">1.10.0</span><span style="color:#c0c5ce;">&quot;]
+                 [ring &quot;</span><span style="color:#a3be8c;">1.7.1</span><span style="color:#c0c5ce;">&quot;]]
+  </span><span style="color:#d08770;">:main </span><span style="color:#c0c5ce;">^</span><span style="color:#d08770;">:skip-aot</span><span style="color:#c0c5ce;"> mini-server.core
+  </span><span style="color:#d08770;">:target-path </span><span style="color:#c0c5ce;">&quot;</span><span style="color:#a3be8c;">target/%s</span><span style="color:#c0c5ce;">&quot;
+  </span><span style="color:#d08770;">:profiles </span><span style="color:#c0c5ce;">{</span><span style="color:#d08770;">:uberjar </span><span style="color:#c0c5ce;">{</span><span style="color:#d08770;">:aot :all</span><span style="color:#c0c5ce;">}})
+</span></code></pre>
+<p>ちゃんとバージョンを書いておく必要あり。</p>
+<p>これでターミナルにてLeiningenのREPLを起動すると必要なモジュールを用意してくれるのでターミナルにて早速使ってみる。</p>
+<p>まずREPLを起動。</p>
+<pre style="background-color:#2b303b;">
+<code><span style="color:#c0c5ce;">$ lein repl
+</span></code></pre>
+<p>そして動かしてみる。</p>
+<pre style="background-color:#2b303b;">
+<code><span style="color:#c0c5ce;">mini-server.core=&gt; (</span><span style="color:#bf616a;">require </span><span style="color:#c0c5ce;">&#39;[ring.adapter.jetty </span><span style="color:#d08770;">:as</span><span style="color:#c0c5ce;"> s])
+</span><span style="color:#65737e;">;; =&gt; nil
+mini-server.core=&gt; (def server (atom nil))
+;; =&gt; #&#39;mini-server.core/server
+mini-server.core=&gt; (reset! server 
+              #_=&gt;         (s/run-jetty (fn [req] 
+              #_=&gt;                        {:body &quot;Hi ! This is test server !&quot;}) 
+              #_=&gt;                      {:port 3000 :join? false}))
+</span></code></pre>
+<p>途中の引数にて<code>:join?</code>はtrueの場合スレッドをサーバーが止まるまでブロックするのでREPLに帰ってこれなくなるためfalseにしておいた。</p>
+<p>これを実行してブラウザにて<a href="http://localhost:3000">localhost:3000</a>を見てみると</p>
+<pre style="background-color:#2b303b;">
+<code><span style="color:#c0c5ce;">Hi ! This is test server !
+</span></code></pre>
+<p>と表示されていると思う。</p>
+<p>さて、動いていることが確認できたので今度はサーバーを止める。</p>
+<pre style="background-color:#2b303b;">
+<code><span style="color:#c0c5ce;">mini-server.core=&gt; (</span><span style="color:#bf616a;">.stop </span><span style="color:#c0c5ce;">@server)
+</span><span style="color:#65737e;">;; =&gt; nil
+mini-server.core=&gt; (reset! server nil)
+;; =&gt; nil
+</span></code></pre><h3 id="matome">まとめ</h3>
+<p>今回はClojureでRingを使って簡単なHTTPリクエストを送るサーバーを実装した。</p>
+<p>これからはもっとサーバーのライフサイクルをもっと簡潔に扱えるようなものを作り、ミドルウェアなども作っていこうと思う。</p>
+<p>とりあえず今日はここまで。</p>
+<h3 id="yu-tan">余談</h3>
+<p>エントリーを書いてるときブラウザでのフォントが等幅フォントではないのでコードの部分のインデントを合わせるのが若干めんどくさい。</p>
+<p>かといって今のフォントは読みやすいので記事を書いているときだけ別のフォントに切り替えることができたら色々捗りそう。</p>
+<p>ここらへんもそのうち模索してみる予定。</p>
+<h3 id="chu-dian">出典</h3>
+<ul>
+<li><a href="http://ayato-p.github.io/clojure-beginner/intro_web_development/index.html">ClojureでWeb開発をはじめてみよう</a></li>
+<li><a href="https://qiita.com/lagenorhynque/items/b15689e5432e0170b172">ミニマリストのためのClojure REST API開発入門</a></li>
+</ul>
+
+        
+      </div>
+    </div>
+  </div>
+</article>
+
+
+    <hr>
+
+    <!-- Footer -->
+    <footer>
+      <div class="container">
+        <div class="row">
+          <div class="col-lg-8 col-md-10 mx-auto">
+            <ul class="list-inline text-center">
+              
+              <li class="list-inline-item">
+                <a href="https:&#x2F;&#x2F;twitter.com&#x2F;komi_edtr_1230">
+                  <span class="fa-stack fa-lg">
+                    <i class="fas fa-circle fa-stack-2x"></i>
+                    <i class="fab fa-twitter fa-stack-1x fa-inverse"></i>
+                  </span>
+                </a>
+              </li>
+              
+              <li class="list-inline-item">
+                <a href="https:&#x2F;&#x2F;github.com&#x2F;komi1230">
+                  <span class="fa-stack fa-lg">
+                    <i class="fas fa-circle fa-stack-2x"></i>
+                    <i class="fab fa-github fa-stack-1x fa-inverse"></i>
+                  </span>
+                </a>
+              </li>
+              
+              <li class="list-inline-item">
+                <a href="https:&#x2F;&#x2F;www.facebook.com&#x2F;1230komi">
+                  <span class="fa-stack fa-lg">
+                    <i class="fas fa-circle fa-stack-2x"></i>
+                    <i class="fab fa-facebook-f fa-stack-1x fa-inverse"></i>
+                  </span>
+                </a>
+              </li>
+              
+              <li class="list-inline-item">
+                <a href="https:&#x2F;&#x2F;www.linkedin.com&#x2F;in&#x2F;yusuke-kominami-0419b1157&#x2F;">
+                  <span class="fa-stack fa-lg">
+                    <i class="fas fa-circle fa-stack-2x"></i>
+                    <i class="fab fa-linkedin fa-stack-1x fa-inverse"></i>
+                  </span>
+                </a>
+              </li>
+              
+            </ul>
+            <p class="copyright text-muted">
+              
+              Copyright &copy; Yusuke Kominami. 2020
+              
+            </p>
+          </div>
+        </div>
+      </div>
+    </footer>
+
+    <!-- Bootstrap core JavaScript -->
+    <script src="https:&#x2F;&#x2F;komi.dev&#x2F;js&#x2F;jquery.min.js"></script>
+    <script src="https:&#x2F;&#x2F;komi.dev&#x2F;js&#x2F;bootstrap.bundle.min.js"></script>
+
+    <!--Custom scripts for this template-->
+    <script src="https:&#x2F;&#x2F;komi.dev&#x2F;js&#x2F;clean-blog.min.js"></script>
+
+    <!--- Additional scripts -->
+    
+    
+  </body>
+
+</html>

@@ -76,93 +76,59 @@
 
     <!-- Page Header -->
     
-    <header class="masthead" style="background-image: url('https:&#x2F;&#x2F;komi.dev&#x2F;img&#x2F;home-bg.jpg')">
-      <div class="overlay">
-      </div>
-      <div class="container">
-        <div class="row">
-          <div class="col-lg-8 col-md-10 mx-auto">
-            <div class="site-heading">
-              <h1>Launch Today</h1>
-              <span class="subheading">Playground and workspace for awesome ideas</span>
-            </div>
-          </div>
-        </div>
-      </div>
-    </header>
-    
-
-    
-    <!-- Main Content -->
-    <div class="container">
-      <div class="row">
-        <div class="col-lg-8 col-md-10 mx-auto">
-          <div class="posts">
-            
-            <div class="post-preview">
-              
-<a href="https:&#x2F;&#x2F;komi.dev&#x2F;hello-world&#x2F;">
-    <h2 class="post-title">Hello World with Zola</h2>
-</a>
-<p class="post-meta">Posted on  2 September 2020</p>
-
-              <p class="post-summary"></p>
-            </div>
-            
-            <div class="post-preview">
-              
-<a href="https:&#x2F;&#x2F;komi.dev&#x2F;rust-in-emacs&#x2F;">
-    <h2 class="post-title">EmacsでRustの開発環境を整える</h2>
-</a>
-<p class="post-meta">Posted on 26 August 2020</p>
-
-              <p class="post-summary"></p>
-            </div>
-            
-            <div class="post-preview">
-              
-<a href="https:&#x2F;&#x2F;komi.dev&#x2F;json-post-to-actix-web&#x2F;">
-    <h2 class="post-title">	Actix-webで作ったAPIサーバーにJSONをPOSTする</h2>
-</a>
-<p class="post-meta">Posted on 24 August 2020</p>
-
-              <p class="post-summary"></p>
-            </div>
-            
-            <div class="post-preview">
-              
-<a href="https:&#x2F;&#x2F;komi.dev&#x2F;api-server-with-actix-web&#x2F;">
-    <h2 class="post-title">	Actix-webでAPIサーバーを立てる</h2>
-</a>
-<p class="post-meta">Posted on 28 July 2020</p>
-
-              <p class="post-summary"></p>
-            </div>
-            
-            <div class="post-preview">
-              
-<a href="https:&#x2F;&#x2F;komi.dev&#x2F;diesel-postgres&#x2F;">
-    <h2 class="post-title">DieselでPostgreSQLに接続</h2>
-</a>
-<p class="post-meta">Posted on 24 July 2020</p>
-
-              <p class="post-summary"></p>
-            </div>
-            
-          </div>
-
-          <!-- Paginator -->
-          <div class="clearfix">
-            
-            
-            <a class="btn btn-primary float-right" href="https:&#x2F;&#x2F;komi.dev&#x2F;page&#x2F;2&#x2F;">Older Posts &rarr;</a>
-            
-          </div>
+<!-- Page Header -->
+<header class="masthead" style="background-image: url('https:&#x2F;&#x2F;komi.dev&#x2F;img&#x2F;post-bg.jpg')">
+  <div class="overlay"></div>
+  <div class="container">
+    <div class="row">
+      <div class="col-lg-8 col-md-10 mx-auto">
+        <div class="post-heading">
+          
+<h1>EmacsでRustの開発環境を整える</h1>
+<span class="meta">Posted on 26 August 2020</span>
 
         </div>
       </div>
     </div>
+  </div>
+</header>
+
+
     
+<!-- Post Content -->
+<article>
+  <div class="container">
+    <div class="row">
+      <div class="col-lg-8 col-md-10 mx-auto">
+        <p>今までRustの開発はrust-modeに委ねていたのだけど、ふとツイッターでrusticなるものを知った。</p>
+<p>試しに入れてみたら開発環境の構築がかなり簡単に片付いて色々リッチになったのでメモ。</p>
+<p>設定は以下の通り。</p>
+<pre style="background-color:#2b303b;">
+<code><span style="color:#c0c5ce;">;; Rust
+(require &#39;rustic)
+(setq-default rustic-format-trigger &#39;on-save)
+(setq rustic-rustfmt-bin &quot;~/.cargo/bin/rustfmt&quot;)
+(add-to-list &#39;rustic-rustfmt-config-alist &#39;(&quot;edition&quot; . &quot;2018&quot;))
+(setq lsp-rust-analyzer-server-command &#39;(&quot;~/usr/local/bin/rust-analyzer&quot;))
+</span></code></pre>
+<p>実を言うとそこまでリッチにしなくても良い感はあって、ある程度補完が効いて型情報などが取れればいい感があるのだけど、今回環境構築をするついでにformatterが自動で効くようにした。</p>
+<p>これは2, 3行目のところで、ファイルを保存した際にCargoでインストールした<code>rustfmt</code>が走るようになっている。</p>
+<p>4行目の<code>add-to-list</code>のところについて、rusticのformatterはなぜかデフォルトでeditionが2015となっていて、<code>async</code>構文を見るとformatterがエラーを吐いてしまう。</p>
+<p>なのでconfigにeditionが2018であることを明記する必要があった。</p>
+<p>LSPのサーバーには<code>rust-analyzer</code>を使っていて、自分はHomebrew経由でインストールしているのでパスをこのように記述した。</p>
+<p>rust-analyzerのインストールは以下の通り。</p>
+<pre style="background-color:#2b303b;">
+<code><span style="color:#bf616a;">brew</span><span style="color:#c0c5ce;"> install rust-analyzer
+</span></code></pre>
+<p>自分の今のところのRustの開発環境はこんな具合。</p>
+<p>Rust楽しんでいくぞ〜〜〜</p>
+
+        
+      </div>
+    </div>
+  </div>
+</article>
+
 
     <hr>
 

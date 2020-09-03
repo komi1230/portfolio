@@ -7,8 +7,28 @@
         <loc>https://komi.dev/about/</loc>
     </url>
     <url>
+        <loc>https://komi.dev/api-server-with-actix-web/</loc>
+        <lastmod>2020-07-28</lastmod>
+    </url>
+    <url>
+        <loc>https://komi.dev/clojure-macro/</loc>
+        <lastmod>2019-10-30</lastmod>
+    </url>
+    <url>
+        <loc>https://komi.dev/clojure-mini-server/</loc>
+        <lastmod>2019-10-28</lastmod>
+    </url>
+    <url>
+        <loc>https://komi.dev/diesel-postgres/</loc>
+        <lastmod>2020-07-24</lastmod>
+    </url>
+    <url>
         <loc>https://komi.dev/hello-world/</loc>
         <lastmod>2020-09-02</lastmod>
+    </url>
+    <url>
+        <loc>https://komi.dev/json-post-to-actix-web/</loc>
+        <lastmod>2020-08-24</lastmod>
     </url>
     <url>
         <loc>https://komi.dev/opengl-from-slime/</loc>
@@ -21,11 +41,22 @@
         <loc>https://komi.dev/page/2/</loc>
     </url>
     <url>
+        <loc>https://komi.dev/page/3/</loc>
+    </url>
+    <url>
         <loc>https://komi.dev/pages/</loc>
     </url>
     <url>
         <loc>https://komi.dev/return-scholarship/</loc>
         <lastmod>2019-10-26</lastmod>
+    </url>
+    <url>
+        <loc>https://komi.dev/rust-in-emacs/</loc>
+        <lastmod>2020-08-26</lastmod>
+    </url>
+    <url>
+        <loc>https://komi.dev/slime-in-spacemacs/</loc>
+        <lastmod>2019-07-14</lastmod>
     </url>
     <url>
         <loc>https://komi.dev/start-kai/</loc>

@@ -1,0 +1,276 @@
+<!DOCTYPE html>
+<html lang="en">
+
+  <head>
+    
+    <!-- Global site tag (gtag.js) - Google Analytics -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=UA-177061519-1"></script>
+    <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag(){dataLayer.push(arguments);}
+      gtag('js', new Date());
+      gtag('config', 'UA-177061519-1');
+    </script>
+    
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta name="description" content="Yusuke Kominami's Blog">
+    <meta name="author" content="Yusuke Kominami">
+    <meta property="og:title" content="Launch Today" />
+    <meta property="og:description" content="Yusuke Kominami's Blog" />
+    <meta property="og:image" content="https://komi.dev/img/home-bg.jpg" />
+    <meta property="og:locale" content="ja_JP" />
+    <meta property="og:site_name" content="Launch Today" />
+    <meta property="og:url" content="https://komi.dev" />
+    <meta name="twitter:site" content="@komi_edtr_1230" />
+    <meta name="twitter:card" content="summary_large_image">
+
+    <title>Launch Today</title>
+
+    <link rel="icon" href="https://komi.dev/img/favicon.ico" />
+
+    <!-- Bootstrap core CSS -->
+    <link rel="stylesheet" href="https:&#x2F;&#x2F;komi.dev&#x2F;css&#x2F;bootstrap.min.css">
+    <!-- Custom fonts for this template -->
+    <link href=" https:&#x2F;&#x2F;komi.dev&#x2F;css&#x2F;all.min.css" rel=" stylesheet" type="text/css">
+    <link href='https://fonts.googleapis.com/css?family=Lora:400,700,400italic,700italic' rel='stylesheet'
+          type='text/css'>
+    <link
+      href='https://fonts.googleapis.com/css?family=Open+Sans:300italic,400italic,600italic,700italic,800italic,400,300,600,700,800'
+      rel='stylesheet' type='text/css'>
+
+    <!-- Custom styles for this template -->
+    <link rel="stylesheet" href="https:&#x2F;&#x2F;komi.dev&#x2F;clean-blog.css">
+
+  </head>
+
+  <body>
+
+    <!-- Navigation -->
+    <nav class="navbar navbar-expand-lg navbar-light fixed-top" id="mainNav">
+      <div class="container">
+        <a class="navbar-brand" href="/">Launch Today</a>
+        <button class="navbar-toggler navbar-toggler-right" type="button" data-toggle="collapse"
+                data-target="#navbarResponsive" aria-controls="navbarResponsive" aria-expanded="false"
+                aria-label="Toggle navigation">
+          Menu
+          <i class="fas fa-bars"></i>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarResponsive">
+          <ul class="navbar-nav ml-auto">
+            
+            <li class="nav-item">
+              <a class="nav-link"
+                 href="https:&#x2F;&#x2F;komi.dev">Home</a>
+            </li>
+            
+            <li class="nav-item">
+              <a class="nav-link"
+                 href="https:&#x2F;&#x2F;komi.dev&#x2F;about">About</a>
+            </li>
+            
+          </ul>
+        </div>
+      </div>
+    </nav>
+
+    <!-- Page Header -->
+    
+<!-- Page Header -->
+<header class="masthead" style="background-image: url('https:&#x2F;&#x2F;komi.dev&#x2F;img&#x2F;post-bg.jpg')">
+  <div class="overlay"></div>
+  <div class="container">
+    <div class="row">
+      <div class="col-lg-8 col-md-10 mx-auto">
+        <div class="post-heading">
+          
+<h1>SpacemacsでSLIMEを導入してQuicklispを入れる</h1>
+<span class="meta">Posted on 14 July 2019</span>
+
+        </div>
+      </div>
+    </div>
+  </div>
+</header>
+
+
+    
+<!-- Post Content -->
+<article>
+  <div class="container">
+    <div class="row">
+      <div class="col-lg-8 col-md-10 mx-auto">
+        <p>Lispを書くときに必要不可欠とも言えるのがSLIMEですよね。</p>
+<p>SLIMEとはLispをIDEっぽくするやつで、Lisperにとっては無くてはならないものです。</p>
+<p>さて、今回はそんなSLIMEを今回Spacemacsで叩けるようにして最終的にQuicklispも使えるようにするのが目標です。</p>
+<h3 id="huan-jing">環境</h3>
+<p>ぼくの環境はmacOS Mojaveです。</p>
+<p>あと、ぼくはシェルにXonshというやつを使っています。</p>
+<p>もしかしたらこのXonshが微妙な悪さをしていて設定に悪影響を及ぼしている可能性があるのですが、とりあえず今回自分はこうしてうまくいったという1つの事例として留めておきます。</p>
+<p>多分Linuxの人もそこまで導入に関しては大きく変わらないはず。</p>
+<h3 id="spacemacsgajian-teirushe-ding-huairu">Spacemacsが見ている設定ファイル</h3>
+<p>Emacsの場合、設定ファイルは</p>
+<ul>
+<li>~/.emacs.el</li>
+<li>~/.emacs</li>
+<li>~/.emacs.d/init.el</li>
+<li>~/.emacs.d/init</li>
+</ul>
+<p>の順番に見ていって、最初に見つけたやつだけを設定ファイルとして読み込むそうです。</p>
+<p>で、これに対してSpacemacsは</p>
+<ul>
+<li>.spacemacs</li>
+<li>~/.emacs.d/init.el</li>
+</ul>
+<p>の順番で両方を見ているようです(違ってたらごめんなさい)</p>
+<p>ただ、色々調べてみたところ、どうもこの2つで役割が微妙に違うらしくて、なのでSpacemacsにSLIMEを導入するにはこの両方を触っていきます。</p>
+<h3 id="mazuhaslimedao-ru">まずはSLIME導入</h3>
+<p>まず <code>.spacemacs</code> の方にて、<code>(defun dotspacemacs/layers () ...</code> のところで、<code>common-lisp</code>を追加します。</p>
+<p>[https://github.com/syl20bnr/spacemacs/tree/master/layers/%2Blang/common-lisp:embed:cite]</p>
+<p>どうやら本来はこれでSLIMEが導入され、処理系としてはデフォルトでSBCLが導入されるらしいのですが、ぼくはこれがうまくいきませんでした。</p>
+<p>で、ということで処理系の設定を<code>(dotspacemacs/user-config () ...</code>のところに<code>(setq inferior-lisp-program &quot;/path/to/your/lisp&quot;)</code>と書き込みます。</p>
+<p>ぼくの場合、HomebrewでインストールしたSBCLのパスは<code>/usr/local/bin/sbcl</code>だったので</p>
+<pre style="background-color:#2b303b;">
+<code><span style="color:#c0c5ce;">(defun dotspacemacs/user-config ()
+  (setq inferior-lisp-program &quot;/usr/local/bin/sbcl&quot;))
+</span></code></pre>
+<p>としました。</p>
+<p>さて、これでSLIME自体は動きます。</p>
+<p>Spacemacsを立ち上げ直して<code>hoge.lisp</code>なりテキトーなファイルを作ってあげて、それで<code>SPC SPC</code>でメタモードにして<code>slime</code>と打てばslimeモードを立ち上げられます。</p>
+<h3 id="slimenoshe-ding-woiziru">SLIMEの設定をいじる</h3>
+<p><code>.spacemacs</code>の設定を以上のようにすればSLIMEは動くようになります。</p>
+<p>で、今度はSLIME自体の設定をします。</p>
+<p>まず<code>~/.emacs.d/</code>の中にSLIMEのリポジトリをcloneします。</p>
+<pre style="background-color:#2b303b;">
+<code><span style="color:#c0c5ce;">cd ~/.emacs.d/
+git clone git clone https://github.com/slime/slime.git
+</span></code></pre>
+<p>そうして、<code>~/.emacs.d/init.el</code>に以下のコードを追記します。</p>
+<pre style="background-color:#2b303b;">
+<code><span style="color:#c0c5ce;">;; ~/.emacs.d/slimeをload-pathに追加
+(add-to-list &#39;load-path (expand-file-name &quot;~/.emacs.d/slime&quot;))
+
+;; SLIMEのロード
+(require &#39;slime)
+(slime-setup &#39;(slime-repl slime-fancy slime-banner)) 
+</span></code></pre>
+<p>これでもう一度Spacemacsを立ち上げ直してSLIMEを起動すると、バナーが表示されるのがわかり、実際にちゃんとこの設定を読めていることがわかります。</p>
+<p>ちなみに余談なのですが、先ほど<code>~/.emacs.d/init.el</code>に書いた<code>(add-to-list 'load-path (expand-file-name &quot;~/.emacs.d/slime&quot;))</code>を書かないと、ターミナルで<code>emacs</code>と売ったらなぜかSpacemacsではなく普通のEmacsが立ち上がるようになります。</p>
+<p>なんででしょう....</p>
+<p>もしかしたら<code>(require 'slime)</code>でSpacemacsではない普通のEmacsが呼ばれるようになっているからかもしれません。</p>
+<p>誰か原因知ってる人がいたら教えてください。</p>
+<p>ちなみにここで色々SLIMEの設定をいじることができるので自動補完等もEmacs Lispを書けばなんとかなります。</p>
+<h3 id="roswellshi-enaino">Roswell使えないの？</h3>
+<p>Lispの処理系の導入とかパッケージ管理をひとまとめにしたRoswellですが、残念ながらRoswellとSpacemacsは相性が悪いようで、今回に関しては見送らざるをえないようです。</p>
+<p>色々調べたんですけど、RoswellとSpacemacsはどちらも設定周りがかなりしっかりしてて、お互い相入れないようになってました。</p>
+<p>多分かなり頑張ればいけるんでしょうけど、パッと見では無理そうだったので今回に関してはRoswellは使えません。</p>
+<p>なのでこの後のQuicklispの導入もRoswellを使わずにSBCLに直接Quicklispを設定します。</p>
+<h3 id="quicklispnodao-ru">Quicklispの導入</h3>
+<p>さて、Quicklispを入れるのは比較的簡単で、基本的には公式サイトの通りにします。</p>
+<p>[https://www.quicklisp.org/beta/:embed:cite]</p>
+<p>まずホームディレクトリにQuicklispのインストールのためのソースコードを取ってきます。</p>
+<pre style="background-color:#2b303b;">
+<code><span style="color:#c0c5ce;">curl -O https://beta.quicklisp.org/quicklisp.lisp
+</span></code></pre>
+<p>そうしてSpacemacs内でSLIMEを立ち上げ、その中で</p>
+<pre style="background-color:#2b303b;">
+<code><span style="color:#c0c5ce;">(load &quot;~/quicklisp.lisp&quot;)
+(quicklisp-quickstart:install)
+</span></code></pre>
+<p>これで入ります。</p>
+<p>さて、これでQuicklispのコマンドを少し叩いてみると</p>
+<pre style="background-color:#2b303b;">
+<code><span style="color:#c0c5ce;">(ql:system-apropos &quot;vecto&quot;)
+</span></code></pre>
+<p>ちゃんと動いてることが確認できると思います。</p>
+<p>Spacemacsを立ち上げ直したとき、もしQuicklispが使えないってなったら</p>
+<pre style="background-color:#2b303b;">
+<code><span style="color:#c0c5ce;">(load &quot;~/quicklisp.lisp&quot;)
+(quicklisp-quickstart:install)
+</span></code></pre>
+<p>をやり直して、それで<code>qlってパッケージないよ！</code>と言われたら</p>
+<pre style="background-color:#2b303b;">
+<code><span style="color:#c0c5ce;">(load &quot;~/quicklisp/setup.lisp&quot;)
+</span></code></pre>
+<p>とすればちゃんとQuicklispが使えるようになります。</p>
+<h3 id="matome">まとめ</h3>
+<p>以上でSpacemacsへの色々な導入ができました。</p>
+<p>Spacemacsはかなり素敵なエディタだと思うんですけど、やっぱりマイナーなエディタであるのと同時にEmacsに比べると拡張性があまりないので使いづらいところがあるなぁって感じですね。</p>
+<p>やっぱりRoswellと互換性ないのは痛いなぁ....</p>
+
+        
+      </div>
+    </div>
+  </div>
+</article>
+
+
+    <hr>
+
+    <!-- Footer -->
+    <footer>
+      <div class="container">
+        <div class="row">
+          <div class="col-lg-8 col-md-10 mx-auto">
+            <ul class="list-inline text-center">
+              
+              <li class="list-inline-item">
+                <a href="https:&#x2F;&#x2F;twitter.com&#x2F;komi_edtr_1230">
+                  <span class="fa-stack fa-lg">
+                    <i class="fas fa-circle fa-stack-2x"></i>
+                    <i class="fab fa-twitter fa-stack-1x fa-inverse"></i>
+                  </span>
+                </a>
+              </li>
+              
+              <li class="list-inline-item">
+                <a href="https:&#x2F;&#x2F;github.com&#x2F;komi1230">
+                  <span class="fa-stack fa-lg">
+                    <i class="fas fa-circle fa-stack-2x"></i>
+                    <i class="fab fa-github fa-stack-1x fa-inverse"></i>
+                  </span>
+                </a>
+              </li>
+              
+              <li class="list-inline-item">
+                <a href="https:&#x2F;&#x2F;www.facebook.com&#x2F;1230komi">
+                  <span class="fa-stack fa-lg">
+                    <i class="fas fa-circle fa-stack-2x"></i>
+                    <i class="fab fa-facebook-f fa-stack-1x fa-inverse"></i>
+                  </span>
+                </a>
+              </li>
+              
+              <li class="list-inline-item">
+                <a href="https:&#x2F;&#x2F;www.linkedin.com&#x2F;in&#x2F;yusuke-kominami-0419b1157&#x2F;">
+                  <span class="fa-stack fa-lg">
+                    <i class="fas fa-circle fa-stack-2x"></i>
+                    <i class="fab fa-linkedin fa-stack-1x fa-inverse"></i>
+                  </span>
+                </a>
+              </li>
+              
+            </ul>
+            <p class="copyright text-muted">
+              
+              Copyright &copy; Yusuke Kominami. 2020
+              
+            </p>
+          </div>
+        </div>
+      </div>
+    </footer>
+
+    <!-- Bootstrap core JavaScript -->
+    <script src="https:&#x2F;&#x2F;komi.dev&#x2F;js&#x2F;jquery.min.js"></script>
+    <script src="https:&#x2F;&#x2F;komi.dev&#x2F;js&#x2F;bootstrap.bundle.min.js"></script>
+
+    <!--Custom scripts for this template-->
+    <script src="https:&#x2F;&#x2F;komi.dev&#x2F;js&#x2F;clean-blog.min.js"></script>
+
+    <!--- Additional scripts -->
+    
+    
+  </body>
+
+</html>

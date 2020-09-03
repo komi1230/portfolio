@@ -1,0 +1,258 @@
+<!DOCTYPE html>
+<html lang="en">
+
+  <head>
+    
+    <!-- Global site tag (gtag.js) - Google Analytics -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=UA-177061519-1"></script>
+    <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag(){dataLayer.push(arguments);}
+      gtag('js', new Date());
+      gtag('config', 'UA-177061519-1');
+    </script>
+    
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta name="description" content="Yusuke Kominami's Blog">
+    <meta name="author" content="Yusuke Kominami">
+    <meta property="og:title" content="Launch Today" />
+    <meta property="og:description" content="Yusuke Kominami's Blog" />
+    <meta property="og:image" content="https://komi.dev/img/home-bg.jpg" />
+    <meta property="og:locale" content="ja_JP" />
+    <meta property="og:site_name" content="Launch Today" />
+    <meta property="og:url" content="https://komi.dev" />
+    <meta name="twitter:site" content="@komi_edtr_1230" />
+    <meta name="twitter:card" content="summary_large_image">
+
+    <title>Launch Today</title>
+
+    <link rel="icon" href="https://komi.dev/img/favicon.ico" />
+
+    <!-- Bootstrap core CSS -->
+    <link rel="stylesheet" href="https:&#x2F;&#x2F;komi.dev&#x2F;css&#x2F;bootstrap.min.css">
+    <!-- Custom fonts for this template -->
+    <link href=" https:&#x2F;&#x2F;komi.dev&#x2F;css&#x2F;all.min.css" rel=" stylesheet" type="text/css">
+    <link href='https://fonts.googleapis.com/css?family=Lora:400,700,400italic,700italic' rel='stylesheet'
+          type='text/css'>
+    <link
+      href='https://fonts.googleapis.com/css?family=Open+Sans:300italic,400italic,600italic,700italic,800italic,400,300,600,700,800'
+      rel='stylesheet' type='text/css'>
+
+    <!-- Custom styles for this template -->
+    <link rel="stylesheet" href="https:&#x2F;&#x2F;komi.dev&#x2F;clean-blog.css">
+
+  </head>
+
+  <body>
+
+    <!-- Navigation -->
+    <nav class="navbar navbar-expand-lg navbar-light fixed-top" id="mainNav">
+      <div class="container">
+        <a class="navbar-brand" href="/">Launch Today</a>
+        <button class="navbar-toggler navbar-toggler-right" type="button" data-toggle="collapse"
+                data-target="#navbarResponsive" aria-controls="navbarResponsive" aria-expanded="false"
+                aria-label="Toggle navigation">
+          Menu
+          <i class="fas fa-bars"></i>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarResponsive">
+          <ul class="navbar-nav ml-auto">
+            
+            <li class="nav-item">
+              <a class="nav-link"
+                 href="https:&#x2F;&#x2F;komi.dev">Home</a>
+            </li>
+            
+            <li class="nav-item">
+              <a class="nav-link"
+                 href="https:&#x2F;&#x2F;komi.dev&#x2F;about">About</a>
+            </li>
+            
+          </ul>
+        </div>
+      </div>
+    </nav>
+
+    <!-- Page Header -->
+    
+<!-- Page Header -->
+<header class="masthead" style="background-image: url('https:&#x2F;&#x2F;komi.dev&#x2F;img&#x2F;post-bg.jpg')">
+  <div class="overlay"></div>
+  <div class="container">
+    <div class="row">
+      <div class="col-lg-8 col-md-10 mx-auto">
+        <div class="post-heading">
+          
+<h1>	Actix-webでAPIサーバーを立てる</h1>
+<span class="meta">Posted on 28 July 2020</span>
+
+        </div>
+      </div>
+    </div>
+  </div>
+</header>
+
+
+    
+<!-- Post Content -->
+<article>
+  <div class="container">
+    <div class="row">
+      <div class="col-lg-8 col-md-10 mx-auto">
+        <p>現在ちょっとしたカレンダーアプリを作っており、バックエンドにはRustを採用している。</p>
+<p>リポジトリは<a href="https://github.com/komi1230/calendar/tree/master/backend">ここ</a>から。</p>
+<p>フレームワークにはActix-webを採用しており、今回バックエンドサイドはある程度書き上がったのでその所感をまとめてみようと思う。</p>
+<h3 id="minimamu">ミニマム</h3>
+<p>とにかく全体的に感じたのが、とにかくミニマムで取り回しやすいなという感じがした。</p>
+<p>マクロ等を利用したルーティングやURIディスパッチ、各種ミドルウェアの実装などをほんの数行で実現でき、簡易的なAPIサーバーを実装するにはかなり良いと思う。</p>
+<p>例えばマクロによるルーティングとURLディスパッチについて、自分も今作っているカレンダーアプリではこんなコードがある。</p>
+<pre style="background-color:#2b303b;">
+<code><span style="color:#c0c5ce;">#[</span><span style="color:#bf616a;">get</span><span style="color:#c0c5ce;">(&quot;</span><span style="color:#a3be8c;">/user/{username}</span><span style="color:#c0c5ce;">&quot;)]
+</span><span style="color:#b48ead;">pub</span><span style="color:#c0c5ce;"> async </span><span style="color:#b48ead;">fn </span><span style="color:#8fa1b3;">schedule_content</span><span style="color:#c0c5ce;">(
+    </span><span style="color:#bf616a;">info</span><span style="color:#c0c5ce;">: web::Path&lt;UserData&gt;,
+    </span><span style="color:#bf616a;">pool</span><span style="color:#c0c5ce;">: web::Data&lt;DbPool&gt;,
+) -&gt; impl Responder {
+    </span><span style="color:#b48ead;">let</span><span style="color:#c0c5ce;"> conn = pool.</span><span style="color:#96b5b4;">get</span><span style="color:#c0c5ce;">().</span><span style="color:#96b5b4;">expect</span><span style="color:#c0c5ce;">(&quot;</span><span style="color:#a3be8c;">couldn&#39;t get db connection from pool</span><span style="color:#c0c5ce;">&quot;);
+    </span><span style="color:#b48ead;">let</span><span style="color:#c0c5ce;"> res = Schedule::get_schedule(info.username.</span><span style="color:#96b5b4;">clone</span><span style="color:#c0c5ce;">(), &amp;conn);
+
+    </span><span style="color:#b48ead;">match</span><span style="color:#c0c5ce;"> res {
+        Ok(contents) =&gt; web::Json(contents),
+        Err(_) =&gt; panic!(&quot;</span><span style="color:#a3be8c;">Not found schedule</span><span style="color:#c0c5ce;">&quot;),
+    }
+}
+</span></code></pre>
+<p> URLで<code>/user/{username}</code>として任意の文字列usernameに対して適当なコンテンツを打ち返すというのがこの関数の動作だけども、</p>
+<ul>
+<li><code>#[get(...)]</code>という属性マクロを用いてルーティングを定義し、</li>
+<li><code>info: web::Path&lt;UserData&gt;</code>として引数にURLのディスパッチを行う</li>
+</ul>
+<p>ということができている。</p>
+<p>例えばこれをPythonのFlaskとかでやろうとするならもう少しコード量が必要になると思われる。</p>
+<p>別にPythonのFlaskでも良い感はあるが、やはりRustには型による安心感がある。</p>
+<p>実際、今回は<code>{username}</code>という任意の文字列を<code>UserData</code>という型(構造体)に押し込めており、こちらとして事前に用意しておいたメソッドを適用させることなどができる。</p>
+<p>もちろん、場合によってはディスパッチされる型を整数型として受け取ることも可能である。</p>
+<p>こうした型の安全性とシンプルなコードを高いレベル両立できるのはやはりすごいと思う。</p>
+<h3 id="kuo-zhang-xing">拡張性</h3>
+<p>今回のバックエンドとしてはそこまで複雑な動作をさせているわけではないが、地味にDBへの連携などの処理がある。</p>
+<p>その点、Actix-webはHTTPサーバーとしての処理とRust内部でのデータ処理のフェイズを綺麗に分けられているので、DieselなどのORMとの橋渡しが思ったよりスムーズにできた。</p>
+<p>正直なところDieselがORMとしてどうなのかという点については多少の文句はあるのだけど(やはりPythonのSQLAlchemyが最高な気がする)、Actix-webに関しては言えばそこらへんを非常に良く分業できているので、開発していてとてもユーザー体験が良かったと思う。</p>
+<p>実際、<a href="https://actix.rs/docs/databases/">チュートリアル</a>にもDieselとの接続について簡単なデザインパターンが載っており、これは初学者にとっては心強いと思う。</p>
+<p>これ以外に、CSRF対策なども数行挟み込めばなんとかなる。</p>
+<pre style="background-color:#2b303b;">
+<code><span style="color:#b48ead;">use </span><span style="color:#c0c5ce;">actix_web::middleware::csrf;
+
+</span><span style="color:#b48ead;">fn </span><span style="color:#8fa1b3;">handle_post</span><span style="color:#c0c5ce;">(</span><span style="color:#bf616a;">_req</span><span style="color:#c0c5ce;">: HttpRequest) -&gt; &amp;</span><span style="color:#b48ead;">&#39;static str </span><span style="color:#c0c5ce;">{
+    &quot;</span><span style="color:#a3be8c;">This action should only be triggered with requests from the same site</span><span style="color:#c0c5ce;">&quot;
+}
+
+</span><span style="color:#b48ead;">fn </span><span style="color:#8fa1b3;">main</span><span style="color:#c0c5ce;">() {
+    </span><span style="color:#b48ead;">let</span><span style="color:#c0c5ce;"> app = Application::new()
+        .</span><span style="color:#96b5b4;">middleware</span><span style="color:#c0c5ce;">(
+            csrf::CsrfFilter::build()
+                .</span><span style="color:#96b5b4;">allowed_origin</span><span style="color:#c0c5ce;">(&quot;</span><span style="color:#a3be8c;">https://www.example.com</span><span style="color:#c0c5ce;">&quot;)
+                .</span><span style="color:#96b5b4;">finish</span><span style="color:#c0c5ce;">())
+        .</span><span style="color:#96b5b4;">resource</span><span style="color:#c0c5ce;">(&quot;</span><span style="color:#a3be8c;">/</span><span style="color:#c0c5ce;">&quot;, |</span><span style="color:#bf616a;">r</span><span style="color:#c0c5ce;">| {
+            r.</span><span style="color:#96b5b4;">method</span><span style="color:#c0c5ce;">(Method::</span><span style="color:#d08770;">GET</span><span style="color:#c0c5ce;">).</span><span style="color:#96b5b4;">f</span><span style="color:#c0c5ce;">(|_| httpcodes::HttpOk);
+            r.</span><span style="color:#96b5b4;">method</span><span style="color:#c0c5ce;">(Method::</span><span style="color:#d08770;">POST</span><span style="color:#c0c5ce;">).</span><span style="color:#96b5b4;">f</span><span style="color:#c0c5ce;">(handle_post);
+        })
+        .</span><span style="color:#96b5b4;">finish</span><span style="color:#c0c5ce;">();
+}
+</span></code></pre>
+<p>他にもHTTP/2.0とかWebSocketあたりの先進的なWebの技術についてもしっかりカバーされており、やはり強い。</p>
+<h3 id="fei-tong-qi">非同期</h3>
+<p>やはりActix-webについてはこれが嬉しい。</p>
+<p>async/awaitを特に意識することなくサクッと実装でき、これは何よりも嬉しいポイントだと思う。</p>
+<p>開発者サイドからは非同期処理特有のめんどくさい部分がRustのasync構文によってtokioのランタイムをフル活用でき、ストレスなく非同期処理を実装できる。</p>
+<h3 id="kun-tutenaikedokun-risounapointo">困ってないけど困りそうなポイント</h3>
+<p>今回はActix-webでAPIサーバーを実装したわけで、割と開発がサクサク進んだので特に困ったポイントなどは無いのだけど、こういうケースだと少し困るかな、という点を上げておこうと思う。</p>
+<ul>
+<li>機能モリモリなMVCフレームワークではない</li>
+</ul>
+<p>DjangoやRailsの場合、データベースやフロントの方までフレームワークが管理しており、フレームワークが敷いたレールの上をしっかり歩めば良いというのが根幹の思想としてある。</p>
+<p>一方で、今回扱ったActix-webについてはそうした完全に全部をカバーするという思想ではなく<b>必要な機能を必要な分だけ使う</b>というイメージである。</p>
+<p>なので、例えばテンプレートエンジンなど込みで一つのフレームワークに乗っかって全て完結させたいんだーという場合において、Actix-webを含めて現存するRustのフレームワークでは実現が難しいポイントだと思う。</p>
+<p>ただ、これについては個人的には問題ないと思っていて、というのもRustはとにかくシンプルにプロダクトを作成するという点においてかなり強みを発揮すると考えている。</p>
+<p>故にRustは疎結合な構成のWebアプリで使われると思っていて(そっちの方が型周りの良さが出てくると思う)、今のところそういう機能モリモリなMVCフレームワークはないし、これからもそういうのは登場する必要はないかなと思う。</p>
+<p>今後もWeb開発においてRustは局所的に高速に非同期処理したい場合で活躍していくと思う。</p>
+<h3 id="matome">まとめ</h3>
+<p>今回はActix-webで実装をしてみた所感については簡単にまとめてみた。</p>
+<p>色々偉そうな感じのことを言ってしまっており、もしかしたら間違いがあるかもしれないので、その場合は後学やコミュニティのためにも指摘してもらえると嬉しい。</p>
+<p>今後もRustで開発していこうと思う。</p>
+
+        
+      </div>
+    </div>
+  </div>
+</article>
+
+
+    <hr>
+
+    <!-- Footer -->
+    <footer>
+      <div class="container">
+        <div class="row">
+          <div class="col-lg-8 col-md-10 mx-auto">
+            <ul class="list-inline text-center">
+              
+              <li class="list-inline-item">
+                <a href="https:&#x2F;&#x2F;twitter.com&#x2F;komi_edtr_1230">
+                  <span class="fa-stack fa-lg">
+                    <i class="fas fa-circle fa-stack-2x"></i>
+                    <i class="fab fa-twitter fa-stack-1x fa-inverse"></i>
+                  </span>
+                </a>
+              </li>
+              
+              <li class="list-inline-item">
+                <a href="https:&#x2F;&#x2F;github.com&#x2F;komi1230">
+                  <span class="fa-stack fa-lg">
+                    <i class="fas fa-circle fa-stack-2x"></i>
+                    <i class="fab fa-github fa-stack-1x fa-inverse"></i>
+                  </span>
+                </a>
+              </li>
+              
+              <li class="list-inline-item">
+                <a href="https:&#x2F;&#x2F;www.facebook.com&#x2F;1230komi">
+                  <span class="fa-stack fa-lg">
+                    <i class="fas fa-circle fa-stack-2x"></i>
+                    <i class="fab fa-facebook-f fa-stack-1x fa-inverse"></i>
+                  </span>
+                </a>
+              </li>
+              
+              <li class="list-inline-item">
+                <a href="https:&#x2F;&#x2F;www.linkedin.com&#x2F;in&#x2F;yusuke-kominami-0419b1157&#x2F;">
+                  <span class="fa-stack fa-lg">
+                    <i class="fas fa-circle fa-stack-2x"></i>
+                    <i class="fab fa-linkedin fa-stack-1x fa-inverse"></i>
+                  </span>
+                </a>
+              </li>
+              
+            </ul>
+            <p class="copyright text-muted">
+              
+              Copyright &copy; Yusuke Kominami. 2020
+              
+            </p>
+          </div>
+        </div>
+      </div>
+    </footer>
+
+    <!-- Bootstrap core JavaScript -->
+    <script src="https:&#x2F;&#x2F;komi.dev&#x2F;js&#x2F;jquery.min.js"></script>
+    <script src="https:&#x2F;&#x2F;komi.dev&#x2F;js&#x2F;bootstrap.bundle.min.js"></script>
+
+    <!--Custom scripts for this template-->
+    <script src="https:&#x2F;&#x2F;komi.dev&#x2F;js&#x2F;clean-blog.min.js"></script>
+
+    <!--- Additional scripts -->
+    
+    
+  </body>
+
+</html>
