@@ -1,0 +1,290 @@
+<!DOCTYPE html>
+<html lang="en">
+
+  <head>
+    
+    <!-- Global site tag (gtag.js) - Google Analytics -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=UA-177061519-1"></script>
+    <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag(){dataLayer.push(arguments);}
+      gtag('js', new Date());
+      gtag('config', 'UA-177061519-1');
+    </script>
+    
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta name="description" content="Yusuke Kominami's Blog">
+    <meta name="author" content="Yusuke Kominami">
+    <meta property="og:title" content="Launch Today" />
+    <meta property="og:description" content="Yusuke Kominami's Blog" />
+    <meta property="og:image" content="https://komi.dev/img/home-bg.jpg" />
+    <meta property="og:locale" content="ja_JP" />
+    <meta property="og:site_name" content="Launch Today" />
+    <meta property="og:url" content="https://komi.dev" />
+    <meta name="twitter:site" content="@komi_edtr_1230" />
+    <meta name="twitter:card" content="summary_large_image">
+
+    <title>Launch Today</title>
+
+    <link rel="icon" href="https://komi.dev/img/favicon.ico" />
+
+    <!-- Bootstrap core CSS -->
+    <link rel="stylesheet" href="https:&#x2F;&#x2F;komi.dev&#x2F;css&#x2F;bootstrap.min.css">
+    <!-- Custom fonts for this template -->
+    <link href=" https:&#x2F;&#x2F;komi.dev&#x2F;css&#x2F;all.min.css" rel=" stylesheet" type="text/css">
+    <link href='https://fonts.googleapis.com/css?family=Lora:400,700,400italic,700italic' rel='stylesheet'
+          type='text/css'>
+    <link
+      href='https://fonts.googleapis.com/css?family=Open+Sans:300italic,400italic,600italic,700italic,800italic,400,300,600,700,800'
+      rel='stylesheet' type='text/css'>
+
+    <!-- Custom styles for this template -->
+    <link rel="stylesheet" href="https:&#x2F;&#x2F;komi.dev&#x2F;clean-blog.css">
+
+  </head>
+
+  <body>
+
+    <!-- Navigation -->
+    <nav class="navbar navbar-expand-lg navbar-light fixed-top" id="mainNav">
+      <div class="container">
+        <a class="navbar-brand" href="/">Launch Today</a>
+        <button class="navbar-toggler navbar-toggler-right" type="button" data-toggle="collapse"
+                data-target="#navbarResponsive" aria-controls="navbarResponsive" aria-expanded="false"
+                aria-label="Toggle navigation">
+          Menu
+          <i class="fas fa-bars"></i>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarResponsive">
+          <ul class="navbar-nav ml-auto">
+            
+            <li class="nav-item">
+              <a class="nav-link"
+                 href="https:&#x2F;&#x2F;komi.dev">Home</a>
+            </li>
+            
+            <li class="nav-item">
+              <a class="nav-link"
+                 href="https:&#x2F;&#x2F;komi.dev&#x2F;about">About</a>
+            </li>
+            
+          </ul>
+        </div>
+      </div>
+    </nav>
+
+    <!-- Page Header -->
+    
+<!-- Page Header -->
+<header class="masthead" style="background-image: url('https:&#x2F;&#x2F;komi.dev&#x2F;img&#x2F;post-bg.jpg')">
+  <div class="overlay"></div>
+  <div class="container">
+    <div class="row">
+      <div class="col-lg-8 col-md-10 mx-auto">
+        <div class="post-heading">
+          
+<h1>	自作OSSとしてCommon Lisp用の描画ツールKaiを作っています</h1>
+<span class="meta">Posted on  7 December 2019</span>
+
+        </div>
+      </div>
+    </div>
+  </div>
+</header>
+
+
+    
+<!-- Post Content -->
+<article>
+  <div class="container">
+    <div class="row">
+      <div class="col-lg-8 col-md-10 mx-auto">
+        <p>Softbank AI部 Advent Calendar 2019の7日目。</p>
+<p>まず始めに、今回一緒にアドベントカレンダーを回していってくれている社員の皆さんと内定者に感謝。</p>
+<p>というのも、このSB AI部のアドベントカレンダーの企画を立ち上げたのは自分だからである。</p>
+<p>先日より内定してちょこちょこ社員や内定者と交流するイベントに出たりしているのだけれど、縁あってSB AI部(社員の方で構成されている部活)のSlackに招待してもらった。</p>
+<p>SB AI部については<a href="https://twitter.com/kmotohas">@kmotohas</a>が書かれた2日目の記事に詳細があるので適宜参照。</p>
+<p>ちょうど11月の上旬くらい、ツイッターを見てると色々な会社が社内アドベントカレンダーをやっていて(しかも結構楽しそう)、もしかしてソフトバンクもやっているのかな？と思ってSlackをバーっと確認。</p>
+<p>どうも見た感じ特にその手のやりとりは無かったので、randomのチャンネルで質問してみる。</p>
+<p>そうすると、社員の方の何人かが<b>面白そう！</b>とか<b>やってみよ！</b>というような反応をしてくださった。</p>
+<p>これはイケるやつだ！ということで、勢いでアドベントカレンダーを作成。</p>
+<p>最初は2, 3枠しか埋まらず、<b>入社前から早速やらかしたやつかぁ...</b>と心配していたのだけれど、だんだんと勢いが出てきて、最終的にはビッシリ埋まった。</p>
+<p>本当に社員の皆さんと内定者には感謝である。</p>
+<h3 id="lisptoren-gong-zhi-neng">Lispと人工知能</h3>
+<p>さてさて、前置きはこのくらいにして7日目の記事の本題へ。</p>
+<p>AIもとい人工知能は少し前から話題になっていて、ソフトバンクの注力事業であるわけだけど、この人工知能は最近になってポッと出てきたものではなく昔から長いこと研究されている領域だったりする。</p>
+<p>では人工知能はいつから研究されているかというと、1950年台に遡り、1956年にAIに関する世界初の国際会議（ダートマス会議）が主催された。</p>
+<p>世界で初めて実用デジタルコンピューターが作られたのが1940年代で、世界で初めての高水準プログラミング言語であるFortranができたのが1954年、これらのことを考えてみればコンピューターの黎明期に人工知能という概念が誕生したと言える。</p>
+<p>ちなみに余談として、FortranはFormula Translation(式変形)の略で、昔はマシン言語を直接書いてコンピューターに計算をさせていたのだけど、Fortranはより人間に近い言語をマシン言語に変換する役割(いわゆるコンパイラ)として登場し、<b>「これからの時代はプログラミングをやる必要はない！全てコンピューターが自動でやってくれる！」</b>という強烈な宣伝文句とともに一世風靡し、当時では画期的なものであった。 (出典 : 『プログラマーのジレンマ 夢と現実の狭間』スコット・ローゼンバーグ著)</p>
+<p>さて、そんな時代の中で開催された国際会議で、ジョン・マッカーシーという数学者が世界で初めて「人工知能」という言葉を定義した。</p>
+<p>このジョン・マッカーシーは人工知能やコンピューターサイエンスにおいて偉大な貢献をした人であり、実は「人工知能の父」と称されるあのマービン・ミンスキーもこの会議を機にAI研究者を志し、その3年後にはMITでマッカーシーを師事することになった。</p>
+<p>さて、この人工知能という言葉を生み出したマッカーシーこそ同時にLispを生んだ人物なのである。(Lisperの間ではマッカーシーはLispを&quot;発見した&quot;と言う)</p>
+<p>この初めてLispを提案したのが<a href="https://aiplaybook.a16z.com/reference-material/mccarthy-1960.pdf">この論文</a>。</p>
+<p>マッカーシーの数多くの貢献の中でも特に有名なものとして、現在ほとんどのプログラミング言語で実装されているif文やガベージコレクションなどがある。(実はかつてのFortranにはif文がなくgoto文しかなかった)</p>
+<p>if文もガベージコレクションも、高水準プログラミング言語として初めて実装されたのはLispなのである。</p>
+<p>これ以外に、マッカーシーはタイムシェアリングシステムというものも提案しており、これは何かというと現在でのアプリケーションサービスプロバイダ、つまりSaaSで、現在流行っているビジネスモデルを半世紀以上前にマッカーシーは実現可能だと提案していた。</p>
+<p>...とまあマッカーシーがすごいという話はある程度にしておいて、人工知能の歴史やLispがどのような興隆を経てきたかという話については以下の記事が非常によくまとまっているのでぜひ読んでもらいたい。</p>
+<p>人工知能は2回の冬の時代を経て現代でまた興隆を極めているのだけれど、現代の人工知能技術の中核をなす技術であるディープラーニングは膨大な数値計算によって成立している。</p>
+<p>かつての人工知能は記号推論によって解決しようとしていたのだが、現実世界でも適用可能な妥当なルールベースを作りこむことが難しいことが分かってきたので、その後は大量のデータからボトムアップ的に学習して自動的に知識表現を獲得してやろうという流れになり、ニューラルネットなどの機械学習手法が発達した。</p>
+<p>なので大きな枠組みで見れば現在のディープラーニングも知識をどのように計算機で実現するかという話であり、それを抽象的なレイヤで行うかボトムアップ的に行うかでアプローチが異なるだけだったりして、本質的には変わらなかったりする。</p>
+<h3 id="moupythonzu-ye-siyouyo">もうPython卒業しようよ</h3>
+<p>コンピュータの性能向上に伴い、プログラミング言語にはアルゴリズムの表現力と開発効率が要求されてくるようになった。</p>
+<p>それにより、今はPythonが最も注目される言語となった。</p>
+<p>ただPython単体だとスクリプト型言語のために実行速度が非常に遅く、ディーブラーニングのような膨大な量のパラメータを逐次更新していくようなアルゴリズムに対しては実行が遅すぎるので、ライブラリとして一部の処理をC言語のような高速な言語に実行させることによってアルゴリズムの表現力を保持しつつ実行速度の担保をするような手法が取られるようになってきているのが昨今の流れとなっている。</p>
+<p>ここでのライブラリというのがTensorFlowだったりPytorch、Keras、今は亡きTheanoやCaffeなどである。</p>
+<p>パッと見だとこれらのアプローチは良さげだと思われるが、例えばエッジコンピューティングのような組み込みなどのものだとPythonを主軸にしたやり方ではメモリを圧迫しすぎてしまうのでプログラムを乗せることができず、結局アルゴリズムの実装しやすさと開発効率を重視したのに最終的にC言語で実装し直すという本末転倒的なことになる。</p>
+<p>一応PythonをネイティブコードへコンパイルするCythonというものもあったりするが、結局Python本来が持つアルゴリズムの実装しやすさに制限をかけることになり、結局何がしたかったんだろうという感じになってしまう。</p>
+<p>このような考えのもと、機械学習アルゴリズムの社会実装への需要が高まっている昨今でいつまでもディープラーニングのアルゴリズムの実装はPythonで実装するしかないというのは少々前時代的という考え方にすら至りうる。</p>
+<p>現在ではプログラミング言語も様々な開発が進んでおり、個人的にはJuliaという言語に注目していて、Python以上に柔軟な文法を持ちながら高速である(少なくともPythonの10倍くらい)</p>
+<p>このような背景も考えるとPythonに頼り続けるのは限界があると思うし、次の時代を見据えるならPython以外の言語に視野を広げる必要があると思う。</p>
+<h3 id="lisptoiuyi-tunoapuroti">Lispという一つのアプローチ</h3>
+<p>さて、ここで一つの解決法として自分はLispはアリなのではないかと考えている。</p>
+<p>Lispはもともと超絶柔軟な文法を持っており(もはや文法が存在しないと言っていい)、強力な抽象化機構を持っているのでアルゴリズムの表現性という点ではあらゆる言語の中で強力なものである。</p>
+<p>柔軟な文法とはどういうことかというと、Lispは<b>自分で構文を定義することができる</b>のである。</p>
+<p>例えば、Pythonでは関数を定義する際に</p>
+<pre style="background-color:#2b303b;">
+<code><span style="color:#b48ead;">def </span><span style="color:#8fa1b3;">hoge</span><span style="color:#c0c5ce;">(</span><span style="color:#bf616a;">x</span><span style="color:#c0c5ce;">, </span><span style="color:#bf616a;">y</span><span style="color:#c0c5ce;">):
+    </span><span style="color:#b48ead;">return </span><span style="color:#c0c5ce;">x + y
+</span></code></pre>
+<p>のように関数を定義することはできるが、このPython本体がもともと持っている関数定義<code>def</code>を自分で定義することはできず、<code>my-def</code>や<code>my-if</code>のようなオリジナルの構文を作ることはできない。</p>
+<p>Lispはマクロという機能を使うことによって自身の構文を定義することができ、言ってしまえばその場で自分オリジナルのプログラミング言語を作ることができる。</p>
+<p>具体的に、Lispのマクロを使えばSQLやHTMLなどもLispのコードとして実装することができる。</p>
+<p>どの言語を使うかで何を言えるかが変わってくる。</p>
+<p>Lispは主に関数型プログラミングのパラダイムを採用していて、高階関数やラムダ式をサポートしているため、Lisp本来が持つ柔軟さもあって一つにアルゴリズムを実装するにしてもC言語とLispではコードの量が10倍以上違ってくる。</p>
+<p>このようなLispではあるが、速度はどうかというと、C言語並みか場合によってはCより速くなる。</p>
+<p>今はLispはあまり有名な言語ではないが、かつてはコンパイラの研究でLispが先頭を走っており、Lispマシンというものも存在したほどであり、昔から高速なプログラミング言語の部類にある。</p>
+<p>中には強烈な名言もあり</p>
+<blockquote>
+<p>Cで書くコードの方がCommon Lispで書くより速いって人がいたら、それは彼のCの技量が高すぎるってことだね。</p>
+<p>“If you can't outperform C in CL, you're too good at C.” — Eric Naggum</p>
+</blockquote>
+<p>Lispが高速な言語であることを物語っている。</p>
+<p>このCより高速なLispのコードを書くことについては以下の深町さんの記事が非常に面白いので参照。</p>
+<p>Lispの高速さを物語るプロダクトとして、この深町さんが実装したWooというHTTPサーバーはあらゆるHTTPサーバーの中でも最高クラスの速度を誇っている。</p>
+<p>Lispがこのような高速さを担保している理由として、OSSでSBCLというネイティブコードまでコンパイルする超優秀なコンパイラがあり、これに最適化オプションをつけることによって超高速なコードを書くことができる。(自分はSBCLのコミッター)</p>
+<p>最適化に際して、Lispの処理系にはプロファイラという機能がついており、プログラムのどの部分が時間がかかっているかを調べることができるのでボトルネックの発見に役立つ。</p>
+<p>そうしてこの時間がかかっているブロックに対して細かく最適化オプションをつけることができ、他のプログラミング言語に比しても最適化を軽快に行うことができる。</p>
+<p>この最適化については前に記事を書いた。</p>
+<p>このようにLispは速度も高速で柔軟性を持っている言語だが、もう一つ絶対に語っておかなければいけないのがSLIMEという開発支援ツールである。</p>
+<p>Lispの特徴として括弧がたくさん現れるが、Lispでは括弧の塊それぞれが一つのソースコードとなっている。</p>
+<p>これの何がすごいかというと、ソースコードの一部だけをコンパイルして実行することができる。</p>
+<p>[f:id:komi1230:20191207003351p:plain]</p>
+<p>この機能があると、手元で書いたソースコードを即時コンパイルしてその場でテストすることができ、実装からテストまでのサイクルを高速で回せるようになるのである。</p>
+<p>以上、Lispは高速で柔軟な文法を持ち強力な開発支援ツールを持ったすごい言語だと言える。</p>
+<h3 id="nazelispharen-qi-ganainoka">なぜLispは人気がないのか</h3>
+<p>このようなプログラミング言語として強力過ぎる魅力を持った言語であるのに、なぜLispはユーザーが少なく人気がないのか。</p>
+<p>これに関してはさっぱりわからない。</p>
+<p>自分はLispを書き始めて数年経つが、特に文句はないし、むしろC言語やPython、JavaScriptなどの他の言語を触るたびに「なぜLispのような機能がないのか」「なぜLispより圧倒的に遅いのか」とイライラさえする。</p>
+<p>もっとLispは評価されるべきだしLisp界隈が盛り上がっていくべきだと思っている。</p>
+<p>ただ一点、指摘することがあるとすれば、ライブラリの開発が全体として勢いがないというのはある。</p>
+<p>これはLispユーザーが少ないことによる副次的な影響なのだが、ライブラリの開発があまり活発に行われていないために死んでしまっているようなライブラリも数少なく、ソースコード自体はバリバリ現役でもドキュメントが古すぎて存在しない(もしくは埋もれてしまっている)ということがある。</p>
+<h3 id="lispnokorekaranotameni">Lispのこれからのために</h3>
+<p>そのようなLispであるが、個人的には最近どんどん勢いが上がっている気がする。</p>
+<p>先述の深町さんがCommon LispでWeb系ライブラリを作りまくってLisp × Webの雪原を踏み荒らしまくった結果、Lispユーザーがグッと増えたような気がする。</p>
+<p>それを見て、自分は自分も得意分野を盛り上げて行こうと思うようになった。</p>
+<p>先日もIBMでAIリサーチャーをやっているMasataro AraiさんからNumclというライブラリを一緒に開発していかないかとお誘いいただいた。</p>
+<p>これはPythonのNumpyにある機能をCommon Lispライクに実装しようというプロジェクトで、自分は機械学習系・数値計算系の人間なので、このようなプロジェクトは非常にワクワクしている。</p>
+<p>さて、数値計算や機械学習系のプロダクトを開発するにあたって、何かとデータを可視化させるツールというのは必要になる。</p>
+<p>一応Common LispにはCL-Plotのような可視化ツールは存在するが、だいたいが2次元プロットで、3次元プロットや散布図、ヒストグラム、ヒートマップのような機能はない。</p>
+<p>ということでMatplotlibのようなプロッターをOSSとして自分で作ることにした。</p>
+<p>名前はKaiとし、ハワイ語で海という意味を持つ。</p>
+<p>現在まだ開発途中であるが、すでに2次元プロット程度ならできるようになっている。</p>
+<p>まだ依存関係を記述するファイルなどを整えていないのでプロダクトとしてしっかりリリースはできていないが、ライブラリとしての体裁が整ったらまた追って正式にリリースの報告を出そうと思っている。</p>
+<p>自分はLispを愛しているが、これからどんどん盛り上がっていけるように自分にできるコミットをどんどんやっていこうと思う。</p>
+<p>これからLispの時代が来るように、一つ一つできることを積み上げていこうと思う。</p>
+<h3 id="zhong-warini">終わりに</h3>
+<p>Softbank AI部のアドベントカレンダーの記事だったが、結果的にただのLispの宣伝になってしまった感がある。</p>
+<p>ただ、本当に自分はこれからのAI系プロダクトではLispは一つのアプローチになると信じているので、これからもコミットしていこうと思う。</p>
+<p>それではお疲れ様でした。</p>
+<h3 id="xing-wei-wochi-tutaren-nidu-ndehosiimono">興味を持った人に読んでほしいもの</h3>
+<ul>
+<li>いまから始めるCommon Lisp</li>
+</ul>
+<p>Lispをちょっと始めてみようかなという人向けの記事。</p>
+<ul>
+<li>Land of Lisp</li>
+</ul>
+<p>Common Lispの勉強で、入門として非常に良い本。</p>
+<ul>
+<li>ハッカーと画家</li>
+</ul>
+<p>Y Combinatorの設立者でありLisp界のゴッドファーザーのポール・グレアムのエッセイ。</p>
+<p><a href="https://www.amazon.co.jp/dp/4274065979/ref=cm_sw_em_r_mt_dp_U_IVN6DbWDX8K45">Amazonのリンク</a></p>
+
+        
+      </div>
+    </div>
+  </div>
+</article>
+
+
+    <hr>
+
+    <!-- Footer -->
+    <footer>
+      <div class="container">
+        <div class="row">
+          <div class="col-lg-8 col-md-10 mx-auto">
+            <ul class="list-inline text-center">
+              
+              <li class="list-inline-item">
+                <a href="https:&#x2F;&#x2F;twitter.com&#x2F;komi_edtr_1230">
+                  <span class="fa-stack fa-lg">
+                    <i class="fas fa-circle fa-stack-2x"></i>
+                    <i class="fab fa-twitter fa-stack-1x fa-inverse"></i>
+                  </span>
+                </a>
+              </li>
+              
+              <li class="list-inline-item">
+                <a href="https:&#x2F;&#x2F;github.com&#x2F;komi1230">
+                  <span class="fa-stack fa-lg">
+                    <i class="fas fa-circle fa-stack-2x"></i>
+                    <i class="fab fa-github fa-stack-1x fa-inverse"></i>
+                  </span>
+                </a>
+              </li>
+              
+              <li class="list-inline-item">
+                <a href="https:&#x2F;&#x2F;www.facebook.com&#x2F;1230komi">
+                  <span class="fa-stack fa-lg">
+                    <i class="fas fa-circle fa-stack-2x"></i>
+                    <i class="fab fa-facebook-f fa-stack-1x fa-inverse"></i>
+                  </span>
+                </a>
+              </li>
+              
+              <li class="list-inline-item">
+                <a href="https:&#x2F;&#x2F;www.linkedin.com&#x2F;in&#x2F;yusuke-kominami-0419b1157&#x2F;">
+                  <span class="fa-stack fa-lg">
+                    <i class="fas fa-circle fa-stack-2x"></i>
+                    <i class="fab fa-linkedin fa-stack-1x fa-inverse"></i>
+                  </span>
+                </a>
+              </li>
+              
+            </ul>
+            <p class="copyright text-muted">
+              
+              Copyright &copy; Yusuke Kominami. 2020
+              
+            </p>
+          </div>
+        </div>
+      </div>
+    </footer>
+
+    <!-- Bootstrap core JavaScript -->
+    <script src="https:&#x2F;&#x2F;komi.dev&#x2F;js&#x2F;jquery.min.js"></script>
+    <script src="https:&#x2F;&#x2F;komi.dev&#x2F;js&#x2F;bootstrap.bundle.min.js"></script>
+
+    <!--Custom scripts for this template-->
+    <script src="https:&#x2F;&#x2F;komi.dev&#x2F;js&#x2F;clean-blog.min.js"></script>
+
+    <!--- Additional scripts -->
+    
+    
+  </body>
+
+</html>
