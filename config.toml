@@ -28,7 +28,7 @@ home = ["HTML", "RSS"]
   # Sidebar settings
   sidebar_about_description = "Software Developer, Rustacean, Open Source Enthusiast"
   sidebar_avatar = "img/me.jpg"
-
+  
   featured_tags = true
   featured_condition_size = 1
   
@@ -44,7 +44,6 @@ home = ["HTML", "RSS"]
   [[params.addtional_menus]]
     title =  "ABOUT"
     href =  "/top/about/"
-
 
 [markup]
   [markup.tableOfContents]
