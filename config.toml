@@ -14,7 +14,7 @@ home = ["HTML", "RSS"]
 
   header_image = "img/home.jpg"
   SEOTitle = "Kominami Blog"
-  description = "技術的なことやプライベートなことについてまとめたりしていきます。"
+  description = "Yusuke Kominami's Blog. About software engineering, career, lifestyle, "
   keyword = "Yusuke Kominami, 小南佑介, 小南 佑介, Rust, Emacs, Lisp, Web, Machine Learning, 機械学習"
   slogan = "Playground and Workspace for Awesome Ideas"
 
