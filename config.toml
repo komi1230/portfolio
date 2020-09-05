@@ -6,8 +6,6 @@ preserveTaxonomyNames = true
 paginate = 5
 hasCJKLanguage = true
 
-thumbnail = "img/home.jpg"
-
 [outputs]
 home = ["HTML", "RSS"]
 
@@ -19,6 +17,8 @@ home = ["HTML", "RSS"]
   description = "技術的なことやプライベートなことについてまとめたりしていきます。"
   keyword = "Yusuke Kominami, 小南佑介, 小南 佑介, Rust, Emacs, Lisp, Web, Machine Learning, 機械学習"
   slogan = "Playground and Workspace for Awesome Ideas"
+
+  thumbnail = "img/home.jpg"
 
   image_404 = "img/404-bg.jpg"
   title_404 = "Page Not Found :("

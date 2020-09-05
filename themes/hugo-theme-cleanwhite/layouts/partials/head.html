@@ -4,14 +4,18 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
 
     <!-- start ogp -->
-    <meta property="og:site_name" content="{{ .Site.Title }}">
-    <meta property="og:type" content="article">
+    <meta property="og:site_name" content="{{ .Site.Title }}" />
+    <meta property="og:type" content="article" />
+    <meta property="og:url" content="https://komi.dev/" />
+    <meta property="og:locale" content="ja_JP" />
+
+    <meta name="twitter:site" content="@komi_edtr_1230" />
 
     {{ if .Params.thumbnail }}
-    <meta property="og:image" content="{{ .Site.BaseURL }}{{ .Params.thumbnail }}">
+    <meta property="og:image" content="{{ .Site.BaseURL }}{{ .Params.thumbnail }}" />
     <meta property="twitter:image" content="{{ .Site.BaseURL }}{{ .Params.thumbnail }}" />
     {{ else }}
-    <meta property="og:image" content="{{ .Site.BaseURL }}/{{ .Site.Params.header_image }}">
+    <meta property="og:image" content="{{ .Site.BaseURL }}/{{ .Site.Params.header_image }}" />
     <meta property="twitter:image" content="{{ .Site.BaseURL }}/{{ .Site.Params.header_image }}" />
     {{ end }}
 
@@ -26,11 +30,11 @@
     {{ end }}
 
     {{ if .Params.description }}
-    <meta name="description" content="{{ .Params.description }}">
+    <meta name="description" content="{{ .Params.description }}" />
     <meta property="og:description" content="{{ .Params.description }}" />
     <meta property="twitter:description" content="{{ .Params.description }}" />
     {{ else }}
-    <meta name="description" content="{{ .Site.Params.description }}">
+    <meta name="description" content="{{ .Site.Params.description }}" />
     <meta property="og:description" content="{{ .Site.Params.description }}" />
     <meta property="twitter:description" content="{{ .Site.Params.description }}" />
     {{ end }}
