@@ -14,7 +14,7 @@ home = ["HTML", "RSS"]
 
   header_image = "img/home.jpg"
   SEOTitle = "Kominami Blog"
-  description = "Yusuke Kominami's Blog. About software engineering, career, lifestyle, "
+  description = "Yusuke Kominami's Blog. About software engineering, career, lifestyle."
   keyword = "Yusuke Kominami, 小南佑介, 小南 佑介, Rust, Emacs, Lisp, Web, Machine Learning, 機械学習"
   slogan = "Playground and Workspace for Awesome Ideas"
 
@@ -28,7 +28,7 @@ home = ["HTML", "RSS"]
   # Sidebar settings
   sidebar_about_description = "Software Developer, Rustacean, Open Source Enthusiast"
   sidebar_avatar = "img/me.jpg"
-  
+
   featured_tags = true
   featured_condition_size = 1
   
@@ -36,7 +36,7 @@ home = ["HTML", "RSS"]
 
   [params.social]
     rss = true
-    #email = "yusuke.kominami@gmail.com"
+    email = "yusuke.kominami@gmail.com"
     github = "https://github.com/komi1230"
     facebook = "https://www.facebook.com/1230komi/"
     linkedin = "https://www.linkedin.com/in/yusuke-kominami-0419b1157/"

@@ -2,22 +2,34 @@
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
     <title>Launch Today</title>
-    <link>http://example.org/</link>
+    <link>http://komi.dev/</link>
     <description>Recent content on Launch Today</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
-    <lastBuildDate>Sat, 04 Nov 2017 00:00:00 +0000</lastBuildDate>
+    <lastBuildDate>Sat, 05 Sep 2020 00:00:00 +0000</lastBuildDate>
     
-	<atom:link href="http://example.org/index.xml" rel="self" type="application/rss+xml" />
+	<atom:link href="http://komi.dev/index.xml" rel="self" type="application/rss+xml" />
     
     
     <item>
-      <title>Welcome to Zhaohuabing Blog</title>
-      <link>http://example.org/2017/11/03/hello-world/</link>
-      <pubDate>Sat, 04 Nov 2017 00:00:00 +0000</pubDate>
+      <title>Hello My New Blog</title>
+      <link>http://komi.dev/post/2020-09-05-make-blog/</link>
+      <pubDate>Sat, 05 Sep 2020 00:00:00 +0000</pubDate>
       
-      <guid>http://example.org/2017/11/03/hello-world/</guid>
-      <description>Hello World! 個人サイトを作り直してみた 今までは自分でReactを使ってサイトを構築していたが、ブログ機能が欲しいと思い始めた。 というのも、エンジニア</description>
+      <guid>http://komi.dev/post/2020-09-05-make-blog/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title></title>
+      <link>http://komi.dev/top/about/</link>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+      
+      <guid>http://komi.dev/top/about/</guid>
+      <description>About me  My name is Yusuke Kominami.
+I&amp;rsquo;m 23 years old and living in Tokyo. And I work at SoftBank as a machine learning engineer and at Aiful as a technical adviser.
+I graduated from the faculty of Science in Kyoto University, majored Biology at Takada Lab.
+About software engineering, I love Rust. It is a perfect programming language, I think. My expertise ranges from HTML/CSS/JavaScript to Low-level programming. Furthermore, I have solid knowledge on machine learning and data science based on mathematics.</description>
     </item>
     
   </channel>
