@@ -4,6 +4,7 @@ title = "Launch Today"
 theme = "hugo-theme-cleanwhite"
 preserveTaxonomyNames = true
 paginate = 5
+googleAnalytics = "UA-177061519-1"
 hasCJKLanguage = true
 
 [outputs]
@@ -30,7 +31,7 @@ home = ["HTML", "RSS"]
   sidebar_avatar = "img/me.jpg"
 
   featured_tags = true
-  featured_condition_size = 1
+  featured_condition_size = 0
   
   about_me = true
 
