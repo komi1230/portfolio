@@ -1,4 +1,4 @@
-baseURL = "http://example.org/"
+baseURL = "http://komi.dev/"
 languageCode = "en-us"
 title = "Launch Today"
 theme = "hugo-theme-cleanwhite"
