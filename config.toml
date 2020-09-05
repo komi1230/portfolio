@@ -11,6 +11,7 @@ home = ["HTML", "RSS"]
 
 [params]
   custom_css = ["css/custom-font.css"]
+  thumbnail = "img/home.jpg"
 
   header_image = "img/home.jpg"
   SEOTitle = "Kominami Blog"
