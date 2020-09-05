@@ -6,12 +6,13 @@ preserveTaxonomyNames = true
 paginate = 5
 hasCJKLanguage = true
 
+thumbnail = "img/home.jpg"
+
 [outputs]
 home = ["HTML", "RSS"]
 
 [params]
   custom_css = ["css/custom-font.css"]
-  thumbnail = "img/home.jpg"
 
   header_image = "img/home.jpg"
   SEOTitle = "Kominami Blog"
