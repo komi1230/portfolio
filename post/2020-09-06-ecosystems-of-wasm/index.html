@@ -1,0 +1,112 @@
+<!doctype html><html lang=en-us><head><meta charset=utf-8><meta http-equiv=x-ua-compatible content="IE=edge"><meta name=viewport content="width=device-width,initial-scale=1"><meta property="og:site_name" content="Launch Today"><meta property="og:type" content="article"><meta property="og:url" content="https://komi.dev/"><meta property="og:locale" content="ja_JP"><meta name=twitter:site content="@komi_edtr_1230"><meta property="og:image" content="http://komi.dev/img/home.jpg"><meta property="twitter:image" content="http://komi.dev/img/home.jpg"><meta name=title content="Tools and Ecosystem of WebAssembly with Rust"><meta property="og:title" content="Tools and Ecosystem of WebAssembly with Rust"><meta property="twitter:title" content="Tools and Ecosystem of WebAssembly with Rust"><meta name=description content="There are many tools around WebAssembly, and they are a bit complicated. Here you can find some clue to develop application using WebAssembly."><meta property="og:description" content="There are many tools around WebAssembly, and they are a bit complicated. Here you can find some clue to develop application using WebAssembly."><meta property="twitter:description" content="There are many tools around WebAssembly, and they are a bit complicated. Here you can find some clue to develop application using WebAssembly."><meta property="twitter:card" content="summary"><meta name=keyword content="Yusuke Kominami, 小南佑介, 小南 佑介, Rust, Emacs, Lisp, Web, Machine Learning, 機械学習"><link rel="shortcut icon" href=/img/favicon.ico><title>Tools and Ecosystem of WebAssembly with Rust</title><link rel=canonical href=/post/2020-09-06-ecosystems-of-wasm/><link rel=stylesheet href=/css/iDisqus.min.css><link rel=stylesheet href=/css/bootstrap.min.css><link rel=stylesheet href=/css/hux-blog.min.css><link rel=stylesheet href=/css/zanshang.css><link href=//cdnjs.cloudflare.com/ajax/libs/font-awesome/4.6.3/css/font-awesome.min.css rel=stylesheet type=text/css><link rel=stylesheet href=http://komi.dev/css/custom-font.css><script src=/js/jquery.min.js></script><script src=/js/bootstrap.min.js></script><script src=/js/hux-blog.min.js></script><script async src="https://www.googletagmanager.com/gtag/js?id=UA-177061519-1"></script><script>window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments);}
+gtag('js',new Date());gtag('config','UA-177061519-1');</script></head><nav class="navbar navbar-default navbar-custom navbar-fixed-top"><div class=container-fluid><div class="navbar-header page-scroll"><button type=button class=navbar-toggle>
+<span class=sr-only>Toggle navigation</span>
+<span class=icon-bar></span><span class=icon-bar></span><span class=icon-bar></span></button>
+<a class=navbar-brand href=/>Launch Today</a></div><div id=huxblog_navbar><div class=navbar-collapse><ul class="nav navbar-nav navbar-right"><li><a href=/>Home</a></li><li><a href=/categories/tech>tech</a></li><li><a href=/top/about/>ABOUT</a></li></ul></div></div></div></nav><script>var $body=document.body;var $toggle=document.querySelector('.navbar-toggle');var $navbar=document.querySelector('#huxblog_navbar');var $collapse=document.querySelector('.navbar-collapse');$toggle.addEventListener('click',handleMagic)
+function handleMagic(e){if($navbar.className.indexOf('in')>0){$navbar.className=" ";setTimeout(function(){if($navbar.className.indexOf('in')<0){$collapse.style.height="0px"}},400)}else{$collapse.style.height="auto"
+$navbar.className+=" in";}}</script><style type=text/css>header.intro-header{background-image:url(https://www.aussiespecialist.com/content/asp/en/sales-resources/fact-sheets-overview/weather/_jcr_content/hero/mobile.adapt.768.high.jpg)}</style><header class=intro-header><div class=container><div class=row><div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1"><div class=post-heading><div class=tags><a class=tag href=/tags/rust title=Rust>Rust</a>
+<a class=tag href=/tags/webassembly title=WebAssembly>WebAssembly</a></div><h1>Tools and Ecosystem of WebAssembly with Rust</h1><h2 class=subheading>About WebAssembly using Rust and wasm-bindgen</h2><span class=meta>Posted
+on
+Sunday, September 6, 2020</span></div></div></div></div></header><article><div class=container><div class=row><div class="col-lg-11 col-lg-offset-1
+col-md-10 col-md-offset-1
+post-container"><header><h2>TOC</h2></header><nav id=TableOfContents><ul><li><a href=#about-webassembly>About WebAssembly</a></li><li><a href=#tools>Tools</a><ul><li><a href=#emscripten>emscripten</a></li><li><a href=#wasm-bindgen>wasm-bindgen</a></li></ul></li><li><a href=#start-project>Start Project</a></li><li><a href=#other-approach>Other approach</a></li></ul></nav><h1 id=about-webassembly>About WebAssembly</h1><p>First of all, you have to understand what WebAssembly is.</p><p>Mozilla says &mldr;</p><blockquote><p>WebAssembly is a new type of code that can be run in modern web browsers — it is a low-level assembly-like language with a compact binary format that runs with near-native performance and provides languages such as C/C++, C# and Rust with a compilation target so that they can run on the web. It is also designed to run alongside JavaScript, allowing both to work together.</p></blockquote><p>To tell simply, WebAssembly is fast language running on browsers.
+And people say WebAssembly as WASM in an shortened name.</p><p>In developing some application running in browsers, you have to write JavaScript to express complicated logic and provide rich UI in client side.
+Of course, it&rsquo;s OK if you want to <strong>just</strong> make application.
+But sometimes JavaScript can be a bottleneck in application&rsquo;s performance.
+For this, there are two reasons:</p><ul><li>Big binary size: JavaScript has big runtime</li><li>Slow: To compile JavaScrit takes high cost</li></ul><p>JavaScript can express complicated logic and rich UI, but can be problem today&rsquo;s modern Web application.
+For example, 3D game, AR/VR and computer vision takes high cost to work.
+Because of this, modern browser expects faster system.</p><p>Here, it&rsquo;s WebAssembly to solve this problem.</p><p>For more information about WebAssembly, see <a href=https://developer.mozilla.org/en-US/docs/WebAssembly>MDN</a>.</p><h1 id=tools>Tools</h1><p>You have already grasped what WebAssembly is.
+In the next stage, let&rsquo;s understand what tool there are in developing WebAssembly.</p><p>As a result, you can develop WebAssembly with C/C++, Go, Rust or etc.
+You have many choice, but here I recommend Rust.</p><p>If you use C/C++, you have to use <code>emscripten</code> to compile your code into WebAssembly.
+<code>emscripten</code> is used to import JavaScript from C/C++ and also outputs JavaScript from LLVMIR.
+But <code>emscripten</code> cannot optimise codes and the ecosystem in developing is a little weak.</p><p>If you use Go, you can make WebAssembly code just by setting compile target.
+But Go has garbage collection to manage computer memory, and the binary size can be larger (this kills WebAssembly&rsquo;s merit)</p><p>Then, your choice is only one: Rust.</p><p>When developing WebAssembly in Rust, <code>wasm-bindgen</code> makes your developing experience more comfortable.
+<code>wasm-bindgen</code> is a tool to run Rust code in browsers, developed by Mozilla.
+And this offers newer and better ecosystem than <code>emscripten</code>.</p><p>Actually, <code>emscripten</code> is also able to compile Rust code to WebAssembly.
+Here I will compare <code>wasm-bindgen</code> with <code>emscripten</code>.</p><h2 id=emscripten>emscripten</h2><p><code>emscripten</code> is compiler of C/C++ into asm.js or WebAssembly via LLVMIR.
+But it&rsquo;s a little hard to use if you use only this.
+As a helper tool for compiling with <code>emscripten</code>, there is <code>Binaryen</code>, which is kind of wrapper of <code>emscripten</code>.</p><p>So far, these are not only for Rust but for C/C++.
+To compile Rust code into WebAssembly, you have to use <code>emscripten-sys</code>, <code>stdweb</code> and <code>cargo-web</code>.</p><ul><li><code>emscripten-sys</code>: A crate for bindings of runtime of <code>emscripten</code> from Rust.</li><li><code>stdweb</code>: A crate for bindings of DOM from Rust.</li><li><code>cargo-web</code>: A build tool like npm. This includes <code>stdweb</code>.</li></ul><p>These tools for Rust seems no longer developed since last commit is 1 year ago.</p><h2 id=wasm-bindgen>wasm-bindgen</h2><p><code>wasm-bindgen</code> is a tool to run Rust in browser, developed by Mozilla.
+This tool is used to import Rust code from JavaScript.</p><p>There are some helper tools for this.</p><ul><li><code>wasm-bindgen</code>: A crate including types.</li><li><code>js-sys</code>: A crate to run JavaScript code in Rust.</li><li><code>web-sys</code>: A crate to help Rust use DOM.</li><li><code>wasm-bindgen-futures</code>: A crate to interact between Future type of Rust and Promise type of JavaScript</li><li><code>wasm-bindgen-cli</code>: A build tool to add runtime of FFI of Rust and JavaScript to wasm file made with <code>wasm-bindgen</code>, <code>js-sys</code> and <code>web-sys</code>.</li><li><code>wasm-pack</code>: A build tool to compile Rust code into wasm file and make package of npm.</li></ul><h1 id=start-project>Start Project</h1><p>OK, let&rsquo;s start WebAssembly project.</p><p>First, install <code>wasm-pack</code>.</p><div class=highlight><pre style=color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-bash data-lang=bash>$ cargo install wasm-pack
+</code></pre></div><p>Next, make project directory with <code>wasm-pack</code>.</p><div class=highlight><pre style=color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-bash data-lang=bash>$ wasm-pack new <span style=color:#ff79c6>{</span>ProjectName<span style=color:#ff79c6>}</span>
+</code></pre></div><p>Then, your directory will be like this:</p><div class=highlight><pre style=color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-bash data-lang=bash>.
+├── Cargo.toml
+├── LICENSE_APACHE
+├── LICENSE_MIT
+├── README.md
+├── src
+│   ├── lib.rs
+│   └── utils.rs
+└── tests
+    └── web.rs
+</code></pre></div><p>When starting WebAssembly project, you have to set <code>crate-type = ["cdylib", "rlib"]</code> in Cargo.toml to handle wasm file.
+And make sure there is <code>wasm-bindgen</code> as dependencies in Cargo.toml.</p><p>In <code>src/lib.rs</code>, there is some functions to run alert function in browser as default.</p><p>Let&rsquo;s build your project and say Hello World !</p><div class=highlight><pre style=color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-bash data-lang=bash>$ wasm-pack build --target web
+</code></pre></div><p>This target flag means <code>--target web</code> turns on including ES modules.</p><p>Then, you can find <code>pkg/</code> directory has been made.
+In this directory, there are .wasm file and its helper or driber (for example, <code>*.d.ts</code> is type definition file)</p><p>Finally, make <code>pkg/index.html</code> and write like this:</p><div class=highlight><pre style=color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-html data-lang=html><span style=color:#ff79c6>&lt;!DOCTYPE html&gt;</span>
+&lt;<span style=color:#ff79c6>html</span>&gt;
+  &lt;<span style=color:#ff79c6>head</span>&gt;
+    &lt;<span style=color:#ff79c6>meta</span> <span style=color:#50fa7b>charset</span><span style=color:#ff79c6>=</span><span style=color:#f1fa8c>&#34;utf-8&#34;</span>&gt;
+    &lt;<span style=color:#ff79c6>title</span>&gt;hello-wasm example&lt;/<span style=color:#ff79c6>title</span>&gt;
+  &lt;/<span style=color:#ff79c6>head</span>&gt;
+  &lt;<span style=color:#ff79c6>body</span>&gt;
+    &lt;<span style=color:#ff79c6>script</span> <span style=color:#50fa7b>type</span><span style=color:#ff79c6>=</span><span style=color:#f1fa8c>&#34;module&#34;</span>&gt;
+        <span style=color:#ff79c6>import</span> <span style=color:#ff79c6>*</span> as mod  from <span style=color:#f1fa8c>&#34;./{ProjectName}.js&#34;</span>;
+        (async () =&gt; {
+            await mod.<span style=color:#ff79c6>default</span>();
+            mod.greet();
+        })();
+    &lt;/<span style=color:#ff79c6>script</span>&gt;
+  &lt;/<span style=color:#ff79c6>body</span>&gt;
+&lt;/<span style=color:#ff79c6>html</span>&gt;
+</code></pre></div><p>Here we want to import <code>.wasm</code> file, so we set <code>type="module"</code> in script tag. (if just <code>&lt;script> ... &lt;/script/</code>, you cannot import files).</p><p>Now, your directory structure is like this:</p><div class=highlight><pre style=color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-bash data-lang=bash>.
+├── Cargo.lock
+├── Cargo.toml
+├── LICENSE_APACHE
+├── LICENSE_MIT
+├── README.md
+├── pkg
+│   ├── README.md
+│   ├── index.html
+│   ├── <span style=color:#ff79c6>{</span>ProjectName<span style=color:#ff79c6>}</span>.d.ts
+│   ├── <span style=color:#ff79c6>{</span>ProjectName<span style=color:#ff79c6>}</span>.js
+│   ├── <span style=color:#ff79c6>{</span>ProjectName<span style=color:#ff79c6>}</span>_bg.d.ts
+│   ├── <span style=color:#ff79c6>{</span>ProjectName<span style=color:#ff79c6>}</span>_bg.js
+│   ├── <span style=color:#ff79c6>{</span>ProjectName<span style=color:#ff79c6>}</span>_bg.wasm
+│   └── package.json
+├── src
+│   ├── lib.rs
+│   └── utils.rs
+├── tests
+│   └── web.rs
+└── target
+    └── ...
+</code></pre></div><p>Finally, run any server (for example, <code>miniserver</code> or <code>python -m http.server 8000</code>) and check browser.</p><p><img src="https://qiita-user-contents.imgix.net/https%3A%2F%2Fqiita-image-store.s3.ap-northeast-1.amazonaws.com%2F0%2F142910%2F416508d9-9013-d346-2eeb-ebcad6854455.png?ixlib=rb-1.2.2&auto=format&gif-q=60&q=75&s=70e6e041d6ffafa9112fd14c6087ccf7" alt=image></p><p>You are already WebAssembly developer!</p><h1 id=other-approach>Other approach</h1><p>Not convinced?
+Then, run wasm file with Deno!</p><p>Make <code>add.rs</code>!</p><div class=highlight><pre style=color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-rust data-lang=rust><span style=color:#ff79c6>#![no_main]</span>
+<span style=color:#ff79c6>#![no_std]</span>
+
+<span style=color:#ff79c6>#[panic_handler]</span>
+<span style=color:#ff79c6>fn</span> <span style=color:#50fa7b>panic</span>(_info: <span style=color:#ff79c6>&amp;</span><span style=color:#50fa7b>core</span>::panic::PanicInfo) -&gt; <span style=color:#ff79c6>!</span> {
+    <span style=color:#ff79c6>loop</span> {}
+}
+
+<span style=color:#ff79c6>#[no_mangle]</span>
+<span style=color:#ff79c6>pub</span> <span style=color:#ff79c6>fn</span> <span style=color:#50fa7b>add</span>(a: <span style=color:#8be9fd>i32</span>, b: <span style=color:#8be9fd>i32</span>) -&gt; <span style=color:#8be9fd>i32</span> {
+    a <span style=color:#ff79c6>+</span> b
+}:
+</code></pre></div><p>And compile it.</p><div class=highlight><pre style=color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-bash data-lang=bash>$ rustc --target wasm32-unknown-unknown add.rs 
+</code></pre></div><p>Then, make <code>main.js</code>.</p><div class=highlight><pre style=color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-javascript data-lang=javascript><span style=color:#ff79c6>const</span> bin <span style=color:#ff79c6>=</span> Deno.readFileSync(<span style=color:#f1fa8c>&#34;./add.wasm&#34;</span>);
+<span style=color:#ff79c6>const</span> wasm <span style=color:#ff79c6>=</span> await WebAssembly.instantiate(bin);
+<span style=color:#ff79c6>const</span> ex <span style=color:#ff79c6>=</span> wasm.instance.exports;
+<span style=color:#ff79c6>const</span> add <span style=color:#ff79c6>=</span> ex.add;
+console.log(add(<span style=color:#bd93f9>1</span>, <span style=color:#bd93f9>2</span>));
+</code></pre></div><p>Finally, run this.</p><div class=highlight><pre style=color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-bash data-lang=bash>$ deno run -A main.js
+</code></pre></div><p>You can find this wasm file also works!</p><hr><ul class=pager><li class=previous><a href=/post/2020-09-05-make-blog/ data-toggle=tooltip data-placement=top title="Hello My New Blog">&larr;
+Previous Post</a></li></ul><div id=disqus-comment></div></div><div class="col-lg-11 col-lg-offset-1
+col-md-10 col-md-offset-1
+sidebar-container"><section><hr class="hidden-sm hidden-xs"><h5><a href=/tags/>FEATURED TAGS</a></h5><div class=tags><a href=/tags/github title=github>github</a>
+<a href=/tags/github-actions title=github-actions>github-actions</a>
+<a href=/tags/github-pages title=github-pages>github-pages</a>
+<a href=/tags/rust title=rust>rust</a>
+<a href=/tags/webassembly title=webassembly>webassembly</a>
+<a href=/tags/zsh title=zsh>zsh</a></div></section></div></div></div></article><footer><div class=container><div class=row><div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1"><ul class="list-inline text-center"><li><a href rel=alternate type=application/rss+xml title="Launch Today"><span class="fa-stack fa-lg"><i class="fa fa-circle fa-stack-2x"></i><i class="fa fa-rss fa-stack-1x fa-inverse"></i></span></a></li><li><a href=mailto:yusuke.kominami@gmail.com><span class="fa-stack fa-lg"><i class="fa fa-circle fa-stack-2x"></i><i class="fa fa-envelope fa-stack-1x fa-inverse"></i></span></a></li><li><a target=_blank href=https://www.facebook.com/1230komi/><span class="fa-stack fa-lg"><i class="fa fa-circle fa-stack-2x"></i><i class="fa fa-facebook fa-stack-1x fa-inverse"></i></span></a></li><li><a target=_blank href=https://github.com/komi1230><span class="fa-stack fa-lg"><i class="fa fa-circle fa-stack-2x"></i><i class="fa fa-github fa-stack-1x fa-inverse"></i></span></a></li><li><a target=_blank href=https://www.linkedin.com/in/yusuke-kominami-0419b1157/><span class="fa-stack fa-lg"><i class="fa fa-circle fa-stack-2x"></i><i class="fa fa-linkedin fa-stack-1x fa-inverse"></i></span></a></li></ul><p class="copyright text-muted">Copyright &copy; Launch Today 2020</p></div></div></div></footer><script>function async(u,c){var d=document,t='script',o=d.createElement(t),s=d.getElementsByTagName(t)[0];o.src=u;if(c){o.addEventListener('load',function(e){c(null,e);},false);}
+s.parentNode.insertBefore(o,s);}</script><script>if($('#tag_cloud').length!==0){async("/js/jquery.tagcloud.js",function(){$.fn.tagcloud.defaults={color:{start:'#bbbbee',end:'#0085a1'},};$('#tag_cloud a').tagcloud();})}</script><script>async("https://cdnjs.cloudflare.com/ajax/libs/fastclick/1.0.6/fastclick.js",function(){var $nav=document.querySelector("nav");if($nav)FastClick.attach($nav);})</script><script type=application/javascript>var doNotTrack=false;if(!doNotTrack){window.ga=window.ga||function(){(ga.q=ga.q||[]).push(arguments)};ga.l=+new Date;ga('create','UA-177061519-1','auto');ga('send','pageview');}</script><script async src=https://www.google-analytics.com/analytics.js></script></body></html>
