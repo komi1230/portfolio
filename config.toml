@@ -42,7 +42,7 @@ home = ["HTML", "RSS"]
     github = "https://github.com/komi1230"
     facebook = "https://www.facebook.com/1230komi/"
     linkedin = "https://www.linkedin.com/in/yusuke-kominami-0419b1157/"
-    stackoverflow = "https://ja.stackoverflow.com/users/36874"
+    stackoverflow = "https://stackoverflow.com/users/12464570"
 
   [[params.addtional_menus]]
     title =  "ABOUT"
