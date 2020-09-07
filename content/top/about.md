@@ -35,7 +35,7 @@ See [LinkedIn](https://www.linkedin.com/in/yusuke-kominami-0419b1157/) for more 
 
 ## Skills
 
-- Languages: Python, C, C++, Java, Lisp, etc.
+- Languages: Python, C, C++, Rust, Go, Java, Lisp, etc.
 - Tools related machine learning and data analysis: Numpy, Scipy, pandas, scikit-learn, Pytorch, TensorFlow
 - Tools related to data visualization: matplotlib, seaborn
 - Business level English and French: Been in Switzerland (August 2018 - December 2018)
