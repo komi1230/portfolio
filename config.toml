@@ -38,9 +38,11 @@ home = ["HTML", "RSS"]
   [params.social]
     rss = true
     email = "yusuke.kominami@gmail.com"
+    twitter = "https://twitter.com/komi_edtr_1230"
     github = "https://github.com/komi1230"
     facebook = "https://www.facebook.com/1230komi/"
     linkedin = "https://www.linkedin.com/in/yusuke-kominami-0419b1157/"
+    stackoverflow = "https://ja.stackoverflow.com/users/36874"
 
   [[params.addtional_menus]]
     title =  "ABOUT"
