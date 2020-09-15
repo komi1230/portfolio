@@ -53,4 +53,4 @@ home = ["HTML", "RSS"]
     endLevel = 2
     startLevel = 1
   [markup.highlight]
-    style = "dracula"
+    style = "emacs"
