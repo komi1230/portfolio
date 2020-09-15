@@ -27,9 +27,9 @@ Here I will compare <code>wasm-bindgen</code> with <code>emscripten</code>.</p><
 But it&rsquo;s a little hard to use if you use only this.
 As a helper tool for compiling with <code>emscripten</code>, there is <code>Binaryen</code>, which is kind of wrapper of <code>emscripten</code>.</p><p>So far, these are not only for Rust but for C/C++.
 To compile Rust code into WebAssembly, you have to use <code>emscripten-sys</code>, <code>stdweb</code> and <code>cargo-web</code>.</p><ul><li><code>emscripten-sys</code>: A crate for bindings of runtime of <code>emscripten</code> from Rust.</li><li><code>stdweb</code>: A crate for bindings of DOM from Rust.</li><li><code>cargo-web</code>: A build tool like npm. This includes <code>stdweb</code>.</li></ul><p>These tools for Rust seems no longer developed since last commit is 1 year ago.</p><h2 id=wasm-bindgen>wasm-bindgen</h2><p><code>wasm-bindgen</code> is a tool to run Rust in browser, developed by Mozilla.
-This tool is used to import Rust code from JavaScript.</p><p>There are some helper tools for this.</p><ul><li><code>wasm-bindgen</code>: A crate including types.</li><li><code>js-sys</code>: A crate to run JavaScript code in Rust.</li><li><code>web-sys</code>: A crate to help Rust use DOM.</li><li><code>wasm-bindgen-futures</code>: A crate to interact between Future type of Rust and Promise type of JavaScript</li><li><code>wasm-bindgen-cli</code>: A build tool to add runtime of FFI of Rust and JavaScript to wasm file made with <code>wasm-bindgen</code>, <code>js-sys</code> and <code>web-sys</code>.</li><li><code>wasm-pack</code>: A build tool to compile Rust code into wasm file and make package of npm.</li></ul><h1 id=start-project>Start Project</h1><p>OK, let&rsquo;s start WebAssembly project.</p><p>First, install <code>wasm-pack</code>.</p><div class=highlight><pre style=color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-bash data-lang=bash>$ cargo install wasm-pack
-</code></pre></div><p>Next, make project directory with <code>wasm-pack</code>.</p><div class=highlight><pre style=color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-bash data-lang=bash>$ wasm-pack new <span style=color:#ff79c6>{</span>ProjectName<span style=color:#ff79c6>}</span>
-</code></pre></div><p>Then, your directory will be like this:</p><div class=highlight><pre style=color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-bash data-lang=bash>.
+This tool is used to import Rust code from JavaScript.</p><p>There are some helper tools for this.</p><ul><li><code>wasm-bindgen</code>: A crate including types.</li><li><code>js-sys</code>: A crate to run JavaScript code in Rust.</li><li><code>web-sys</code>: A crate to help Rust use DOM.</li><li><code>wasm-bindgen-futures</code>: A crate to interact between Future type of Rust and Promise type of JavaScript</li><li><code>wasm-bindgen-cli</code>: A build tool to add runtime of FFI of Rust and JavaScript to wasm file made with <code>wasm-bindgen</code>, <code>js-sys</code> and <code>web-sys</code>.</li><li><code>wasm-pack</code>: A build tool to compile Rust code into wasm file and make package of npm.</li></ul><h1 id=start-project>Start Project</h1><p>OK, let&rsquo;s start WebAssembly project.</p><p>First, install <code>wasm-pack</code>.</p><div class=highlight><pre style=background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-bash data-lang=bash>$ cargo install wasm-pack
+</code></pre></div><p>Next, make project directory with <code>wasm-pack</code>.</p><div class=highlight><pre style=background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-bash data-lang=bash>$ wasm-pack new <span style=color:#666>{</span>ProjectName<span style=color:#666>}</span>
+</code></pre></div><p>Then, your directory will be like this:</p><div class=highlight><pre style=background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-bash data-lang=bash>.
 ├── Cargo.toml
 ├── LICENSE_APACHE
 ├── LICENSE_MIT
@@ -40,25 +40,25 @@ This tool is used to import Rust code from JavaScript.</p><p>There are some help
 └── tests
     └── web.rs
 </code></pre></div><p>When starting WebAssembly project, you have to set <code>crate-type = ["cdylib", "rlib"]</code> in Cargo.toml to handle wasm file.
-And make sure there is <code>wasm-bindgen</code> as dependencies in Cargo.toml.</p><p>In <code>src/lib.rs</code>, there is some functions to run alert function in browser as default.</p><p>Let&rsquo;s build your project and say Hello World !</p><div class=highlight><pre style=color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-bash data-lang=bash>$ wasm-pack build --target web
+And make sure there is <code>wasm-bindgen</code> as dependencies in Cargo.toml.</p><p>In <code>src/lib.rs</code>, there is some functions to run alert function in browser as default.</p><p>Let&rsquo;s build your project and say Hello World !</p><div class=highlight><pre style=background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-bash data-lang=bash>$ wasm-pack build --target web
 </code></pre></div><p>This target flag means <code>--target web</code> turns on including ES modules.</p><p>Then, you can find <code>pkg/</code> directory has been made.
-In this directory, there are .wasm file and its helper or driber (for example, <code>*.d.ts</code> is type definition file)</p><p>Finally, make <code>pkg/index.html</code> and write like this:</p><div class=highlight><pre style=color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-html data-lang=html><span style=color:#ff79c6>&lt;!DOCTYPE html&gt;</span>
-&lt;<span style=color:#ff79c6>html</span>&gt;
-  &lt;<span style=color:#ff79c6>head</span>&gt;
-    &lt;<span style=color:#ff79c6>meta</span> <span style=color:#50fa7b>charset</span><span style=color:#ff79c6>=</span><span style=color:#f1fa8c>&#34;utf-8&#34;</span>&gt;
-    &lt;<span style=color:#ff79c6>title</span>&gt;hello-wasm example&lt;/<span style=color:#ff79c6>title</span>&gt;
-  &lt;/<span style=color:#ff79c6>head</span>&gt;
-  &lt;<span style=color:#ff79c6>body</span>&gt;
-    &lt;<span style=color:#ff79c6>script</span> <span style=color:#50fa7b>type</span><span style=color:#ff79c6>=</span><span style=color:#f1fa8c>&#34;module&#34;</span>&gt;
-        <span style=color:#ff79c6>import</span> <span style=color:#ff79c6>*</span> as mod  from <span style=color:#f1fa8c>&#34;./{ProjectName}.js&#34;</span>;
+In this directory, there are .wasm file and its helper or driber (for example, <code>*.d.ts</code> is type definition file)</p><p>Finally, make <code>pkg/index.html</code> and write like this:</p><div class=highlight><pre style=background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-html data-lang=html><span style=color:#080>&lt;!DOCTYPE html&gt;</span>
+&lt;<span style=color:green;font-weight:700>html</span>&gt;
+  &lt;<span style=color:green;font-weight:700>head</span>&gt;
+    &lt;<span style=color:green;font-weight:700>meta</span> <span style=color:#b44>charset</span><span style=color:#666>=</span><span style=color:#b44>&#34;utf-8&#34;</span>&gt;
+    &lt;<span style=color:green;font-weight:700>title</span>&gt;hello-wasm example&lt;/<span style=color:green;font-weight:700>title</span>&gt;
+  &lt;/<span style=color:green;font-weight:700>head</span>&gt;
+  &lt;<span style=color:green;font-weight:700>body</span>&gt;
+    &lt;<span style=color:green;font-weight:700>script</span> <span style=color:#b44>type</span><span style=color:#666>=</span><span style=color:#b44>&#34;module&#34;</span>&gt;
+        <span style=color:#a2f;font-weight:700>import</span> <span style=color:#666>*</span> as mod  from <span style=color:#b44>&#34;./{ProjectName}.js&#34;</span>;
         (async () =&gt; {
-            await mod.<span style=color:#ff79c6>default</span>();
+            await mod.<span style=color:#a2f;font-weight:700>default</span>();
             mod.greet();
         })();
-    &lt;/<span style=color:#ff79c6>script</span>&gt;
-  &lt;/<span style=color:#ff79c6>body</span>&gt;
-&lt;/<span style=color:#ff79c6>html</span>&gt;
-</code></pre></div><p>Here we want to import <code>.wasm</code> file, so we set <code>type="module"</code> in script tag. (if just <code>&lt;script> ... &lt;/script/</code>, you cannot import files).</p><p>Now, your directory structure is like this:</p><div class=highlight><pre style=color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-bash data-lang=bash>.
+    &lt;/<span style=color:green;font-weight:700>script</span>&gt;
+  &lt;/<span style=color:green;font-weight:700>body</span>&gt;
+&lt;/<span style=color:green;font-weight:700>html</span>&gt;
+</code></pre></div><p>Here we want to import <code>.wasm</code> file, so we set <code>type="module"</code> in script tag. (if just <code>&lt;script> ... &lt;/script/</code>, you cannot import files).</p><p>Now, your directory structure is like this:</p><div class=highlight><pre style=background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-bash data-lang=bash>.
 ├── Cargo.lock
 ├── Cargo.toml
 ├── LICENSE_APACHE
@@ -67,11 +67,11 @@ In this directory, there are .wasm file and its helper or driber (for example, <
 ├── pkg
 │   ├── README.md
 │   ├── index.html
-│   ├── <span style=color:#ff79c6>{</span>ProjectName<span style=color:#ff79c6>}</span>.d.ts
-│   ├── <span style=color:#ff79c6>{</span>ProjectName<span style=color:#ff79c6>}</span>.js
-│   ├── <span style=color:#ff79c6>{</span>ProjectName<span style=color:#ff79c6>}</span>_bg.d.ts
-│   ├── <span style=color:#ff79c6>{</span>ProjectName<span style=color:#ff79c6>}</span>_bg.js
-│   ├── <span style=color:#ff79c6>{</span>ProjectName<span style=color:#ff79c6>}</span>_bg.wasm
+│   ├── <span style=color:#666>{</span>ProjectName<span style=color:#666>}</span>.d.ts
+│   ├── <span style=color:#666>{</span>ProjectName<span style=color:#666>}</span>.js
+│   ├── <span style=color:#666>{</span>ProjectName<span style=color:#666>}</span>_bg.d.ts
+│   ├── <span style=color:#666>{</span>ProjectName<span style=color:#666>}</span>_bg.js
+│   ├── <span style=color:#666>{</span>ProjectName<span style=color:#666>}</span>_bg.wasm
 │   └── package.json
 ├── src
 │   ├── lib.rs
@@ -81,25 +81,25 @@ In this directory, there are .wasm file and its helper or driber (for example, <
 └── target
     └── ...
 </code></pre></div><p>Finally, run any server (for example, <code>miniserver</code> or <code>python -m http.server 8000</code>) and check browser.</p><p><img src="https://qiita-user-contents.imgix.net/https%3A%2F%2Fqiita-image-store.s3.ap-northeast-1.amazonaws.com%2F0%2F142910%2F416508d9-9013-d346-2eeb-ebcad6854455.png?ixlib=rb-1.2.2&auto=format&gif-q=60&q=75&s=70e6e041d6ffafa9112fd14c6087ccf7" alt=image></p><p>You are already WebAssembly developer!</p><h1 id=other-approach>Other approach</h1><p>Not convinced?
-Then, run wasm file with Deno!</p><p>Make <code>add.rs</code>!</p><div class=highlight><pre style=color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-rust data-lang=rust><span style=color:#ff79c6>#![no_main]</span>
-<span style=color:#ff79c6>#![no_std]</span>
-
-<span style=color:#ff79c6>#[panic_handler]</span>
-<span style=color:#ff79c6>fn</span> <span style=color:#50fa7b>panic</span>(_info: <span style=color:#ff79c6>&amp;</span><span style=color:#50fa7b>core</span>::panic::PanicInfo) -&gt; <span style=color:#ff79c6>!</span> {
-    <span style=color:#ff79c6>loop</span> {}
-}
-
-<span style=color:#ff79c6>#[no_mangle]</span>
-<span style=color:#ff79c6>pub</span> <span style=color:#ff79c6>fn</span> <span style=color:#50fa7b>add</span>(a: <span style=color:#8be9fd>i32</span>, b: <span style=color:#8be9fd>i32</span>) -&gt; <span style=color:#8be9fd>i32</span> {
-    a <span style=color:#ff79c6>+</span> b
-}:
-</code></pre></div><p>And compile it.</p><div class=highlight><pre style=color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-bash data-lang=bash>$ rustc --target wasm32-unknown-unknown add.rs 
-</code></pre></div><p>Then, make <code>main.js</code>.</p><div class=highlight><pre style=color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-javascript data-lang=javascript><span style=color:#ff79c6>const</span> bin <span style=color:#ff79c6>=</span> Deno.readFileSync(<span style=color:#f1fa8c>&#34;./add.wasm&#34;</span>);
-<span style=color:#ff79c6>const</span> wasm <span style=color:#ff79c6>=</span> await WebAssembly.instantiate(bin);
-<span style=color:#ff79c6>const</span> ex <span style=color:#ff79c6>=</span> wasm.instance.exports;
-<span style=color:#ff79c6>const</span> add <span style=color:#ff79c6>=</span> ex.add;
-console.log(add(<span style=color:#bd93f9>1</span>, <span style=color:#bd93f9>2</span>));
-</code></pre></div><p>Finally, run this.</p><div class=highlight><pre style=color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-bash data-lang=bash>$ deno run -A main.js
+Then, run wasm file with Deno!</p><p>Make <code>add.rs</code>!</p><div class=highlight><pre style=background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-rust data-lang=rust><span style=color:#080>#![no_main]</span><span style=color:#bbb>
+</span><span style=color:#bbb></span><span style=color:#080>#![no_std]</span><span style=color:#bbb>
+</span><span style=color:#bbb>
+</span><span style=color:#bbb></span><span style=color:#080>#[panic_handler]</span><span style=color:#bbb>
+</span><span style=color:#bbb></span><span style=color:#a2f;font-weight:700>fn</span> <span style=color:#00a000>panic</span>(_info: <span style=color:#a2f>&amp;</span><span style=color:#00f>core</span>::panic::PanicInfo)<span style=color:#bbb> </span>-&gt; <span style=color:#666>!</span><span style=color:#bbb> </span>{<span style=color:#bbb>
+</span><span style=color:#bbb>    </span><span style=color:#a2f;font-weight:700>loop</span><span style=color:#bbb> </span>{}<span style=color:#bbb>
+</span><span style=color:#bbb></span>}<span style=color:#bbb>
+</span><span style=color:#bbb>
+</span><span style=color:#bbb></span><span style=color:#080>#[no_mangle]</span><span style=color:#bbb>
+</span><span style=color:#bbb></span><span style=color:#a2f;font-weight:700>pub</span><span style=color:#bbb> </span><span style=color:#a2f;font-weight:700>fn</span> <span style=color:#00a000>add</span>(a: <span style=color:#0b0;font-weight:700>i32</span>,<span style=color:#bbb> </span>b: <span style=color:#0b0;font-weight:700>i32</span>)<span style=color:#bbb> </span>-&gt; <span style=color:#0b0;font-weight:700>i32</span> {<span style=color:#bbb>
+</span><span style=color:#bbb>    </span>a<span style=color:#bbb> </span><span style=color:#666>+</span><span style=color:#bbb> </span>b<span style=color:#bbb>
+</span><span style=color:#bbb></span>}:
+</code></pre></div><p>And compile it.</p><div class=highlight><pre style=background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-bash data-lang=bash>$ rustc --target wasm32-unknown-unknown add.rs 
+</code></pre></div><p>Then, make <code>main.js</code>.</p><div class=highlight><pre style=background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-javascript data-lang=javascript><span style=color:#a2f;font-weight:700>const</span> bin <span style=color:#666>=</span> Deno.readFileSync(<span style=color:#b44>&#34;./add.wasm&#34;</span>);
+<span style=color:#a2f;font-weight:700>const</span> wasm <span style=color:#666>=</span> await WebAssembly.instantiate(bin);
+<span style=color:#a2f;font-weight:700>const</span> ex <span style=color:#666>=</span> wasm.instance.exports;
+<span style=color:#a2f;font-weight:700>const</span> add <span style=color:#666>=</span> ex.add;
+console.log(add(<span style=color:#666>1</span>, <span style=color:#666>2</span>));
+</code></pre></div><p>Finally, run this.</p><div class=highlight><pre style=background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-bash data-lang=bash>$ deno run -A main.js
 </code></pre></div><p>You can find this wasm file also works!</p><hr><ul class=pager><li class=previous><a href=/post/2020-09-05-make-blog/ data-toggle=tooltip data-placement=top title="Hello My New Blog">&larr;
 Previous Post</a></li><li class=next><a href=/post/2020-09-07-modernize-emacs/ data-toggle=tooltip data-placement=top title="Modernize Emacs">Next
 Post &rarr;</a></li></ul><div id=disqus-comment></div></div><div class="col-lg-11 col-lg-offset-1

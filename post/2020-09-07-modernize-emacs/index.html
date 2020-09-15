@@ -20,199 +20,199 @@ One of the features and merits of Emacs is easy to customize.
 From my point of view, Emacs is shell or OS rather than editor.
 In Emacs, you can watch YouTube, send mails or play video games.</p><p>In this article, I&rsquo;ll describe how to setup Emacs to be modern IDE.</p><h1 id=my-environment>My Environment</h1><p><img src=./environment.png alt="my environment"></p><p>This is my environment.
 Not VSCode.
-My environment has really rich UI and also blazingly fast.</p><h2 id=neotree>Neotree</h2><p><a href=https://github.com/jaypei/emacs-neotree>Neotree</a> is a emacs tree plugin like NerdTree for Vim.</p><p><img src=https://raw.githubusercontent.com/wiki/jaypei/emacs-neotree/imgs/neotree-1.png alt=image></p><p>In <code>~/.emacs.d/init.el</code>, the setting is like this:</p><div class=highlight><pre style=color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-emacs data-lang=emacs><span style=color:#6272a4>;; neotree</span>
-(<span style=color:#8be9fd;font-style:italic>use-package</span> <span style=color:#8be9fd;font-style:italic>neotree</span>
-    <span style=color:#8be9fd;font-style:italic>:after</span>
-    <span style=color:#8be9fd;font-style:italic>projectile</span>
-    <span style=color:#8be9fd;font-style:italic>:commands</span>
-    (<span style=color:#8be9fd;font-style:italic>neotree-show</span> <span style=color:#8be9fd;font-style:italic>neotree-hide</span> <span style=color:#8be9fd;font-style:italic>neotree-dir</span> <span style=color:#8be9fd;font-style:italic>neotree-find</span>)
-    <span style=color:#8be9fd;font-style:italic>:custom</span>
-    (<span style=color:#8be9fd;font-style:italic>neo-theme</span> <span style=color:#f1fa8c>&#39;nerd2</span>)
-    <span style=color:#8be9fd;font-style:italic>:bind</span>
-    (<span style=color:#f1fa8c>&#34;&lt;f9&gt;&#34;</span> <span style=color:#ff79c6>.</span> <span style=color:#8be9fd;font-style:italic>neotree-projectile-toggle</span>)
-    <span style=color:#8be9fd;font-style:italic>:preface</span>
-    (<span style=color:#8be9fd;font-style:italic>defun</span> <span style=color:#8be9fd;font-style:italic>neotree-projectile-toggle</span> ()
-      (<span style=color:#8be9fd;font-style:italic>interactive</span>)
-      (<span style=color:#8be9fd;font-style:italic>let</span> ((<span style=color:#8be9fd;font-style:italic>project-dir</span>
-         (<span style=color:#8be9fd;font-style:italic>ignore-errors</span>
-         <span style=color:#6272a4>;;; Pick one: projectile or find-file-in-project</span>
-           (<span style=color:#8be9fd;font-style:italic>projectile-project-root</span>)
+My environment has really rich UI and also blazingly fast.</p><h2 id=neotree>Neotree</h2><p><a href=https://github.com/jaypei/emacs-neotree>Neotree</a> is a emacs tree plugin like NerdTree for Vim.</p><p><img src=https://raw.githubusercontent.com/wiki/jaypei/emacs-neotree/imgs/neotree-1.png alt=image></p><p>In <code>~/.emacs.d/init.el</code>, the setting is like this:</p><div class=highlight><pre style=background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-emacs data-lang=emacs><span style=color:#080;font-style:italic>;; neotree</span>
+(<span style=color:#a2f>use-package</span> <span style=color:#b8860b>neotree</span>
+    <span style=color:#a2f>:after</span>
+    <span style=color:#b8860b>projectile</span>
+    <span style=color:#a2f>:commands</span>
+    (<span style=color:#b8860b>neotree-show</span> <span style=color:#b8860b>neotree-hide</span> <span style=color:#b8860b>neotree-dir</span> <span style=color:#b8860b>neotree-find</span>)
+    <span style=color:#a2f>:custom</span>
+    (<span style=color:#b8860b>neo-theme</span> <span style=color:#b8860b>&#39;nerd2</span>)
+    <span style=color:#a2f>:bind</span>
+    (<span style=color:#b44>&#34;&lt;f9&gt;&#34;</span> <span style=color:#666>.</span> <span style=color:#b8860b>neotree-projectile-toggle</span>)
+    <span style=color:#a2f>:preface</span>
+    (<span style=color:#a2f>defun</span> <span style=color:#b8860b>neotree-projectile-toggle</span> ()
+      (<span style=color:#a2f>interactive</span>)
+      (<span style=color:#a2f>let</span> ((<span style=color:#b8860b>project-dir</span>
+         (<span style=color:#a2f>ignore-errors</span>
+         <span style=color:#080;font-style:italic>;;; Pick one: projectile or find-file-in-project</span>
+           (<span style=color:#b8860b>projectile-project-root</span>)
            ))
-        (<span style=color:#8be9fd;font-style:italic>file-name</span> (<span style=color:#50fa7b>buffer-file-name</span>))
-        (<span style=color:#8be9fd;font-style:italic>neo-smart-open</span> t))
-    (<span style=color:#8be9fd;font-style:italic>if</span> (<span style=color:#8be9fd;font-style:italic>and</span> (<span style=color:#50fa7b>fboundp</span> <span style=color:#f1fa8c>&#39;neo-global--window-exists-p</span>)
-         (<span style=color:#8be9fd;font-style:italic>neo-global--window-exists-p</span>))
-        (<span style=color:#8be9fd;font-style:italic>neotree-hide</span>)
-      (<span style=color:#8be9fd;font-style:italic>progn</span>
-        (<span style=color:#8be9fd;font-style:italic>neotree-show</span>)
-        (<span style=color:#8be9fd;font-style:italic>if</span> <span style=color:#8be9fd;font-style:italic>project-dir</span>
-        (<span style=color:#8be9fd;font-style:italic>neotree-dir</span> <span style=color:#8be9fd;font-style:italic>project-dir</span>))
-        (<span style=color:#8be9fd;font-style:italic>if</span> <span style=color:#8be9fd;font-style:italic>file-name</span>
-        (<span style=color:#8be9fd;font-style:italic>neotree-find</span> <span style=color:#8be9fd;font-style:italic>file-name</span>)))))))
-(<span style=color:#8be9fd;font-style:italic>global-set-key</span> <span style=color:#f1fa8c>&#34;\C-o&#34;</span> <span style=color:#f1fa8c>&#39;neotree-toggle</span>)
-</code></pre></div><p>To show or hide, set key as <code>Ctrl-o</code>.</p><h2 id=minimap>Minimap</h2><p><a href=https://github.com/dengste/minimap>Minimap</a> shows minimap in the side buffer.</p><p><img src="https://github.com/dengste/minimap/blob/master/minimap.png?raw=true" alt=image-minimap></p><p>Setting is like below.</p><div class=highlight><pre style=color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-emacs data-lang=emacs><span style=color:#6272a4>;; Minimap</span>
-(<span style=color:#8be9fd;font-style:italic>use-package</span> <span style=color:#8be9fd;font-style:italic>minimap</span>
-    <span style=color:#8be9fd;font-style:italic>:commands</span>
-    (<span style=color:#8be9fd;font-style:italic>minimap-bufname</span> <span style=color:#8be9fd;font-style:italic>minimap-create</span> <span style=color:#8be9fd;font-style:italic>minimap-kill</span>)
-    <span style=color:#8be9fd;font-style:italic>:custom</span>
-    (<span style=color:#8be9fd;font-style:italic>minimap-major-modes</span> <span style=color:#ff79c6>&#39;</span>(<span style=color:#8be9fd;font-style:italic>prog-mode</span>))
+        (<span style=color:#b8860b>file-name</span> (<span style=color:#00a000>buffer-file-name</span>))
+        (<span style=color:#b8860b>neo-smart-open</span> <span style=color:#800>t</span>))
+    (<span style=color:#a2f>if</span> (<span style=color:#a2f>and</span> (<span style=color:#00a000>fboundp</span> <span style=color:#b8860b>&#39;neo-global--window-exists-p</span>)
+         (<span style=color:#b8860b>neo-global--window-exists-p</span>))
+        (<span style=color:#b8860b>neotree-hide</span>)
+      (<span style=color:#a2f>progn</span>
+        (<span style=color:#b8860b>neotree-show</span>)
+        (<span style=color:#a2f>if</span> <span style=color:#b8860b>project-dir</span>
+        (<span style=color:#b8860b>neotree-dir</span> <span style=color:#b8860b>project-dir</span>))
+        (<span style=color:#a2f>if</span> <span style=color:#b8860b>file-name</span>
+        (<span style=color:#b8860b>neotree-find</span> <span style=color:#b8860b>file-name</span>)))))))
+(<span style=color:#b8860b>global-set-key</span> <span style=color:#b44>&#34;\C-o&#34;</span> <span style=color:#b8860b>&#39;neotree-toggle</span>)
+</code></pre></div><p>To show or hide, set key as <code>Ctrl-o</code>.</p><h2 id=minimap>Minimap</h2><p><a href=https://github.com/dengste/minimap>Minimap</a> shows minimap in the side buffer.</p><p><img src="https://github.com/dengste/minimap/blob/master/minimap.png?raw=true" alt=image-minimap></p><p>Setting is like below.</p><div class=highlight><pre style=background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-emacs data-lang=emacs><span style=color:#080;font-style:italic>;; Minimap</span>
+(<span style=color:#a2f>use-package</span> <span style=color:#b8860b>minimap</span>
+    <span style=color:#a2f>:commands</span>
+    (<span style=color:#b8860b>minimap-bufname</span> <span style=color:#b8860b>minimap-create</span> <span style=color:#b8860b>minimap-kill</span>)
+    <span style=color:#a2f>:custom</span>
+    (<span style=color:#b8860b>minimap-major-modes</span> <span style=color:#666>&#39;</span>(<span style=color:#b8860b>prog-mode</span>))
 
-    (<span style=color:#8be9fd;font-style:italic>minimap-window-location</span> <span style=color:#f1fa8c>&#39;right</span>)
-    (<span style=color:#8be9fd;font-style:italic>minimap-update-delay</span> <span style=color:#bd93f9>0.2</span>)
-    (<span style=color:#8be9fd;font-style:italic>minimap-minimum-width</span> <span style=color:#bd93f9>20</span>)
-    <span style=color:#8be9fd;font-style:italic>:bind</span>
-    (<span style=color:#f1fa8c>&#34;M-t m&#34;</span> <span style=color:#ff79c6>.</span> <span style=color:#8be9fd;font-style:italic>ladicle/toggle-minimap</span>)
-    <span style=color:#8be9fd;font-style:italic>:preface</span>
-    (<span style=color:#8be9fd;font-style:italic>defun</span> <span style=color:#8be9fd;font-style:italic>ladicle/toggle-minimap</span> ()
-      <span style=color:#f1fa8c>&#34;Toggle minimap for current buffer.&#34;</span>
-      (<span style=color:#8be9fd;font-style:italic>interactive</span>)
-      (<span style=color:#8be9fd;font-style:italic>if</span> (<span style=color:#50fa7b>null</span> <span style=color:#8be9fd;font-style:italic>minimap-bufname</span>)
-      (<span style=color:#8be9fd;font-style:italic>minimap-create</span>)
-    (<span style=color:#8be9fd;font-style:italic>minimap-kill</span>)))
-    <span style=color:#8be9fd;font-style:italic>:config</span>
-    (<span style=color:#8be9fd;font-style:italic>custom-set-faces</span>
-     <span style=color:#ff79c6>&#39;</span>(<span style=color:#8be9fd;font-style:italic>minimap-active-region-background</span>
-      ((((<span style=color:#8be9fd;font-style:italic>background</span> <span style=color:#8be9fd;font-style:italic>dark</span>)) (<span style=color:#8be9fd;font-style:italic>:background</span> <span style=color:#f1fa8c>&#34;#555555555555&#34;</span>))
-    (t (<span style=color:#8be9fd;font-style:italic>:background</span> <span style=color:#f1fa8c>&#34;#C847D8FEFFFF&#34;</span>))) <span style=color:#8be9fd;font-style:italic>:group</span> <span style=color:#f1fa8c>&#39;minimap</span>)))
+    (<span style=color:#b8860b>minimap-window-location</span> <span style=color:#b8860b>&#39;right</span>)
+    (<span style=color:#b8860b>minimap-update-delay</span> <span style=color:#666>0.2</span>)
+    (<span style=color:#b8860b>minimap-minimum-width</span> <span style=color:#666>20</span>)
+    <span style=color:#a2f>:bind</span>
+    (<span style=color:#b44>&#34;M-t m&#34;</span> <span style=color:#666>.</span> <span style=color:#b8860b>ladicle/toggle-minimap</span>)
+    <span style=color:#a2f>:preface</span>
+    (<span style=color:#a2f>defun</span> <span style=color:#b8860b>ladicle/toggle-minimap</span> ()
+      <span style=color:#b44>&#34;Toggle minimap for current buffer.&#34;</span>
+      (<span style=color:#a2f>interactive</span>)
+      (<span style=color:#a2f>if</span> (<span style=color:#00a000>null</span> <span style=color:#b8860b>minimap-bufname</span>)
+      (<span style=color:#b8860b>minimap-create</span>)
+    (<span style=color:#b8860b>minimap-kill</span>)))
+    <span style=color:#a2f>:config</span>
+    (<span style=color:#b8860b>custom-set-faces</span>
+     <span style=color:#666>&#39;</span>(<span style=color:#b8860b>minimap-active-region-background</span>
+      ((((<span style=color:#b8860b>background</span> <span style=color:#b8860b>dark</span>)) (<span style=color:#a2f>:background</span> <span style=color:#b44>&#34;#555555555555&#34;</span>))
+    (<span style=color:#800>t</span> (<span style=color:#a2f>:background</span> <span style=color:#b44>&#34;#C847D8FEFFFF&#34;</span>))) <span style=color:#a2f>:group</span> <span style=color:#b8860b>&#39;minimap</span>)))
 </code></pre></div><h2 id=git-gutter>Git-gutter</h2><p>In modern software engineering, git is an essential for engineer team.
-<a href=https://github.com/emacsorphanage/git-gutter>Git-gutter</a> make</p><p><img src="https://qiita-user-contents.imgix.net/https%3A%2F%2Fqiita-image-store.s3.amazonaws.com%2F0%2F26683%2Fedf7eb7d-04aa-69d7-56ff-3721cc56ef53.png?ixlib=rb-1.2.2&auto=format&gif-q=60&q=75&w=1400&fit=max&s=1f0b082c2859673b2504aa43c15653e0" alt=image></p><p>Setting is below. You can change color or sign.</p><div class=highlight><pre style=color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-emacs data-lang=emacs><span style=color:#6272a4>;; git-gutter</span>
-(<span style=color:#8be9fd;font-style:italic>use-package</span> <span style=color:#8be9fd;font-style:italic>git-gutter</span>
-    <span style=color:#8be9fd;font-style:italic>:custom</span>
-    (<span style=color:#8be9fd;font-style:italic>git-gutter:modified-sign</span> <span style=color:#f1fa8c>&#34;~&#34;</span>)
-    (<span style=color:#8be9fd;font-style:italic>git-gutter:added-sign</span>    <span style=color:#f1fa8c>&#34;+&#34;</span>)
-    (<span style=color:#8be9fd;font-style:italic>git-gutter:deleted-sign</span>  <span style=color:#f1fa8c>&#34;-&#34;</span>)
-    <span style=color:#8be9fd;font-style:italic>:custom-face</span>
-    (<span style=color:#8be9fd;font-style:italic>git-gutter:modified</span> ((t (<span style=color:#8be9fd;font-style:italic>:background</span> <span style=color:#f1fa8c>&#34;#f1fa8c&#34;</span>))))
-    (<span style=color:#8be9fd;font-style:italic>git-gutter:added</span>    ((t (<span style=color:#8be9fd;font-style:italic>:background</span> <span style=color:#f1fa8c>&#34;#50fa7b&#34;</span>))))
-    (<span style=color:#8be9fd;font-style:italic>git-gutter:deleted</span>  ((t (<span style=color:#8be9fd;font-style:italic>:background</span> <span style=color:#f1fa8c>&#34;#ff79c6&#34;</span>))))
-    <span style=color:#8be9fd;font-style:italic>:config</span>
-    (<span style=color:#8be9fd;font-style:italic>global-git-gutter-mode</span> <span style=color:#bd93f9>+1</span>))
+<a href=https://github.com/emacsorphanage/git-gutter>Git-gutter</a> make</p><p><img src="https://qiita-user-contents.imgix.net/https%3A%2F%2Fqiita-image-store.s3.amazonaws.com%2F0%2F26683%2Fedf7eb7d-04aa-69d7-56ff-3721cc56ef53.png?ixlib=rb-1.2.2&auto=format&gif-q=60&q=75&w=1400&fit=max&s=1f0b082c2859673b2504aa43c15653e0" alt=image></p><p>Setting is below. You can change color or sign.</p><div class=highlight><pre style=background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-emacs data-lang=emacs><span style=color:#080;font-style:italic>;; git-gutter</span>
+(<span style=color:#a2f>use-package</span> <span style=color:#b8860b>git-gutter</span>
+    <span style=color:#a2f>:custom</span>
+    (<span style=color:#b8860b>git-gutter:modified-sign</span> <span style=color:#b44>&#34;~&#34;</span>)
+    (<span style=color:#b8860b>git-gutter:added-sign</span>    <span style=color:#b44>&#34;+&#34;</span>)
+    (<span style=color:#b8860b>git-gutter:deleted-sign</span>  <span style=color:#b44>&#34;-&#34;</span>)
+    <span style=color:#a2f>:custom-face</span>
+    (<span style=color:#b8860b>git-gutter:modified</span> ((<span style=color:#800>t</span> (<span style=color:#a2f>:background</span> <span style=color:#b44>&#34;#f1fa8c&#34;</span>))))
+    (<span style=color:#b8860b>git-gutter:added</span>    ((<span style=color:#800>t</span> (<span style=color:#a2f>:background</span> <span style=color:#b44>&#34;#50fa7b&#34;</span>))))
+    (<span style=color:#b8860b>git-gutter:deleted</span>  ((<span style=color:#800>t</span> (<span style=color:#a2f>:background</span> <span style=color:#b44>&#34;#ff79c6&#34;</span>))))
+    <span style=color:#a2f>:config</span>
+    (<span style=color:#b8860b>global-git-gutter-mode</span> <span style=color:#666>+1</span>))
 </code></pre></div><h2 id=lsp-mode>lsp-mode</h2><p>Modern editors should have rich auto completion.
-In Emacs, <a href=https://github.com/emacs-lsp/lsp-mode>lsp-mode</a> can offer you rich UI and cool experience.</p><p>In my environment, <code>lsp-mode</code> is used with <code>company</code> and <code>yasnippet</code>.</p><div class=highlight><pre style=color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-emacs data-lang=emacs><span style=color:#6272a4>;; Company</span>
-(<span style=color:#8be9fd;font-style:italic>require</span> <span style=color:#f1fa8c>&#39;company</span>)
-(<span style=color:#8be9fd;font-style:italic>global-company-mode</span>) <span style=color:#6272a4>; Turn on in all buffers</span>
-(<span style=color:#8be9fd;font-style:italic>setq</span> <span style=color:#8be9fd;font-style:italic>company-transformers</span> <span style=color:#ff79c6>&#39;</span>(<span style=color:#8be9fd;font-style:italic>company-sort-by-backend-importance</span>)) <span style=color:#6272a4>;; Should be sorted</span>
-(<span style=color:#8be9fd;font-style:italic>setq</span> <span style=color:#8be9fd;font-style:italic>company-idle-delay</span> <span style=color:#bd93f9>0</span>) <span style=color:#6272a4>; default is 0.5</span>
-(<span style=color:#8be9fd;font-style:italic>setq</span> <span style=color:#8be9fd;font-style:italic>company-minimum-prefix-length</span> <span style=color:#bd93f9>3</span>) <span style=color:#6272a4>; default is 4</span>
-(<span style=color:#8be9fd;font-style:italic>setq</span> <span style=color:#8be9fd;font-style:italic>company-selection-wrap-around</span> t) <span style=color:#6272a4>; When you reach the final, jump to the first</span>
-(<span style=color:#8be9fd;font-style:italic>setq</span> <span style=color:#8be9fd;font-style:italic>completion-ignore-case</span> t)
-(<span style=color:#8be9fd;font-style:italic>setq</span> <span style=color:#8be9fd;font-style:italic>company-dabbrev-downcase</span> nil)
-(<span style=color:#8be9fd;font-style:italic>global-set-key</span> (<span style=color:#8be9fd;font-style:italic>kbd</span> <span style=color:#f1fa8c>&#34;C-M-i&#34;</span>) <span style=color:#f1fa8c>&#39;company-complete</span>)
-(<span style=color:#50fa7b>define-key</span> <span style=color:#8be9fd;font-style:italic>company-active-map</span> [<span style=color:#8be9fd;font-style:italic>tab</span>] <span style=color:#f1fa8c>&#39;company-select-next</span>) <span style=color:#6272a4>;; select with tab</span>
-(<span style=color:#50fa7b>define-key</span> <span style=color:#8be9fd;font-style:italic>emacs-lisp-mode-map</span> (<span style=color:#8be9fd;font-style:italic>kbd</span> <span style=color:#f1fa8c>&#34;C-M-i&#34;</span>) <span style=color:#f1fa8c>&#39;company-complete</span>)
+In Emacs, <a href=https://github.com/emacs-lsp/lsp-mode>lsp-mode</a> can offer you rich UI and cool experience.</p><p>In my environment, <code>lsp-mode</code> is used with <code>company</code> and <code>yasnippet</code>.</p><div class=highlight><pre style=background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-emacs data-lang=emacs><span style=color:#080;font-style:italic>;; Company</span>
+(<span style=color:#a2f>require</span> <span style=color:#b8860b>&#39;company</span>)
+(<span style=color:#b8860b>global-company-mode</span>) <span style=color:#080;font-style:italic>; Turn on in all buffers</span>
+(<span style=color:#a2f>setq</span> <span style=color:#b8860b>company-transformers</span> <span style=color:#666>&#39;</span>(<span style=color:#b8860b>company-sort-by-backend-importance</span>)) <span style=color:#080;font-style:italic>;; Should be sorted</span>
+(<span style=color:#a2f>setq</span> <span style=color:#b8860b>company-idle-delay</span> <span style=color:#666>0</span>) <span style=color:#080;font-style:italic>; default is 0.5</span>
+(<span style=color:#a2f>setq</span> <span style=color:#b8860b>company-minimum-prefix-length</span> <span style=color:#666>3</span>) <span style=color:#080;font-style:italic>; default is 4</span>
+(<span style=color:#a2f>setq</span> <span style=color:#b8860b>company-selection-wrap-around</span> <span style=color:#800>t</span>) <span style=color:#080;font-style:italic>; When you reach the final, jump to the first</span>
+(<span style=color:#a2f>setq</span> <span style=color:#b8860b>completion-ignore-case</span> <span style=color:#800>t</span>)
+(<span style=color:#a2f>setq</span> <span style=color:#b8860b>company-dabbrev-downcase</span> <span style=color:#800>nil</span>)
+(<span style=color:#b8860b>global-set-key</span> (<span style=color:#b8860b>kbd</span> <span style=color:#b44>&#34;C-M-i&#34;</span>) <span style=color:#b8860b>&#39;company-complete</span>)
+(<span style=color:#00a000>define-key</span> <span style=color:#b8860b>company-active-map</span> [<span style=color:#b8860b>tab</span>] <span style=color:#b8860b>&#39;company-select-next</span>) <span style=color:#080;font-style:italic>;; select with tab</span>
+(<span style=color:#00a000>define-key</span> <span style=color:#b8860b>emacs-lisp-mode-map</span> (<span style=color:#b8860b>kbd</span> <span style=color:#b44>&#34;C-M-i&#34;</span>) <span style=color:#b8860b>&#39;company-complete</span>)
 
-<span style=color:#6272a4>;; yasnippet</span>
-(<span style=color:#8be9fd;font-style:italic>defvar</span> <span style=color:#8be9fd;font-style:italic>company-mode/enable-yas</span> t
-  <span style=color:#f1fa8c>&#34;Enable yasnippet for all backends.&#34;</span>)
-(<span style=color:#8be9fd;font-style:italic>defun</span> <span style=color:#8be9fd;font-style:italic>company-mode/backend-with-yas</span> (<span style=color:#8be9fd;font-style:italic>backend</span>)
-  (<span style=color:#8be9fd;font-style:italic>if</span> (<span style=color:#8be9fd;font-style:italic>or</span> (<span style=color:#8be9fd;font-style:italic>not</span> <span style=color:#8be9fd;font-style:italic>company-mode/enable-yas</span>) (<span style=color:#8be9fd;font-style:italic>and</span> (<span style=color:#50fa7b>listp</span> <span style=color:#8be9fd;font-style:italic>backend</span>) (<span style=color:#50fa7b>member</span> <span style=color:#f1fa8c>&#39;company-yasnippet</span> <span style=color:#8be9fd;font-style:italic>backend</span>)))
-      <span style=color:#8be9fd;font-style:italic>backend</span>
-    (<span style=color:#50fa7b>append</span> (<span style=color:#8be9fd;font-style:italic>if</span> (<span style=color:#50fa7b>consp</span> <span style=color:#8be9fd;font-style:italic>backend</span>) <span style=color:#8be9fd;font-style:italic>backend</span> (<span style=color:#50fa7b>list</span> <span style=color:#8be9fd;font-style:italic>backend</span>))
-            <span style=color:#ff79c6>&#39;</span>(<span style=color:#8be9fd;font-style:italic>:with</span> <span style=color:#8be9fd;font-style:italic>company-yasnippet</span>))))
-(<span style=color:#8be9fd;font-style:italic>setq</span> <span style=color:#8be9fd;font-style:italic>company-backends</span> (<span style=color:#50fa7b>mapcar</span> <span style=color:#50fa7b>#&#39;</span><span style=color:#8be9fd;font-style:italic>company-mode/backend-with-yas</span> <span style=color:#8be9fd;font-style:italic>company-backends</span>))
+<span style=color:#080;font-style:italic>;; yasnippet</span>
+(<span style=color:#a2f>defvar</span> <span style=color:#b8860b>company-mode/enable-yas</span> <span style=color:#800>t</span>
+  <span style=color:#b44>&#34;Enable yasnippet for all backends.&#34;</span>)
+(<span style=color:#a2f>defun</span> <span style=color:#b8860b>company-mode/backend-with-yas</span> (<span style=color:#b8860b>backend</span>)
+  (<span style=color:#a2f>if</span> (<span style=color:#a2f>or</span> (<span style=color:#b8860b>not</span> <span style=color:#b8860b>company-mode/enable-yas</span>) (<span style=color:#a2f>and</span> (<span style=color:#00a000>listp</span> <span style=color:#b8860b>backend</span>) (<span style=color:#00a000>member</span> <span style=color:#b8860b>&#39;company-yasnippet</span> <span style=color:#b8860b>backend</span>)))
+      <span style=color:#b8860b>backend</span>
+    (<span style=color:#00a000>append</span> (<span style=color:#a2f>if</span> (<span style=color:#00a000>consp</span> <span style=color:#b8860b>backend</span>) <span style=color:#b8860b>backend</span> (<span style=color:#00a000>list</span> <span style=color:#b8860b>backend</span>))
+            <span style=color:#666>&#39;</span>(<span style=color:#a2f>:with</span> <span style=color:#b8860b>company-yasnippet</span>))))
+(<span style=color:#a2f>setq</span> <span style=color:#b8860b>company-backends</span> (<span style=color:#00a000>mapcar</span> <span style=color:#00a000>#&#39;</span><span style=color:#b8860b>company-mode/backend-with-yas</span> <span style=color:#b8860b>company-backends</span>))
 
-(<span style=color:#8be9fd;font-style:italic>require</span> <span style=color:#f1fa8c>&#39;yasnippet</span>)
-(<span style=color:#8be9fd;font-style:italic>add-to-list</span> <span style=color:#f1fa8c>&#39;load-path</span> <span style=color:#f1fa8c>&#34;~/.emacs.d/plugins/yasnippet&#34;</span>)
-(<span style=color:#8be9fd;font-style:italic>yas-global-mode</span> <span style=color:#bd93f9>1</span>)
+(<span style=color:#a2f>require</span> <span style=color:#b8860b>&#39;yasnippet</span>)
+(<span style=color:#b8860b>add-to-list</span> <span style=color:#b8860b>&#39;load-path</span> <span style=color:#b44>&#34;~/.emacs.d/plugins/yasnippet&#34;</span>)
+(<span style=color:#b8860b>yas-global-mode</span> <span style=color:#666>1</span>)
 </code></pre></div><p>Before using company, you should install <code>yasnippet</code>.
-<code>yasnippet</code> means <em>Yet Another Snippets</em>.</p><div class=highlight><pre style=color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-bash data-lang=bash>$ git clone --recursive https://github.com/joaotavora/yasnippet ~/.emacs.d/plugins
+<code>yasnippet</code> means <em>Yet Another Snippets</em>.</p><div class=highlight><pre style=background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-bash data-lang=bash>$ git clone --recursive https://github.com/joaotavora/yasnippet ~/.emacs.d/plugins
 </code></pre></div><p>Without this, you can use auto completion but the cursor doesn&rsquo;t move to appropriate position and some invalid texts exists in the file.</p><h2 id=ivy>ivy</h2><p><code>ivy</code> is command completion package.
-There is <code>helm</code> similar to this, but I feel <code>ivy</code> is faster.</p><p>There are some packages using <code>ivy</code>.</p><h3 id=counsel>counsel</h3><p><code>counsel</code> enables you refine search.</p><p><img src="https://qiita-user-contents.imgix.net/https%3A%2F%2Fqiita-image-store.s3.amazonaws.com%2F0%2F144707%2F75aac71a-f7bc-bc4f-dae1-bb2786f607cf.gif?ixlib=rb-1.2.2&auto=format&gif-q=60&q=75&w=1400&fit=max&s=44a0a3d56a7584ebc16a9257d8aaf554" alt=gif></p><div class=highlight><pre style=color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-emacs data-lang=emacs><span style=color:#6272a4>;; ivy</span>
-(<span style=color:#8be9fd;font-style:italic>require</span> <span style=color:#f1fa8c>&#39;ivy</span>)
-(<span style=color:#8be9fd;font-style:italic>ivy-mode</span> <span style=color:#bd93f9>1</span>)
-(<span style=color:#8be9fd;font-style:italic>setq</span> <span style=color:#8be9fd;font-style:italic>ivy-use-virtual-buffers</span> t)
-(<span style=color:#8be9fd;font-style:italic>setq</span> <span style=color:#8be9fd;font-style:italic>enable-recursive-minibuffers</span> t)
-(<span style=color:#8be9fd;font-style:italic>setq</span> <span style=color:#8be9fd;font-style:italic>ivy-height</span> <span style=color:#bd93f9>30</span>) <span style=color:#6272a4>;; bigger minibuffer size</span>
-(<span style=color:#8be9fd;font-style:italic>setq</span> <span style=color:#8be9fd;font-style:italic>ivy-extra-directories</span> nil)
-(<span style=color:#8be9fd;font-style:italic>setq</span> <span style=color:#8be9fd;font-style:italic>ivy-re-builders-alist</span> <span style=color:#ff79c6>&#39;</span>((t <span style=color:#ff79c6>.</span> <span style=color:#8be9fd;font-style:italic>ivy--regex-plus</span>)))
+There is <code>helm</code> similar to this, but I feel <code>ivy</code> is faster.</p><p>There are some packages using <code>ivy</code>.</p><h3 id=counsel>counsel</h3><p><code>counsel</code> enables you refine search.</p><p><img src="https://qiita-user-contents.imgix.net/https%3A%2F%2Fqiita-image-store.s3.amazonaws.com%2F0%2F144707%2F75aac71a-f7bc-bc4f-dae1-bb2786f607cf.gif?ixlib=rb-1.2.2&auto=format&gif-q=60&q=75&w=1400&fit=max&s=44a0a3d56a7584ebc16a9257d8aaf554" alt=gif></p><div class=highlight><pre style=background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-emacs data-lang=emacs><span style=color:#080;font-style:italic>;; ivy</span>
+(<span style=color:#a2f>require</span> <span style=color:#b8860b>&#39;ivy</span>)
+(<span style=color:#b8860b>ivy-mode</span> <span style=color:#666>1</span>)
+(<span style=color:#a2f>setq</span> <span style=color:#b8860b>ivy-use-virtual-buffers</span> <span style=color:#800>t</span>)
+(<span style=color:#a2f>setq</span> <span style=color:#b8860b>enable-recursive-minibuffers</span> <span style=color:#800>t</span>)
+(<span style=color:#a2f>setq</span> <span style=color:#b8860b>ivy-height</span> <span style=color:#666>30</span>) <span style=color:#080;font-style:italic>;; bigger minibuffer size</span>
+(<span style=color:#a2f>setq</span> <span style=color:#b8860b>ivy-extra-directories</span> <span style=color:#800>nil</span>)
+(<span style=color:#a2f>setq</span> <span style=color:#b8860b>ivy-re-builders-alist</span> <span style=color:#666>&#39;</span>((<span style=color:#800>t</span> <span style=color:#666>.</span> <span style=color:#b8860b>ivy--regex-plus</span>)))
 
-<span style=color:#6272a4>;; counsel</span>
-(<span style=color:#8be9fd;font-style:italic>global-set-key</span> (<span style=color:#8be9fd;font-style:italic>kbd</span> <span style=color:#f1fa8c>&#34;M-x&#34;</span>) <span style=color:#f1fa8c>&#39;counsel-M-x</span>)
-(<span style=color:#8be9fd;font-style:italic>global-set-key</span> (<span style=color:#8be9fd;font-style:italic>kbd</span> <span style=color:#f1fa8c>&#34;C-x C-f&#34;</span>) <span style=color:#f1fa8c>&#39;counsel-find-file</span>) <span style=color:#6272a4>;; get counsel to find file</span>
-(<span style=color:#8be9fd;font-style:italic>setq</span> <span style=color:#8be9fd;font-style:italic>counsel-find-file-ignore-regexp</span> (<span style=color:#8be9fd;font-style:italic>regexp-opt</span> <span style=color:#ff79c6>&#39;</span>(<span style=color:#f1fa8c>&#34;./&#34;</span> <span style=color:#f1fa8c>&#34;../&#34;</span>)))
+<span style=color:#080;font-style:italic>;; counsel</span>
+(<span style=color:#b8860b>global-set-key</span> (<span style=color:#b8860b>kbd</span> <span style=color:#b44>&#34;M-x&#34;</span>) <span style=color:#b8860b>&#39;counsel-M-x</span>)
+(<span style=color:#b8860b>global-set-key</span> (<span style=color:#b8860b>kbd</span> <span style=color:#b44>&#34;C-x C-f&#34;</span>) <span style=color:#b8860b>&#39;counsel-find-file</span>) <span style=color:#080;font-style:italic>;; get counsel to find file</span>
+(<span style=color:#a2f>setq</span> <span style=color:#b8860b>counsel-find-file-ignore-regexp</span> (<span style=color:#b8860b>regexp-opt</span> <span style=color:#666>&#39;</span>(<span style=color:#b44>&#34;./&#34;</span> <span style=color:#b44>&#34;../&#34;</span>)))
 </code></pre></div><h3 id=swiper>swiper</h3><p><code>swiper</code> is word search package.
 By using <code>ivy</code>, it&rsquo;s really fast.
-And also it can do fuzzy search or retrieval search with multiple words.</p><div class=highlight><pre style=color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-emacs data-lang=emacs><span style=color:#6272a4>;; Swiper</span>
-(<span style=color:#8be9fd;font-style:italic>global-set-key</span> <span style=color:#f1fa8c>&#34;\C-s&#34;</span> <span style=color:#f1fa8c>&#39;swiper</span>)
-(<span style=color:#8be9fd;font-style:italic>setq</span> <span style=color:#8be9fd;font-style:italic>swiper-include-line-number-in-search</span> t)
+And also it can do fuzzy search or retrieval search with multiple words.</p><div class=highlight><pre style=background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-emacs data-lang=emacs><span style=color:#080;font-style:italic>;; Swiper</span>
+(<span style=color:#b8860b>global-set-key</span> <span style=color:#b44>&#34;\C-s&#34;</span> <span style=color:#b8860b>&#39;swiper</span>)
+(<span style=color:#a2f>setq</span> <span style=color:#b8860b>swiper-include-line-number-in-search</span> <span style=color:#800>t</span>)
 </code></pre></div><h3 id=find-file-in-project>find-file-in-project</h3><p>You can find files by file name.</p><p><img src=https://raw.githubusercontent.com/technomancy/find-file-in-project/master/ffip-screenshot-nq8.png alt=image></p><h3 id=recentf>recentf</h3><p>You can find files by your file history.
 This is really good tool for jump to a many files.
 For example, I&rsquo;m writing this article (this article file is in <code>~/blog/content/post/2020-09-07-modernize-emacs/index.md</code>) checking my <code>~/.emacs.d/init.el</code>.
 It takes high cost to jump between these files since each file path is so long.
-Then this <code>recentf</code> works fine.</p><div class=highlight><pre style=color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-emacs data-lang=emacs><span style=color:#6272a4>;; recentf</span>
-(<span style=color:#8be9fd;font-style:italic>require</span> <span style=color:#f1fa8c>&#39;recentf</span>)
-(<span style=color:#8be9fd;font-style:italic>recentf-mode</span> <span style=color:#bd93f9>1</span>)
-(<span style=color:#8be9fd;font-style:italic>setq</span> <span style=color:#8be9fd;font-style:italic>recentf-save-file</span> <span style=color:#f1fa8c>&#34;~/.emacs.d/.recentf&#34;</span>)
-(<span style=color:#8be9fd;font-style:italic>setq</span> <span style=color:#8be9fd;font-style:italic>recentf-max-menu-items</span> <span style=color:#bd93f9>25</span>)
-(<span style=color:#8be9fd;font-style:italic>setq</span> <span style=color:#8be9fd;font-style:italic>recentf-max-saved-items</span> <span style=color:#bd93f9>25</span>)
-(<span style=color:#8be9fd;font-style:italic>setq</span> <span style=color:#8be9fd;font-style:italic>recentf-exclude</span> <span style=color:#ff79c6>&#39;</span>(<span style=color:#f1fa8c>&#34;.recentf&#34;</span>))
-(<span style=color:#8be9fd;font-style:italic>setq</span> <span style=color:#8be9fd;font-style:italic>recentf-auto-cleanup</span> <span style=color:#f1fa8c>&#39;never</span>)
-(<span style=color:#8be9fd;font-style:italic>require</span> <span style=color:#f1fa8c>&#39;recentf-ext</span>)
-(<span style=color:#50fa7b>define-key</span> <span style=color:#8be9fd;font-style:italic>global-map</span> (<span style=color:#8be9fd;font-style:italic>kbd</span> <span style=color:#f1fa8c>&#34;C-r&#34;</span>) <span style=color:#f1fa8c>&#39;counsel-recentf</span>)
+Then this <code>recentf</code> works fine.</p><div class=highlight><pre style=background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-emacs data-lang=emacs><span style=color:#080;font-style:italic>;; recentf</span>
+(<span style=color:#a2f>require</span> <span style=color:#b8860b>&#39;recentf</span>)
+(<span style=color:#b8860b>recentf-mode</span> <span style=color:#666>1</span>)
+(<span style=color:#a2f>setq</span> <span style=color:#b8860b>recentf-save-file</span> <span style=color:#b44>&#34;~/.emacs.d/.recentf&#34;</span>)
+(<span style=color:#a2f>setq</span> <span style=color:#b8860b>recentf-max-menu-items</span> <span style=color:#666>25</span>)
+(<span style=color:#a2f>setq</span> <span style=color:#b8860b>recentf-max-saved-items</span> <span style=color:#666>25</span>)
+(<span style=color:#a2f>setq</span> <span style=color:#b8860b>recentf-exclude</span> <span style=color:#666>&#39;</span>(<span style=color:#b44>&#34;.recentf&#34;</span>))
+(<span style=color:#a2f>setq</span> <span style=color:#b8860b>recentf-auto-cleanup</span> <span style=color:#b8860b>&#39;never</span>)
+(<span style=color:#a2f>require</span> <span style=color:#b8860b>&#39;recentf-ext</span>)
+(<span style=color:#00a000>define-key</span> <span style=color:#b8860b>global-map</span> (<span style=color:#b8860b>kbd</span> <span style=color:#b44>&#34;C-r&#34;</span>) <span style=color:#b8860b>&#39;counsel-recentf</span>)
 </code></pre></div><h2 id=rust-go-python>Rust, Go, Python</h2><p>I love Rust. And sometimes I write Go and Python.</p><p>I&rsquo;ll show each language setting.</p><h3 id=rust>Rust</h3><p>About Rust, I use <code>rustic</code>.
-This contains <code>lsp</code>, which is <code>rust-analyzer</code> as default.</p><p>For more infomation about this, see <a href=https://github.com/brotzeit/rustic>its repository</a>.</p><div class=highlight><pre style=color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-emacs data-lang=emacs><span style=color:#6272a4>;; Rust</span>
-(<span style=color:#8be9fd;font-style:italic>require</span> <span style=color:#f1fa8c>&#39;rustic</span>)
-(<span style=color:#8be9fd;font-style:italic>setq-default</span> <span style=color:#8be9fd;font-style:italic>rustic-format-trigger</span> <span style=color:#f1fa8c>&#39;on-save</span>)
-(<span style=color:#8be9fd;font-style:italic>setq</span> <span style=color:#8be9fd;font-style:italic>rustic-rustfmt-bin</span> <span style=color:#f1fa8c>&#34;~/.cargo/bin/rustfmt&#34;</span>)
-(<span style=color:#8be9fd;font-style:italic>add-to-list</span> <span style=color:#f1fa8c>&#39;rustic-rustfmt-config-alist</span> <span style=color:#ff79c6>&#39;</span>(<span style=color:#f1fa8c>&#34;edition&#34;</span> <span style=color:#ff79c6>.</span> <span style=color:#f1fa8c>&#34;2018&#34;</span>))
-<span style=color:#6272a4>;;(setq rustic-lsp-server &#39;rls)</span>
-(<span style=color:#8be9fd;font-style:italic>setq</span> <span style=color:#8be9fd;font-style:italic>lsp-rust-analyzer-server-command</span> <span style=color:#ff79c6>&#39;</span>(<span style=color:#f1fa8c>&#34;~/usr/local/bin/rust-analyzer&#34;</span>))
+This contains <code>lsp</code>, which is <code>rust-analyzer</code> as default.</p><p>For more infomation about this, see <a href=https://github.com/brotzeit/rustic>its repository</a>.</p><div class=highlight><pre style=background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-emacs data-lang=emacs><span style=color:#080;font-style:italic>;; Rust</span>
+(<span style=color:#a2f>require</span> <span style=color:#b8860b>&#39;rustic</span>)
+(<span style=color:#a2f>setq-default</span> <span style=color:#b8860b>rustic-format-trigger</span> <span style=color:#b8860b>&#39;on-save</span>)
+(<span style=color:#a2f>setq</span> <span style=color:#b8860b>rustic-rustfmt-bin</span> <span style=color:#b44>&#34;~/.cargo/bin/rustfmt&#34;</span>)
+(<span style=color:#b8860b>add-to-list</span> <span style=color:#b8860b>&#39;rustic-rustfmt-config-alist</span> <span style=color:#666>&#39;</span>(<span style=color:#b44>&#34;edition&#34;</span> <span style=color:#666>.</span> <span style=color:#b44>&#34;2018&#34;</span>))
+<span style=color:#080;font-style:italic>;;(setq rustic-lsp-server &#39;rls)</span>
+(<span style=color:#a2f>setq</span> <span style=color:#b8860b>lsp-rust-analyzer-server-command</span> <span style=color:#666>&#39;</span>(<span style=color:#b44>&#34;~/usr/local/bin/rust-analyzer&#34;</span>))
 </code></pre></div><p><code>rustfmt</code> runs when you save changes.
 And I have installed <code>rust-analyzer</code> via Homebrew, so here is set the path.</p><p>Note: <code>rustic</code>'s rust is edition 2015 as default, so you should add edtiion 2018 to setting.</p><h3 id=go>Go</h3><p>It&rsquo;s easy to set your Emacs as Go IDE because all you have to do is hook with LSP.
-Thanks LSP!</p><div class=highlight><pre style=color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-emacs data-lang=emacs><span style=color:#6272a4>;; Go</span>
-(<span style=color:#8be9fd;font-style:italic>require</span> <span style=color:#f1fa8c>&#39;go-mode</span>)
-(<span style=color:#8be9fd;font-style:italic>add-to-list</span> <span style=color:#f1fa8c>&#39;exec-path</span> (<span style=color:#50fa7b>expand-file-name</span> <span style=color:#f1fa8c>&#34;~/go/bin/&#34;</span>))
-(<span style=color:#8be9fd;font-style:italic>add-hook</span> <span style=color:#f1fa8c>&#39;go-mode-hook</span> <span style=color:#50fa7b>#&#39;</span><span style=color:#8be9fd;font-style:italic>lsp-deferred</span>)
-</code></pre></div><h3 id=python>Python</h3><p>About Python, <code>elpy</code> is a inclusive package, which includes some config, linter or etc.</p><div class=highlight><pre style=color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-emacs data-lang=emacs><span style=color:#6272a4>;; Python</span>
-(<span style=color:#8be9fd;font-style:italic>add-to-list</span> <span style=color:#f1fa8c>&#39;exec-path</span> (<span style=color:#50fa7b>expand-file-name</span> <span style=color:#f1fa8c>&#34;~/.pyenv/shims/&#34;</span>))
-(<span style=color:#8be9fd;font-style:italic>add-to-list</span> <span style=color:#f1fa8c>&#39;exec-path</span> (<span style=color:#50fa7b>expand-file-name</span> <span style=color:#f1fa8c>&#34;~/.local/bin/&#34;</span>))
-(<span style=color:#8be9fd;font-style:italic>use-package</span> <span style=color:#8be9fd;font-style:italic>elpy</span>
-  <span style=color:#8be9fd;font-style:italic>:ensure</span> t
-  <span style=color:#8be9fd;font-style:italic>:init</span>
-  (<span style=color:#8be9fd;font-style:italic>elpy-enable</span>))
-</code></pre></div><h2 id=theme-and-modeline>Theme and modeline</h2><p>My theme and modeline are based on <code>Doom</code>.</p><div class=highlight><pre style=color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-emacs data-lang=emacs><span style=color:#6272a4>; cat in modeline</span>
-(<span style=color:#8be9fd;font-style:italic>nyan-mode</span> <span style=color:#bd93f9>1</span>)
+Thanks LSP!</p><div class=highlight><pre style=background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-emacs data-lang=emacs><span style=color:#080;font-style:italic>;; Go</span>
+(<span style=color:#a2f>require</span> <span style=color:#b8860b>&#39;go-mode</span>)
+(<span style=color:#b8860b>add-to-list</span> <span style=color:#b8860b>&#39;exec-path</span> (<span style=color:#00a000>expand-file-name</span> <span style=color:#b44>&#34;~/go/bin/&#34;</span>))
+(<span style=color:#b8860b>add-hook</span> <span style=color:#b8860b>&#39;go-mode-hook</span> <span style=color:#00a000>#&#39;</span><span style=color:#b8860b>lsp-deferred</span>)
+</code></pre></div><h3 id=python>Python</h3><p>About Python, <code>elpy</code> is a inclusive package, which includes some config, linter or etc.</p><div class=highlight><pre style=background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-emacs data-lang=emacs><span style=color:#080;font-style:italic>;; Python</span>
+(<span style=color:#b8860b>add-to-list</span> <span style=color:#b8860b>&#39;exec-path</span> (<span style=color:#00a000>expand-file-name</span> <span style=color:#b44>&#34;~/.pyenv/shims/&#34;</span>))
+(<span style=color:#b8860b>add-to-list</span> <span style=color:#b8860b>&#39;exec-path</span> (<span style=color:#00a000>expand-file-name</span> <span style=color:#b44>&#34;~/.local/bin/&#34;</span>))
+(<span style=color:#a2f>use-package</span> <span style=color:#b8860b>elpy</span>
+  <span style=color:#a2f>:ensure</span> <span style=color:#800>t</span>
+  <span style=color:#a2f>:init</span>
+  (<span style=color:#b8860b>elpy-enable</span>))
+</code></pre></div><h2 id=theme-and-modeline>Theme and modeline</h2><p>My theme and modeline are based on <code>Doom</code>.</p><div class=highlight><pre style=background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-emacs data-lang=emacs><span style=color:#080;font-style:italic>; cat in modeline</span>
+(<span style=color:#b8860b>nyan-mode</span> <span style=color:#666>1</span>)
 
-<span style=color:#6272a4>;; modeline</span>
-(<span style=color:#8be9fd;font-style:italic>use-package</span> <span style=color:#8be9fd;font-style:italic>doom-themes</span>
-  <span style=color:#8be9fd;font-style:italic>:custom</span>
-  (<span style=color:#8be9fd;font-style:italic>doom-themes-enable-italic</span> t)
-  (<span style=color:#8be9fd;font-style:italic>doom-themes-enable-bold</span> t)
-  <span style=color:#8be9fd;font-style:italic>:custom-face</span>
-  (<span style=color:#8be9fd;font-style:italic>doom-modeline-bar</span> ((t (<span style=color:#8be9fd;font-style:italic>:background</span> <span style=color:#f1fa8c>&#34;#6272a4&#34;</span>))))
-  <span style=color:#8be9fd;font-style:italic>:config</span>
-  (<span style=color:#8be9fd;font-style:italic>load-theme</span> <span style=color:#f1fa8c>&#39;doom-vibrant</span> t)
-  (<span style=color:#8be9fd;font-style:italic>doom-themes-neotree-config</span>)
-  (<span style=color:#8be9fd;font-style:italic>doom-themes-org-config</span>))
+<span style=color:#080;font-style:italic>;; modeline</span>
+(<span style=color:#a2f>use-package</span> <span style=color:#b8860b>doom-themes</span>
+  <span style=color:#a2f>:custom</span>
+  (<span style=color:#b8860b>doom-themes-enable-italic</span> <span style=color:#800>t</span>)
+  (<span style=color:#b8860b>doom-themes-enable-bold</span> <span style=color:#800>t</span>)
+  <span style=color:#a2f>:custom-face</span>
+  (<span style=color:#b8860b>doom-modeline-bar</span> ((<span style=color:#800>t</span> (<span style=color:#a2f>:background</span> <span style=color:#b44>&#34;#6272a4&#34;</span>))))
+  <span style=color:#a2f>:config</span>
+  (<span style=color:#b8860b>load-theme</span> <span style=color:#b8860b>&#39;doom-vibrant</span> <span style=color:#800>t</span>)
+  (<span style=color:#b8860b>doom-themes-neotree-config</span>)
+  (<span style=color:#b8860b>doom-themes-org-config</span>))
 
-(<span style=color:#8be9fd;font-style:italic>use-package</span> <span style=color:#8be9fd;font-style:italic>doom-modeline</span>
-  <span style=color:#8be9fd;font-style:italic>:custom</span>
-  (<span style=color:#8be9fd;font-style:italic>doom-modeline-buffer-file-name-style</span> <span style=color:#f1fa8c>&#39;truncate-with-project</span>)
-  (<span style=color:#8be9fd;font-style:italic>doom-modeline-icon</span> nil)
-  (<span style=color:#8be9fd;font-style:italic>doom-modeline-major-mode-icon</span> nil)
-  (<span style=color:#8be9fd;font-style:italic>doom-modeline-minor-modes</span> nil)
-  <span style=color:#8be9fd;font-style:italic>:hook</span>
-  (<span style=color:#8be9fd;font-style:italic>after-init</span> <span style=color:#ff79c6>.</span> <span style=color:#8be9fd;font-style:italic>doom-modeline-mode</span>)
-  <span style=color:#8be9fd;font-style:italic>:config</span>
-  (<span style=color:#8be9fd;font-style:italic>line-number-mode</span> <span style=color:#bd93f9>0</span>)
-  (<span style=color:#8be9fd;font-style:italic>column-number-mode</span> <span style=color:#bd93f9>0</span>)
-  (<span style=color:#8be9fd;font-style:italic>doom-modeline-def-modeline</span> <span style=color:#f1fa8c>&#39;main</span>
-    <span style=color:#ff79c6>&#39;</span>(<span style=color:#8be9fd;font-style:italic>bar</span> <span style=color:#8be9fd;font-style:italic>window-number</span> <span style=color:#8be9fd;font-style:italic>matches</span> <span style=color:#8be9fd;font-style:italic>buffer-info</span> <span style=color:#8be9fd;font-style:italic>remote-host</span> <span style=color:#8be9fd;font-style:italic>buffer-position</span> <span style=color:#8be9fd;font-style:italic>parrot</span> <span style=color:#8be9fd;font-style:italic>selection-info</span>)
-    <span style=color:#ff79c6>&#39;</span>(<span style=color:#8be9fd;font-style:italic>misc-info</span> <span style=color:#8be9fd;font-style:italic>persp-name</span> <span style=color:#8be9fd;font-style:italic>lsp</span> <span style=color:#8be9fd;font-style:italic>github</span> <span style=color:#8be9fd;font-style:italic>debug</span> <span style=color:#8be9fd;font-style:italic>minor-modes</span> <span style=color:#8be9fd;font-style:italic>input-method</span> <span style=color:#8be9fd;font-style:italic>major-mode</span> <span style=color:#8be9fd;font-style:italic>process</span> <span style=color:#8be9fd;font-style:italic>vcs</span> <span style=color:#8be9fd;font-style:italic>checker</span>)))
+(<span style=color:#a2f>use-package</span> <span style=color:#b8860b>doom-modeline</span>
+  <span style=color:#a2f>:custom</span>
+  (<span style=color:#b8860b>doom-modeline-buffer-file-name-style</span> <span style=color:#b8860b>&#39;truncate-with-project</span>)
+  (<span style=color:#b8860b>doom-modeline-icon</span> <span style=color:#800>nil</span>)
+  (<span style=color:#b8860b>doom-modeline-major-mode-icon</span> <span style=color:#800>nil</span>)
+  (<span style=color:#b8860b>doom-modeline-minor-modes</span> <span style=color:#800>nil</span>)
+  <span style=color:#a2f>:hook</span>
+  (<span style=color:#b8860b>after-init</span> <span style=color:#666>.</span> <span style=color:#b8860b>doom-modeline-mode</span>)
+  <span style=color:#a2f>:config</span>
+  (<span style=color:#b8860b>line-number-mode</span> <span style=color:#666>0</span>)
+  (<span style=color:#b8860b>column-number-mode</span> <span style=color:#666>0</span>)
+  (<span style=color:#b8860b>doom-modeline-def-modeline</span> <span style=color:#b8860b>&#39;main</span>
+    <span style=color:#666>&#39;</span>(<span style=color:#b8860b>bar</span> <span style=color:#b8860b>window-number</span> <span style=color:#b8860b>matches</span> <span style=color:#b8860b>buffer-info</span> <span style=color:#b8860b>remote-host</span> <span style=color:#b8860b>buffer-position</span> <span style=color:#b8860b>parrot</span> <span style=color:#b8860b>selection-info</span>)
+    <span style=color:#666>&#39;</span>(<span style=color:#b8860b>misc-info</span> <span style=color:#b8860b>persp-name</span> <span style=color:#b8860b>lsp</span> <span style=color:#b8860b>github</span> <span style=color:#b8860b>debug</span> <span style=color:#b8860b>minor-modes</span> <span style=color:#b8860b>input-method</span> <span style=color:#b8860b>major-mode</span> <span style=color:#b8860b>process</span> <span style=color:#b8860b>vcs</span> <span style=color:#b8860b>checker</span>)))
 
-(<span style=color:#8be9fd;font-style:italic>use-package</span> <span style=color:#8be9fd;font-style:italic>hide-mode-line</span>
-  <span style=color:#8be9fd;font-style:italic>:hook</span>
-  ((<span style=color:#8be9fd;font-style:italic>neotree-mode</span> <span style=color:#8be9fd;font-style:italic>imenu-list-minor-mode</span> <span style=color:#8be9fd;font-style:italic>minimap-mode</span>) <span style=color:#ff79c6>.</span> <span style=color:#8be9fd;font-style:italic>hide-mode-line-mode</span>))
+(<span style=color:#a2f>use-package</span> <span style=color:#b8860b>hide-mode-line</span>
+  <span style=color:#a2f>:hook</span>
+  ((<span style=color:#b8860b>neotree-mode</span> <span style=color:#b8860b>imenu-list-minor-mode</span> <span style=color:#b8860b>minimap-mode</span>) <span style=color:#666>.</span> <span style=color:#b8860b>hide-mode-line-mode</span>))
 
 </code></pre></div><p>With <code>nyan-mode</code>, you can always look a cute cat.</p><h2 id=which-key>which-key</h2><p>Actually I&rsquo;m not familiar with Emacs key binds.
-<code>which-key</code> provides you information about the meaning of each key bind.</p><div class=highlight><pre style=color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-emacs data-lang=emacs><span style=color:#6272a4>;; which key</span>
-(<span style=color:#8be9fd;font-style:italic>use-package</span> <span style=color:#8be9fd;font-style:italic>which-key</span>
-  <span style=color:#8be9fd;font-style:italic>:diminish</span> <span style=color:#8be9fd;font-style:italic>which-key-mode</span>
-  <span style=color:#8be9fd;font-style:italic>:hook</span> (<span style=color:#8be9fd;font-style:italic>after-init</span> <span style=color:#ff79c6>.</span> <span style=color:#8be9fd;font-style:italic>which-key-mode</span>))
-</code></pre></div><h1 id=summary>Summary</h1><p>My custom key bindings are like below.</p><div class=highlight><pre style=color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-emacs data-lang=emacs>(<span style=color:#8be9fd;font-style:italic>global-set-key</span> (<span style=color:#8be9fd;font-style:italic>kbd</span> <span style=color:#f1fa8c>&#34;M-x&#34;</span>) <span style=color:#f1fa8c>&#39;counsel</span>)
-(<span style=color:#8be9fd;font-style:italic>global-set-key</span> (<span style=color:#8be9fd;font-style:italic>kbd</span> <span style=color:#f1fa8c>&#34;C-s&#34;</span>) <span style=color:#f1fa8c>&#39;swiper</span>)
-(<span style=color:#8be9fd;font-style:italic>global-set-key</span> (<span style=color:#8be9fd;font-style:italic>kbd</span> <span style=color:#f1fa8c>&#34;C-r&#34;</span>) <span style=color:#f1fa8c>&#39;counsel-recentf</span>) 
-(<span style=color:#8be9fd;font-style:italic>global-set-key</span> (<span style=color:#8be9fd;font-style:italic>kbd</span> <span style=color:#f1fa8c>&#34;C-o&#34;</span>)
+<code>which-key</code> provides you information about the meaning of each key bind.</p><div class=highlight><pre style=background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-emacs data-lang=emacs><span style=color:#080;font-style:italic>;; which key</span>
+(<span style=color:#a2f>use-package</span> <span style=color:#b8860b>which-key</span>
+  <span style=color:#a2f>:diminish</span> <span style=color:#b8860b>which-key-mode</span>
+  <span style=color:#a2f>:hook</span> (<span style=color:#b8860b>after-init</span> <span style=color:#666>.</span> <span style=color:#b8860b>which-key-mode</span>))
+</code></pre></div><h1 id=summary>Summary</h1><p>My custom key bindings are like below.</p><div class=highlight><pre style=background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-emacs data-lang=emacs>(<span style=color:#b8860b>global-set-key</span> (<span style=color:#b8860b>kbd</span> <span style=color:#b44>&#34;M-x&#34;</span>) <span style=color:#b8860b>&#39;counsel</span>)
+(<span style=color:#b8860b>global-set-key</span> (<span style=color:#b8860b>kbd</span> <span style=color:#b44>&#34;C-s&#34;</span>) <span style=color:#b8860b>&#39;swiper</span>)
+(<span style=color:#b8860b>global-set-key</span> (<span style=color:#b8860b>kbd</span> <span style=color:#b44>&#34;C-r&#34;</span>) <span style=color:#b8860b>&#39;counsel-recentf</span>) 
+(<span style=color:#b8860b>global-set-key</span> (<span style=color:#b8860b>kbd</span> <span style=color:#b44>&#34;C-o&#34;</span>)
 </code></pre></div><hr><ul class=pager><li class=previous><a href=/post/2020-09-06-ecosystems-of-wasm/ data-toggle=tooltip data-placement=top title="Tools and Ecosystem of WebAssembly with Rust">&larr;
 Previous Post</a></li><li class=next><a href=/post/2020-09-12-when-to-use-lazy_static/ data-toggle=tooltip data-placement=top title="const and static in Rust">Next
 Post &rarr;</a></li></ul><div id=disqus-comment></div></div><div class="col-lg-11 col-lg-offset-1

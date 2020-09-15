@@ -11,151 +11,151 @@ col-md-10 col-md-offset-1
 post-container"><header><h2>TOC</h2></header><nav id=TableOfContents><ul><li><a href=#global-variable-in-rust>Global variable in Rust</a></li><li><a href=#how-to-use-properly>How to use properly</a></li><li><a href=#thread_local-and-lazy_static>thread_local! and lazy_static!</a><ul><li><a href=#thread_local-macro>thread_local! macro</a></li><li><a href=#lazy_static-macro>lazy_static! macro</a></li></ul></li></ul></nav><h1 id=global-variable-in-rust>Global variable in Rust</h1><p>In functional programming, the way to use global variable properly is just to avoid using it.
 This is not a joke.
 Modern software engineering requires variables to be scoped, and at the same time, they shouldn&rsquo;t be changed even in scopes such as closures.</p><p>However, we can&rsquo;t sometimes avoid using global variable (Somtimes codes can be cleaner.)
-For such situations, Rust provides some syntax to controll global variables.</p><p>They are <code>const</code> and <code>static</code>.</p><p>To explain their functionality, let&rsquo;s take a easy example.</p><div class=highlight><pre style=color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-rust data-lang=rust><span style=color:#ff79c6>const</span> X: <span style=color:#8be9fd>usize</span> <span style=color:#ff79c6>=</span> <span style=color:#bd93f9>0</span>;
-
-<span style=color:#ff79c6>fn</span> <span style=color:#50fa7b>main</span>() {
-  println<span style=color:#ff79c6>!</span>(<span style=color:#f1fa8c>&#34;X = {}&#34;</span>, X);
-  X <span style=color:#ff79c6>+=</span> <span style=color:#bd93f9>1</span>;
-  println<span style=color:#ff79c6>!</span>(<span style=color:#f1fa8c>&#34;X = {}&#34;</span>, X);
-}
-</code></pre></div><p>When you try to compile this, you will face an error message.</p><div class=highlight><pre style=color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-rust data-lang=rust>error[E0067]: <span style=color:#50fa7b>invalid</span> left<span style=color:#ff79c6>-</span>hand side of assignment
- <span style=color:#ff79c6>-</span>-&gt; <span style=color:#50fa7b>src</span><span style=color:#ff79c6>/</span>main.rs:<span style=color:#bd93f9>5</span>:<span style=color:#bd93f9>5</span>
-  <span style=color:#ff79c6>|</span>
-<span style=color:#bd93f9>5</span> <span style=color:#ff79c6>|</span>   X <span style=color:#ff79c6>+=</span> <span style=color:#bd93f9>1</span>;
-  <span style=color:#ff79c6>|</span>   <span style=color:#ff79c6>-</span> <span style=color:#ff79c6>^^</span>
-  <span style=color:#ff79c6>|</span>   <span style=color:#ff79c6>|</span>
-  <span style=color:#ff79c6>|</span>   cannot assign to this expression
-</code></pre></div><p><code>const</code> variable can&rsquo;t be changed and can be accessed from any place.</p><p>On the other hand, this is compilable.</p><div class=highlight><pre style=color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-rust data-lang=rust><span style=color:#ff79c6>const</span> X: <span style=color:#8be9fd>usize</span> <span style=color:#ff79c6>=</span> <span style=color:#bd93f9>0</span>;
-
-<span style=color:#ff79c6>fn</span> <span style=color:#50fa7b>main</span>() {
-  <span style=color:#ff79c6>unsafe</span> {
-    println<span style=color:#ff79c6>!</span>(<span style=color:#f1fa8c>&#34;X = {}&#34;</span>, X);
-    X <span style=color:#ff79c6>+=</span> <span style=color:#bd93f9>1</span>;
-    println<span style=color:#ff79c6>!</span>(<span style=color:#f1fa8c>&#34;X = {}&#34;</span>, X);
-  }
-}
-</code></pre></div><p>This uses <code>unsafe</code> but <code>static</code> allows us to change itself.</p><p>OK, the next example is more clear.</p><div class=highlight><pre style=color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-rust data-lang=rust><span style=color:#ff79c6>use</span> std::sync::atomic::{self, AtomicUsize};
-
-<span style=color:#ff79c6>const</span> X: <span style=color:#50fa7b>AtomicUsize</span> <span style=color:#ff79c6>=</span> AtomicUsize::new(<span style=color:#bd93f9>0</span>);
-<span style=color:#ff79c6>static</span> Y: <span style=color:#50fa7b>AtomicUsize</span> <span style=color:#ff79c6>=</span> AtomicUsize::new(<span style=color:#bd93f9>0</span>);
-
-<span style=color:#ff79c6>fn</span> <span style=color:#50fa7b>main</span>() {
-    <span style=color:#ff79c6>for</span> _ <span style=color:#ff79c6>in</span> <span style=color:#bd93f9>0</span>..<span style=color:#bd93f9>5</span> {
-        println<span style=color:#ff79c6>!</span>(<span style=color:#f1fa8c>&#34;X = {}&#34;</span>, X.fetch_add(<span style=color:#bd93f9>1</span>, atomic::Ordering::SeqCst));
-    }
-    <span style=color:#ff79c6>for</span> _ <span style=color:#ff79c6>in</span> <span style=color:#bd93f9>0</span>..<span style=color:#bd93f9>5</span> {
-        println<span style=color:#ff79c6>!</span>(<span style=color:#f1fa8c>&#34;Y = {}&#34;</span>, Y.fetch_add(<span style=color:#bd93f9>1</span>, atomic::Ordering::SeqCst));
-    }
-}
-</code></pre></div><p>This code is from <a href=https://qnighy.hatenablog.com/entry/2018/06/17/190000>here</a>.
-When you run, this prints below.</p><div class=highlight><pre style=color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-bash data-lang=bash><span style=color:#8be9fd;font-style:italic>X</span> <span style=color:#ff79c6>=</span> <span style=color:#bd93f9>0</span>
-<span style=color:#8be9fd;font-style:italic>X</span> <span style=color:#ff79c6>=</span> <span style=color:#bd93f9>0</span>
-<span style=color:#8be9fd;font-style:italic>X</span> <span style=color:#ff79c6>=</span> <span style=color:#bd93f9>0</span>
-<span style=color:#8be9fd;font-style:italic>X</span> <span style=color:#ff79c6>=</span> <span style=color:#bd93f9>0</span>
-<span style=color:#8be9fd;font-style:italic>X</span> <span style=color:#ff79c6>=</span> <span style=color:#bd93f9>0</span>
-<span style=color:#8be9fd;font-style:italic>Y</span> <span style=color:#ff79c6>=</span> <span style=color:#bd93f9>0</span>
-<span style=color:#8be9fd;font-style:italic>Y</span> <span style=color:#ff79c6>=</span> <span style=color:#bd93f9>1</span>
-<span style=color:#8be9fd;font-style:italic>Y</span> <span style=color:#ff79c6>=</span> <span style=color:#bd93f9>2</span>
-<span style=color:#8be9fd;font-style:italic>Y</span> <span style=color:#ff79c6>=</span> <span style=color:#bd93f9>3</span>
-<span style=color:#8be9fd;font-style:italic>Y</span> <span style=color:#ff79c6>=</span> <span style=color:#bd93f9>4</span>
+For such situations, Rust provides some syntax to controll global variables.</p><p>They are <code>const</code> and <code>static</code>.</p><p>To explain their functionality, let&rsquo;s take a easy example.</p><div class=highlight><pre style=background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-rust data-lang=rust><span style=color:#a2f;font-weight:700>const</span><span style=color:#bbb> </span>X: <span style=color:#0b0;font-weight:700>usize</span> <span style=color:#666>=</span><span style=color:#bbb> </span><span style=color:#666>0</span>;<span style=color:#bbb>
+</span><span style=color:#bbb>
+</span><span style=color:#bbb></span><span style=color:#a2f;font-weight:700>fn</span> <span style=color:#00a000>main</span>()<span style=color:#bbb> </span>{<span style=color:#bbb>
+</span><span style=color:#bbb>  </span>println<span style=color:#666>!</span>(<span style=color:#b44>&#34;X = {}&#34;</span>,<span style=color:#bbb> </span>X);<span style=color:#bbb>
+</span><span style=color:#bbb>  </span>X<span style=color:#bbb> </span><span style=color:#666>+=</span><span style=color:#bbb> </span><span style=color:#666>1</span>;<span style=color:#bbb>
+</span><span style=color:#bbb>  </span>println<span style=color:#666>!</span>(<span style=color:#b44>&#34;X = {}&#34;</span>,<span style=color:#bbb> </span>X);<span style=color:#bbb>
+</span><span style=color:#bbb></span>}<span style=color:#bbb>
+</span></code></pre></div><p>When you try to compile this, you will face an error message.</p><div class=highlight><pre style=background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-rust data-lang=rust>error[E0067]: <span style=color:#00f>invalid</span><span style=color:#bbb> </span>left<span style=color:#666>-</span>hand<span style=color:#bbb> </span>side<span style=color:#bbb> </span>of<span style=color:#bbb> </span>assignment<span style=color:#bbb>
+</span><span style=color:#bbb> </span><span style=color:#666>-</span>-&gt; <span style=color:#00f>src</span><span style=color:#666>/</span>main.rs:<span style=color:#666>5</span>:<span style=color:#666>5</span><span style=color:#bbb>
+</span><span style=color:#bbb>  </span><span style=color:#666>|</span><span style=color:#bbb>
+</span><span style=color:#bbb></span><span style=color:#666>5</span><span style=color:#bbb> </span><span style=color:#666>|</span><span style=color:#bbb>   </span>X<span style=color:#bbb> </span><span style=color:#666>+=</span><span style=color:#bbb> </span><span style=color:#666>1</span>;<span style=color:#bbb>
+</span><span style=color:#bbb>  </span><span style=color:#666>|</span><span style=color:#bbb>   </span><span style=color:#666>-</span><span style=color:#bbb> </span><span style=color:#666>^^</span><span style=color:#bbb>
+</span><span style=color:#bbb>  </span><span style=color:#666>|</span><span style=color:#bbb>   </span><span style=color:#666>|</span><span style=color:#bbb>
+</span><span style=color:#bbb>  </span><span style=color:#666>|</span><span style=color:#bbb>   </span>cannot<span style=color:#bbb> </span>assign<span style=color:#bbb> </span>to<span style=color:#bbb> </span>this<span style=color:#bbb> </span>expression<span style=color:#bbb>
+</span></code></pre></div><p><code>const</code> variable can&rsquo;t be changed and can be accessed from any place.</p><p>On the other hand, this is compilable.</p><div class=highlight><pre style=background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-rust data-lang=rust><span style=color:#a2f;font-weight:700>const</span><span style=color:#bbb> </span>X: <span style=color:#0b0;font-weight:700>usize</span> <span style=color:#666>=</span><span style=color:#bbb> </span><span style=color:#666>0</span>;<span style=color:#bbb>
+</span><span style=color:#bbb>
+</span><span style=color:#bbb></span><span style=color:#a2f;font-weight:700>fn</span> <span style=color:#00a000>main</span>()<span style=color:#bbb> </span>{<span style=color:#bbb>
+</span><span style=color:#bbb>  </span><span style=color:#a2f;font-weight:700>unsafe</span><span style=color:#bbb> </span>{<span style=color:#bbb>
+</span><span style=color:#bbb>    </span>println<span style=color:#666>!</span>(<span style=color:#b44>&#34;X = {}&#34;</span>,<span style=color:#bbb> </span>X);<span style=color:#bbb>
+</span><span style=color:#bbb>    </span>X<span style=color:#bbb> </span><span style=color:#666>+=</span><span style=color:#bbb> </span><span style=color:#666>1</span>;<span style=color:#bbb>
+</span><span style=color:#bbb>    </span>println<span style=color:#666>!</span>(<span style=color:#b44>&#34;X = {}&#34;</span>,<span style=color:#bbb> </span>X);<span style=color:#bbb>
+</span><span style=color:#bbb>  </span>}<span style=color:#bbb>
+</span><span style=color:#bbb></span>}<span style=color:#bbb>
+</span></code></pre></div><p>This uses <code>unsafe</code> but <code>static</code> allows us to change itself.</p><p>OK, the next example is more clear.</p><div class=highlight><pre style=background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-rust data-lang=rust><span style=color:#a2f;font-weight:700>use</span><span style=color:#bbb> </span>std::sync::atomic::{self,<span style=color:#bbb> </span>AtomicUsize};<span style=color:#bbb>
+</span><span style=color:#bbb>
+</span><span style=color:#bbb></span><span style=color:#a2f;font-weight:700>const</span><span style=color:#bbb> </span>X: <span style=color:#00f>AtomicUsize</span><span style=color:#bbb> </span><span style=color:#666>=</span><span style=color:#bbb> </span>AtomicUsize::new(<span style=color:#666>0</span>);<span style=color:#bbb>
+</span><span style=color:#bbb></span><span style=color:#a2f;font-weight:700>static</span><span style=color:#bbb> </span>Y: <span style=color:#00f>AtomicUsize</span><span style=color:#bbb> </span><span style=color:#666>=</span><span style=color:#bbb> </span>AtomicUsize::new(<span style=color:#666>0</span>);<span style=color:#bbb>
+</span><span style=color:#bbb>
+</span><span style=color:#bbb></span><span style=color:#a2f;font-weight:700>fn</span> <span style=color:#00a000>main</span>()<span style=color:#bbb> </span>{<span style=color:#bbb>
+</span><span style=color:#bbb>    </span><span style=color:#a2f;font-weight:700>for</span><span style=color:#bbb> </span>_<span style=color:#bbb> </span><span style=color:#a2f;font-weight:700>in</span><span style=color:#bbb> </span><span style=color:#666>0</span>..<span style=color:#666>5</span><span style=color:#bbb> </span>{<span style=color:#bbb>
+</span><span style=color:#bbb>        </span>println<span style=color:#666>!</span>(<span style=color:#b44>&#34;X = {}&#34;</span>,<span style=color:#bbb> </span>X.fetch_add(<span style=color:#666>1</span>,<span style=color:#bbb> </span>atomic::Ordering::SeqCst));<span style=color:#bbb>
+</span><span style=color:#bbb>    </span>}<span style=color:#bbb>
+</span><span style=color:#bbb>    </span><span style=color:#a2f;font-weight:700>for</span><span style=color:#bbb> </span>_<span style=color:#bbb> </span><span style=color:#a2f;font-weight:700>in</span><span style=color:#bbb> </span><span style=color:#666>0</span>..<span style=color:#666>5</span><span style=color:#bbb> </span>{<span style=color:#bbb>
+</span><span style=color:#bbb>        </span>println<span style=color:#666>!</span>(<span style=color:#b44>&#34;Y = {}&#34;</span>,<span style=color:#bbb> </span>Y.fetch_add(<span style=color:#666>1</span>,<span style=color:#bbb> </span>atomic::Ordering::SeqCst));<span style=color:#bbb>
+</span><span style=color:#bbb>    </span>}<span style=color:#bbb>
+</span><span style=color:#bbb></span>}<span style=color:#bbb>
+</span></code></pre></div><p>This code is from <a href=https://qnighy.hatenablog.com/entry/2018/06/17/190000>here</a>.
+When you run, this prints below.</p><div class=highlight><pre style=background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-bash data-lang=bash><span style=color:#b8860b>X</span> <span style=color:#666>=</span> <span style=color:#666>0</span>
+<span style=color:#b8860b>X</span> <span style=color:#666>=</span> <span style=color:#666>0</span>
+<span style=color:#b8860b>X</span> <span style=color:#666>=</span> <span style=color:#666>0</span>
+<span style=color:#b8860b>X</span> <span style=color:#666>=</span> <span style=color:#666>0</span>
+<span style=color:#b8860b>X</span> <span style=color:#666>=</span> <span style=color:#666>0</span>
+<span style=color:#b8860b>Y</span> <span style=color:#666>=</span> <span style=color:#666>0</span>
+<span style=color:#b8860b>Y</span> <span style=color:#666>=</span> <span style=color:#666>1</span>
+<span style=color:#b8860b>Y</span> <span style=color:#666>=</span> <span style=color:#666>2</span>
+<span style=color:#b8860b>Y</span> <span style=color:#666>=</span> <span style=color:#666>3</span>
+<span style=color:#b8860b>Y</span> <span style=color:#666>=</span> <span style=color:#666>4</span>
 </code></pre></div><p><code>fetch_add</code> takes <code>&self</code>, so <code>&X</code> and <code>&Y</code> are calculated in this example.
 About <code>const</code>, some anonymous local variable is allocated for each time, so the <code>const</code> variable looks unchanged.
 In short, new variable initialized as <code>AtomicUsize</code> is generated for each iteration.</p><p>But <code>static</code> fixes the address of the variable.
 So this is incremented for each iteration., which has <code>'static</code> lifetime.</p><p>To summarize, the difference between <code>const</code> and <code>static</code> is:</p><ul><li><code>const</code> defines the value determined in compiling. This fixes value, not address.</li><li><code>static</code> defines the address, which will be set value in compiling. It isn&rsquo;t essential whether this is initialzied with value.</li></ul><h1 id=how-to-use-properly>How to use properly</h1><p><code>const</code> is really simple and easy to use.
 But <code>static</code> is a little diffucult to understand and use.
 In fact, <code>static</code> has cause to really step in it.</p><p>When you set global variable initialized with <code>static mut</code>, this often results in undefined behaviour.
-For example, see this <a href="https://play.rust-lang.org/?version=nightly&mode=debug&edition=2018&gist=4e947d6632d52f39536d42ff51136e1b">link</a>.</p><div class=highlight><pre style=color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-rust data-lang=rust><span style=color:#ff79c6>#[derive(Debug, Clone)]</span>
-<span style=color:#ff79c6>struct</span> <span style=color:#50fa7b>Node</span> {
-    children: <span style=color:#8be9fd;font-style:italic>Vec</span><span style=color:#ff79c6>&lt;</span><span style=color:#8be9fd>usize</span><span style=color:#ff79c6>&gt;</span>,
-    last: <span style=color:#8be9fd>usize</span>,
-}
-
-<span style=color:#ff79c6>impl</span> Node {
-    <span style=color:#ff79c6>fn</span> <span style=color:#50fa7b>add</span>(<span style=color:#ff79c6>&amp;</span><span style=color:#ff79c6>mut</span> self, next: <span style=color:#8be9fd>usize</span>) -&gt; <span style=color:#8be9fd>usize</span> {
-        self.children.push(next);
-        self.last <span style=color:#ff79c6>=</span> next;
-        next
-    }
-}
-
-<span style=color:#ff79c6>static</span> <span style=color:#ff79c6>mut</span> NODES: <span style=color:#8be9fd;font-style:italic>Vec</span><span style=color:#ff79c6>&lt;</span>Node<span style=color:#ff79c6>&gt;</span> <span style=color:#ff79c6>=</span> <span style=color:#8be9fd;font-style:italic>Vec</span>::new();
-
-<span style=color:#ff79c6>unsafe</span> <span style=color:#ff79c6>fn</span> <span style=color:#50fa7b>new_node</span>() -&gt; <span style=color:#8be9fd>usize</span> {
-    <span style=color:#8be9fd;font-style:italic>let</span> ret <span style=color:#ff79c6>=</span> NODES.len();
-    NODES.push(Node { children: <span style=color:#8be9fd;font-style:italic>Vec</span>::new(), last: <span style=color:#bd93f9>0</span> });
-    ret
-}
-
-<span style=color:#ff79c6>fn</span> <span style=color:#50fa7b>main</span>() {
-    <span style=color:#ff79c6>unsafe</span> {
-        <span style=color:#8be9fd;font-style:italic>let</span> <span style=color:#ff79c6>mut</span> last <span style=color:#ff79c6>=</span> new_node();
-        <span style=color:#ff79c6>for</span> _ <span style=color:#ff79c6>in</span> <span style=color:#bd93f9>0</span>..<span style=color:#bd93f9>30</span> {
-            last <span style=color:#ff79c6>=</span> NODES[last].add(new_node());
-        }
-        <span style=color:#ff79c6>for</span> node <span style=color:#ff79c6>in</span> <span style=color:#ff79c6>&amp;</span>NODES {
-            println<span style=color:#ff79c6>!</span>(<span style=color:#f1fa8c>&#34;{}&#34;</span>, node.last);
-        }
-    }
-}
-</code></pre></div><p>In this code, <code>NODES</code> should be set as 0 -> 1 -> 2 -> &mldr; -> 30.
-But the result is below.</p><div class=highlight><pre style=color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-rust data-lang=rust><span style=color:#bd93f9>1</span>
-<span style=color:#bd93f9>2</span>
-<span style=color:#bd93f9>3</span>
-<span style=color:#bd93f9>0</span>
-<span style=color:#bd93f9>5</span>
-<span style=color:#bd93f9>6</span>
-<span style=color:#bd93f9>7</span>
-<span style=color:#bd93f9>0</span>
-<span style=color:#bd93f9>9</span>
-<span style=color:#bd93f9>10</span>
-<span style=color:#bd93f9>11</span>
-<span style=color:#bd93f9>12</span>
-<span style=color:#bd93f9>13</span>
-<span style=color:#bd93f9>14</span>
-<span style=color:#bd93f9>15</span>
-<span style=color:#bd93f9>0</span>
-<span style=color:#bd93f9>17</span>
-<span style=color:#bd93f9>18</span>
-<span style=color:#bd93f9>19</span>
-<span style=color:#bd93f9>20</span>
-<span style=color:#bd93f9>21</span>
-<span style=color:#bd93f9>22</span>
-<span style=color:#bd93f9>23</span>
-<span style=color:#bd93f9>24</span>
-<span style=color:#bd93f9>25</span>
-<span style=color:#bd93f9>26</span>
-<span style=color:#bd93f9>27</span>
-<span style=color:#bd93f9>28</span>
-<span style=color:#bd93f9>29</span>
-<span style=color:#bd93f9>30</span>
-<span style=color:#bd93f9>0</span>
-</code></pre></div><p>The reason for such a phenomenon is <code>static mut</code> has global pointer.</p><p>To avoid this, you should avoid using global variable.
+For example, see this <a href="https://play.rust-lang.org/?version=nightly&mode=debug&edition=2018&gist=4e947d6632d52f39536d42ff51136e1b">link</a>.</p><div class=highlight><pre style=background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-rust data-lang=rust><span style=color:#080>#[derive(Debug, Clone)]</span><span style=color:#bbb>
+</span><span style=color:#bbb></span><span style=color:#a2f;font-weight:700>struct</span> <span style=color:#00f>Node</span><span style=color:#bbb> </span>{<span style=color:#bbb>
+</span><span style=color:#bbb>    </span>children: <span style=color:#a2f>Vec</span><span style=color:#666>&lt;</span><span style=color:#0b0;font-weight:700>usize</span><span style=color:#666>&gt;</span>,<span style=color:#bbb>
+</span><span style=color:#bbb>    </span>last: <span style=color:#0b0;font-weight:700>usize</span>,<span style=color:#bbb>
+</span><span style=color:#bbb></span>}<span style=color:#bbb>
+</span><span style=color:#bbb>
+</span><span style=color:#bbb></span><span style=color:#a2f;font-weight:700>impl</span><span style=color:#bbb> </span>Node<span style=color:#bbb> </span>{<span style=color:#bbb>
+</span><span style=color:#bbb>    </span><span style=color:#a2f;font-weight:700>fn</span> <span style=color:#00a000>add</span>(<span style=color:#666>&amp;</span><span style=color:#a2f;font-weight:700>mut</span><span style=color:#bbb> </span>self,<span style=color:#bbb> </span>next: <span style=color:#0b0;font-weight:700>usize</span>)<span style=color:#bbb> </span>-&gt; <span style=color:#0b0;font-weight:700>usize</span> {<span style=color:#bbb>
+</span><span style=color:#bbb>        </span>self.children.push(next);<span style=color:#bbb>
+</span><span style=color:#bbb>        </span>self.last<span style=color:#bbb> </span><span style=color:#666>=</span><span style=color:#bbb> </span>next;<span style=color:#bbb>
+</span><span style=color:#bbb>        </span>next<span style=color:#bbb>
+</span><span style=color:#bbb>    </span>}<span style=color:#bbb>
+</span><span style=color:#bbb></span>}<span style=color:#bbb>
+</span><span style=color:#bbb>
+</span><span style=color:#bbb></span><span style=color:#a2f;font-weight:700>static</span><span style=color:#bbb> </span><span style=color:#a2f;font-weight:700>mut</span><span style=color:#bbb> </span>NODES: <span style=color:#a2f>Vec</span><span style=color:#666>&lt;</span>Node<span style=color:#666>&gt;</span><span style=color:#bbb> </span><span style=color:#666>=</span><span style=color:#bbb> </span><span style=color:#a2f>Vec</span>::new();<span style=color:#bbb>
+</span><span style=color:#bbb>
+</span><span style=color:#bbb></span><span style=color:#a2f;font-weight:700>unsafe</span><span style=color:#bbb> </span><span style=color:#a2f;font-weight:700>fn</span> <span style=color:#00a000>new_node</span>()<span style=color:#bbb> </span>-&gt; <span style=color:#0b0;font-weight:700>usize</span> {<span style=color:#bbb>
+</span><span style=color:#bbb>    </span><span style=color:#a2f;font-weight:700>let</span><span style=color:#bbb> </span>ret<span style=color:#bbb> </span><span style=color:#666>=</span><span style=color:#bbb> </span>NODES.len();<span style=color:#bbb>
+</span><span style=color:#bbb>    </span>NODES.push(Node<span style=color:#bbb> </span>{<span style=color:#bbb> </span>children: <span style=color:#a2f>Vec</span>::new(),<span style=color:#bbb> </span>last: <span style=color:#666>0</span><span style=color:#bbb> </span>});<span style=color:#bbb>
+</span><span style=color:#bbb>    </span>ret<span style=color:#bbb>
+</span><span style=color:#bbb></span>}<span style=color:#bbb>
+</span><span style=color:#bbb>
+</span><span style=color:#bbb></span><span style=color:#a2f;font-weight:700>fn</span> <span style=color:#00a000>main</span>()<span style=color:#bbb> </span>{<span style=color:#bbb>
+</span><span style=color:#bbb>    </span><span style=color:#a2f;font-weight:700>unsafe</span><span style=color:#bbb> </span>{<span style=color:#bbb>
+</span><span style=color:#bbb>        </span><span style=color:#a2f;font-weight:700>let</span><span style=color:#bbb> </span><span style=color:#a2f;font-weight:700>mut</span><span style=color:#bbb> </span>last<span style=color:#bbb> </span><span style=color:#666>=</span><span style=color:#bbb> </span>new_node();<span style=color:#bbb>
+</span><span style=color:#bbb>        </span><span style=color:#a2f;font-weight:700>for</span><span style=color:#bbb> </span>_<span style=color:#bbb> </span><span style=color:#a2f;font-weight:700>in</span><span style=color:#bbb> </span><span style=color:#666>0</span>..<span style=color:#666>30</span><span style=color:#bbb> </span>{<span style=color:#bbb>
+</span><span style=color:#bbb>            </span>last<span style=color:#bbb> </span><span style=color:#666>=</span><span style=color:#bbb> </span>NODES[last].add(new_node());<span style=color:#bbb>
+</span><span style=color:#bbb>        </span>}<span style=color:#bbb>
+</span><span style=color:#bbb>        </span><span style=color:#a2f;font-weight:700>for</span><span style=color:#bbb> </span>node<span style=color:#bbb> </span><span style=color:#a2f;font-weight:700>in</span><span style=color:#bbb> </span><span style=color:#666>&amp;</span>NODES<span style=color:#bbb> </span>{<span style=color:#bbb>
+</span><span style=color:#bbb>            </span>println<span style=color:#666>!</span>(<span style=color:#b44>&#34;{}&#34;</span>,<span style=color:#bbb> </span>node.last);<span style=color:#bbb>
+</span><span style=color:#bbb>        </span>}<span style=color:#bbb>
+</span><span style=color:#bbb>    </span>}<span style=color:#bbb>
+</span><span style=color:#bbb></span>}<span style=color:#bbb>
+</span></code></pre></div><p>In this code, <code>NODES</code> should be set as 0 -> 1 -> 2 -> &mldr; -> 30.
+But the result is below.</p><div class=highlight><pre style=background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-rust data-lang=rust><span style=color:#666>1</span><span style=color:#bbb>
+</span><span style=color:#bbb></span><span style=color:#666>2</span><span style=color:#bbb>
+</span><span style=color:#bbb></span><span style=color:#666>3</span><span style=color:#bbb>
+</span><span style=color:#bbb></span><span style=color:#666>0</span><span style=color:#bbb>
+</span><span style=color:#bbb></span><span style=color:#666>5</span><span style=color:#bbb>
+</span><span style=color:#bbb></span><span style=color:#666>6</span><span style=color:#bbb>
+</span><span style=color:#bbb></span><span style=color:#666>7</span><span style=color:#bbb>
+</span><span style=color:#bbb></span><span style=color:#666>0</span><span style=color:#bbb>
+</span><span style=color:#bbb></span><span style=color:#666>9</span><span style=color:#bbb>
+</span><span style=color:#bbb></span><span style=color:#666>10</span><span style=color:#bbb>
+</span><span style=color:#bbb></span><span style=color:#666>11</span><span style=color:#bbb>
+</span><span style=color:#bbb></span><span style=color:#666>12</span><span style=color:#bbb>
+</span><span style=color:#bbb></span><span style=color:#666>13</span><span style=color:#bbb>
+</span><span style=color:#bbb></span><span style=color:#666>14</span><span style=color:#bbb>
+</span><span style=color:#bbb></span><span style=color:#666>15</span><span style=color:#bbb>
+</span><span style=color:#bbb></span><span style=color:#666>0</span><span style=color:#bbb>
+</span><span style=color:#bbb></span><span style=color:#666>17</span><span style=color:#bbb>
+</span><span style=color:#bbb></span><span style=color:#666>18</span><span style=color:#bbb>
+</span><span style=color:#bbb></span><span style=color:#666>19</span><span style=color:#bbb>
+</span><span style=color:#bbb></span><span style=color:#666>20</span><span style=color:#bbb>
+</span><span style=color:#bbb></span><span style=color:#666>21</span><span style=color:#bbb>
+</span><span style=color:#bbb></span><span style=color:#666>22</span><span style=color:#bbb>
+</span><span style=color:#bbb></span><span style=color:#666>23</span><span style=color:#bbb>
+</span><span style=color:#bbb></span><span style=color:#666>24</span><span style=color:#bbb>
+</span><span style=color:#bbb></span><span style=color:#666>25</span><span style=color:#bbb>
+</span><span style=color:#bbb></span><span style=color:#666>26</span><span style=color:#bbb>
+</span><span style=color:#bbb></span><span style=color:#666>27</span><span style=color:#bbb>
+</span><span style=color:#bbb></span><span style=color:#666>28</span><span style=color:#bbb>
+</span><span style=color:#bbb></span><span style=color:#666>29</span><span style=color:#bbb>
+</span><span style=color:#bbb></span><span style=color:#666>30</span><span style=color:#bbb>
+</span><span style=color:#bbb></span><span style=color:#666>0</span><span style=color:#bbb>
+</span></code></pre></div><p>The reason for such a phenomenon is <code>static mut</code> has global pointer.</p><p>To avoid this, you should avoid using global variable.
 Or use <code>thread_local!</code> macro.</p><p>Global poiter can be dangerous, so it&rsquo;s safer to restrict scope of global variable.</p><h1 id=thread_local-and-lazy_static>thread_local! and lazy_static!</h1><h2 id=thread_local-macro>thread_local! macro</h2><p><code>thread_local!</code> is really useful to handle safely global variable.
-This macro allocates static data like raw <code>static</code> but this allocates for each thread (not global).</p><div class=highlight><pre style=color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-rust data-lang=rust><span style=color:#ff79c6>use</span> std::cell::RefCell;
-
-thread_local<span style=color:#ff79c6>!</span> {
-    <span style=color:#ff79c6>static</span> X: <span style=color:#50fa7b>RefCell</span><span style=color:#ff79c6>&lt;</span><span style=color:#8be9fd>usize</span><span style=color:#ff79c6>&gt;</span> <span style=color:#ff79c6>=</span> RefCell::new(<span style=color:#bd93f9>0</span>);
-}
-
-<span style=color:#ff79c6>fn</span> <span style=color:#50fa7b>main</span>() {
-    X.with(<span style=color:#ff79c6>|</span>a<span style=color:#ff79c6>|</span> {
-        <span style=color:#ff79c6>*</span>a.borrow_mut() <span style=color:#ff79c6>+=</span> <span style=color:#bd93f9>1</span>;
-    })
-}
-</code></pre></div><p>To use it, you have to borrow with <code>with</code> method and make closure.</p><p>You can use static data safely without undefined behaviour.</p><h2 id=lazy_static-macro>lazy_static! macro</h2><p>If you want to initialize global variable with some data (ex. File I/O), this is useful.
-There are some situations where you want to read some configuration files or dictionary data in advance and put the contents of those files globally.</p><p>In Rust, it is possible to create global variables by using <code>static</code>, but it is not usable in the above situation because the expression used for initialization must be evaluated at compile time.</p><div class=highlight><pre style=color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-rust data-lang=rust><span style=color:#ff79c6>#[macro_use]</span>
-<span style=color:#ff79c6>extern</span> <span style=color:#ff79c6>crate</span> lazy_static;
-
-<span style=color:#ff79c6>use</span> std::sync::Mutex;
-
-lazy_static::lazy_static<span style=color:#ff79c6>!</span> {	
-    <span style=color:#ff79c6>static</span> <span style=color:#ff79c6>ref</span> X: <span style=color:#50fa7b>Mutex</span><span style=color:#ff79c6>&lt;</span><span style=color:#8be9fd>usize</span><span style=color:#ff79c6>&gt;</span> <span style=color:#ff79c6>=</span> Mutex::new(<span style=color:#bd93f9>0</span>);	
-}
-
-<span style=color:#ff79c6>fn</span> <span style=color:#50fa7b>main</span>() {
-    <span style=color:#ff79c6>*</span>X.lock().unwrap() <span style=color:#ff79c6>+=</span> <span style=color:#bd93f9>1</span>;
-}
-</code></pre></div><hr><ul class=pager><li class=previous><a href=/post/2020-09-07-modernize-emacs/ data-toggle=tooltip data-placement=top title="Modernize Emacs">&larr;
+This macro allocates static data like raw <code>static</code> but this allocates for each thread (not global).</p><div class=highlight><pre style=background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-rust data-lang=rust><span style=color:#a2f;font-weight:700>use</span><span style=color:#bbb> </span>std::cell::RefCell;<span style=color:#bbb>
+</span><span style=color:#bbb>
+</span><span style=color:#bbb></span>thread_local<span style=color:#666>!</span><span style=color:#bbb> </span>{<span style=color:#bbb>
+</span><span style=color:#bbb>    </span><span style=color:#a2f;font-weight:700>static</span><span style=color:#bbb> </span>X: <span style=color:#00f>RefCell</span><span style=color:#666>&lt;</span><span style=color:#0b0;font-weight:700>usize</span><span style=color:#666>&gt;</span><span style=color:#bbb> </span><span style=color:#666>=</span><span style=color:#bbb> </span>RefCell::new(<span style=color:#666>0</span>);<span style=color:#bbb>
+</span><span style=color:#bbb></span>}<span style=color:#bbb>
+</span><span style=color:#bbb>
+</span><span style=color:#bbb></span><span style=color:#a2f;font-weight:700>fn</span> <span style=color:#00a000>main</span>()<span style=color:#bbb> </span>{<span style=color:#bbb>
+</span><span style=color:#bbb>    </span>X.with(<span style=color:#666>|</span>a<span style=color:#666>|</span><span style=color:#bbb> </span>{<span style=color:#bbb>
+</span><span style=color:#bbb>        </span><span style=color:#666>*</span>a.borrow_mut()<span style=color:#bbb> </span><span style=color:#666>+=</span><span style=color:#bbb> </span><span style=color:#666>1</span>;<span style=color:#bbb>
+</span><span style=color:#bbb>    </span>})<span style=color:#bbb>
+</span><span style=color:#bbb></span>}<span style=color:#bbb>
+</span></code></pre></div><p>To use it, you have to borrow with <code>with</code> method and make closure.</p><p>You can use static data safely without undefined behaviour.</p><h2 id=lazy_static-macro>lazy_static! macro</h2><p>If you want to initialize global variable with some data (ex. File I/O), this is useful.
+There are some situations where you want to read some configuration files or dictionary data in advance and put the contents of those files globally.</p><p>In Rust, it is possible to create global variables by using <code>static</code>, but it is not usable in the above situation because the expression used for initialization must be evaluated at compile time.</p><div class=highlight><pre style=background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-rust data-lang=rust><span style=color:#080>#[macro_use]</span><span style=color:#bbb>
+</span><span style=color:#bbb></span><span style=color:#a2f;font-weight:700>extern</span><span style=color:#bbb> </span><span style=color:#a2f;font-weight:700>crate</span><span style=color:#bbb> </span>lazy_static;<span style=color:#bbb>
+</span><span style=color:#bbb>
+</span><span style=color:#bbb></span><span style=color:#a2f;font-weight:700>use</span><span style=color:#bbb> </span>std::sync::Mutex;<span style=color:#bbb>
+</span><span style=color:#bbb>
+</span><span style=color:#bbb></span>lazy_static::lazy_static<span style=color:#666>!</span><span style=color:#bbb> </span>{<span style=color:#bbb>	
+</span><span style=color:#bbb>    </span><span style=color:#a2f;font-weight:700>static</span><span style=color:#bbb> </span><span style=color:#a2f;font-weight:700>ref</span><span style=color:#bbb> </span>X: <span style=color:#00f>Mutex</span><span style=color:#666>&lt;</span><span style=color:#0b0;font-weight:700>usize</span><span style=color:#666>&gt;</span><span style=color:#bbb> </span><span style=color:#666>=</span><span style=color:#bbb> </span>Mutex::new(<span style=color:#666>0</span>);<span style=color:#bbb>	
+</span><span style=color:#bbb></span>}<span style=color:#bbb>
+</span><span style=color:#bbb>
+</span><span style=color:#bbb></span><span style=color:#a2f;font-weight:700>fn</span> <span style=color:#00a000>main</span>()<span style=color:#bbb> </span>{<span style=color:#bbb>
+</span><span style=color:#bbb>    </span><span style=color:#666>*</span>X.lock().unwrap()<span style=color:#bbb> </span><span style=color:#666>+=</span><span style=color:#bbb> </span><span style=color:#666>1</span>;<span style=color:#bbb>
+</span><span style=color:#bbb></span>}<span style=color:#bbb>
+</span></code></pre></div><hr><ul class=pager><li class=previous><a href=/post/2020-09-07-modernize-emacs/ data-toggle=tooltip data-placement=top title="Modernize Emacs">&larr;
 Previous Post</a></li></ul><div id=disqus-comment></div></div><div class="col-lg-11 col-lg-offset-1
 col-md-10 col-md-offset-1
 sidebar-container"><section><hr class="hidden-sm hidden-xs"><h5><a href=/tags/>FEATURED TAGS</a></h5><div class=tags><a href=/tags/emacs title=emacs>emacs</a>
