@@ -31,7 +31,7 @@ home = ["HTML", "RSS"]
   sidebar_avatar = "img/me.jpg"
 
   featured_tags = true
-  featured_condition_size = 0
+  featured_condition_size = 1
   
   about_me = true
 
