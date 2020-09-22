@@ -31,6 +31,9 @@ jobs:
       - name: Build
         run: hugo --minify
       
+      - name: Setup Tinysearch
+        run: mv ./static/wasm/* ./public/search/
+      
       - name: Attach CNAME
         run: echo "komi.dev" > ./public/CNAME
       
