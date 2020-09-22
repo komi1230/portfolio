@@ -43,10 +43,11 @@
 <script>
   // And afterwards we can use all the functionality defined in wasm.
   function doSearch() {
-    let value = document.getElementById("search").value;
-    const arr = search(value, 10);
+    let query = document.getElementById("search").value;
+    const arr = search(query, 10);
     let ul = document.getElementById("results");
     ul.innerHTML = "";
+    console.log(arr)
 
     for (i = 0; i < arr.length; i++) {
       var li = document.createElement("li");
@@ -65,8 +66,7 @@
 <h2>Search</h2>
 <input type="text" id="search" onkeyup="doSearch()" class="ais-search-box">
 <h2>Results</h2>
-<ul id="results">
-</ul>
+<ul id="results"></ul>
 
 <style>
   .ais-search-box {
