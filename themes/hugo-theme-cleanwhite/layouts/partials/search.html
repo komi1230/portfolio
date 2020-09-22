@@ -51,6 +51,7 @@
 
     for (i = 0; i < arr.length; i++) {
       var li = document.createElement("li");
+      li.className += "search-item"
 
       let elem = arr[i];
       let elemlink = document.createElement('a');
@@ -66,7 +67,7 @@
 <h2>Search</h2>
 <input type="text" id="search" onkeyup="doSearch()" class="ais-search-box">
 <h2>Results</h2>
-<ul id="results"></ul>
+<ul id="results" class="search-list"></ul>
 
 <style>
   .ais-search-box {
@@ -75,38 +76,16 @@
     padding: 5px 10px;
   }
 
-  .post-item {
-    margin-bottom: 30px;
+  .search-list {
+    list-style-type: none;
+    padding: 0;
   }
 
-  .post-link .ais-Highlight {
-    color: #111;
-    font-style: normal;
-    text-decoration: underline;
-  }
-
-  .post-breadcrumbs {
-    color: #424242;
-    display: block;
-  }
-
-  .post-breadcrumb {
-    font-size: 18px;
-    color: #424242;
-  }
-
-  .post-breadcrumb .ais-Highlight {
+  .search-item {
+    border-bottom: 2px #dadada;
+    background: whitesmoke;
+    margin-bottom: 20px;
+    padding: 1.0em;
     font-weight: bold;
-    font-style: normal;
-  }
-
-  .post-snippet .ais-Highlight {
-    color: #2a7ae2;
-    font-style: normal;
-    font-weight: bold;
-  }
-
-  .post-snippet img {
-    display: none;
   }
 </style>
