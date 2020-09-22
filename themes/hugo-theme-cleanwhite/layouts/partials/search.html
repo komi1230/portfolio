@@ -1,109 +1,111 @@
 <!-- Including InstantSearch.js library and styling -->
 <script src="https://cdn.jsdelivr.net/npm/instantsearch.js@2.6.0/dist/instantsearch.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.20.1/moment.min.js"></script>
-<link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/instantsearch.js@2.6.0/dist/instantsearch.min.css">
-<link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/instantsearch.js@2.6.0/dist/instantsearch-theme-algolia.min.css">
+<link rel="stylesheet" type="text/css"
+  href="https://cdn.jsdelivr.net/npm/instantsearch.js@2.6.0/dist/instantsearch.min.css">
+<link rel="stylesheet" type="text/css"
+  href="https://cdn.jsdelivr.net/npm/instantsearch.js@2.6.0/dist/instantsearch-theme-algolia.min.css">
 
 <div id="search-searchbar"></div>
- <div class="post-list" id="search-hits">
- </div>
+<div class="post-list" id="search-hits">
+</div>
 
-<script>
-const search = instantsearch({
-  appId: '{{ .Site.Params.algolia_appId }}',
-  indexName: '{{ .Site.Params.algolia_indexName }}',
-  apiKey: '{{ .Site.Params.algolia_apiKey }}'
-});
+<!-- Note the usage of `type=module` here as this is an ES6 module -->
+<script type="module">
+  // Use ES module import syntax to import functionality from the module
+  // that we have compiled.
+  //
+  // Note that the `default` import is an initialization function which
+  // will "boot" the module and make it ready to use. Currently browsers
+  // don't support natively imported WebAssembly as an ES module, but
+  // eventually the manual initialization won't be required!
+  // import { search, default as init } from './tinysearch_engine.js';
+  import { search, default as init } from './tinysearch_engine.js';
+  window.search = search;
 
-const hitTemplate = function(hit) {
-/*  if (hit === null){
-      return;
-  }*/
-  let date = '';
-  if (hit.date) {
-    date = moment.unix(hit.date).format('MMM D, YYYY');
-  }
-  let url = `${hit.url}#${hit.anchor}`;
-  const title = hit._highlightResult.title.value;
-
-  let breadcrumbs = '';
-  if (hit._highlightResult.headings) {
-    breadcrumbs = hit._highlightResult.headings.map(match => {
-      return `<span class="post-breadcrumb">${match.value}</span>`
-    }).join(' > ')
-  }
-
-  let content = "" ; 
-  if (hit._highlightResult.content){
-      content = hit._highlightResult.content.value;
-  }
-  else{
-      content = hit.summary;
+  async function run() {
+    // First up we need to actually load the wasm file, so we use the
+    // default export to inform it where the wasm file is located on the
+    // server, and then we wait on the returned promise to wait for the
+    // wasm to be loaded.
+    //
+    // Note that instead of a string here you can also pass in an instance
+    // of `WebAssembly.Module` which allows you to compile your own module.
+    // Also note that the promise, when resolved, yields the wasm module's
+    // exports which is the same as importing the `*_bg` module in other
+    // modes
+    await init('./tinysearch_engine_bg.wasm');
   }
 
-
-  return `
-    <div class="post-item">
-      <span class="post-meta">${date}</span>
-      <h2><a class="post-link" href="${url}">${title}</a></h2>
-      <a href="${url}" class="post-breadcrumbs">${breadcrumbs}</a>
-      <div class="post-snippet">${content}</div>
-    </div>
-  `;
-}
-
-
-search.addWidget(
-  instantsearch.widgets.searchBox({
-    container: '#search-searchbar',
-    placeholder: 'Search into posts...',
-    poweredBy: true // This is required if you're on the free Community plan
-  })
-);
-
-search.addWidget(
-  instantsearch.widgets.hits({
-    container: '#search-hits',
-    templates: {
-      item: hitTemplate
-    }
-  })
-);
-
-search.start();
+  run();
 </script>
 
+<script>
+  // And afterwards we can use all the functionality defined in wasm.
+  function doSearch() {
+    let value = document.getElementById("demo").value;
+    const arr = search(value, 10);
+    let ul = document.getElementById("results");
+    ul.innerHTML = "";
+
+    for (i = 0; i < arr.length; i++) {
+      var li = document.createElement("li");
+
+      let elem = arr[i];
+      let elemlink = document.createElement('a');
+      elemlink.innerHTML = elem[0];
+      elemlink.setAttribute('href', elem[1]);
+      li.appendChild(elemlink);
+
+      ul.appendChild(li);
+    }
+  }
+</script>
+
+<h2>Search:</h2>
+<input type="text" id="demo" onkeyup="doSearch()">
+<h2>Results:</h2>
+<ul id="results">
+</ul>
+
 <style>
-.ais-search-box {
-  max-width: 100%;
-  margin-bottom: 15px;
-}
-.post-item {
-  margin-bottom: 30px;
-}
-.post-link .ais-Highlight {
-  color: #111;
-  font-style: normal;
-  text-decoration: underline;
-}
-.post-breadcrumbs {
-  color: #424242;
-  display: block;
-}
-.post-breadcrumb {
-  font-size: 18px;
-  color: #424242;
-}
-.post-breadcrumb .ais-Highlight {
-  font-weight: bold;
-  font-style: normal;
-}
-.post-snippet .ais-Highlight {
-  color: #2a7ae2;
-  font-style: normal;
-  font-weight: bold;
-}
-.post-snippet img {
-  display: none;
-}
+  .ais-search-box {
+    max-width: 100%;
+    margin-bottom: 15px;
+  }
+
+  .post-item {
+    margin-bottom: 30px;
+  }
+
+  .post-link .ais-Highlight {
+    color: #111;
+    font-style: normal;
+    text-decoration: underline;
+  }
+
+  .post-breadcrumbs {
+    color: #424242;
+    display: block;
+  }
+
+  .post-breadcrumb {
+    font-size: 18px;
+    color: #424242;
+  }
+
+  .post-breadcrumb .ais-Highlight {
+    font-weight: bold;
+    font-style: normal;
+  }
+
+  .post-snippet .ais-Highlight {
+    color: #2a7ae2;
+    font-style: normal;
+    font-weight: bold;
+  }
+
+  .post-snippet img {
+    display: none;
+  }
 </style>
