@@ -1,11 +1,13 @@
-# About me
+# About
 
 ![my image](/img/me.jpg)
+
+## Introduction
 
 My name is Yusuke Kominami.
 
 I'm 23 years old and living in Tokyo.
-And I work at SoftBank as a machine learning engineer and at Aiful as a technical adviser.
+And I work as machine learning engineer and also as technical adviser.
 
 I graduated from the faculty of Science in Kyoto University, majored Biology at [Takada Lab](http://theory.biophys.kyoto-u.ac.jp/).
 
@@ -29,9 +31,9 @@ See [LinkedIn](https://www.linkedin.com/in/yusuke-kominami-0419b1157/) for more 
 
 ## Knowledge
 
-- bioinformatics
-- machine learning and reinforcement learning
-- both practical and theoretical aspect of algorithms
+- Machine learning and reinforcement learning
+- Both practical and theoretical aspect of algorithms
+- Biology
 
 ## Skills
 
