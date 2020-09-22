@@ -43,7 +43,7 @@
 <script>
   // And afterwards we can use all the functionality defined in wasm.
   function doSearch() {
-    let value = document.getElementById("demo").value;
+    let value = document.getElementById("search").value;
     const arr = search(value, 10);
     let ul = document.getElementById("results");
     ul.innerHTML = "";
@@ -62,9 +62,9 @@
   }
 </script>
 
-<h2>Search:</h2>
-<input type="text" id="demo" onkeyup="doSearch()">
-<h2>Results:</h2>
+<h2>Search</h2>
+<input type="text" id="search" onkeyup="doSearch()" class="ais-search-box">
+<h2>Results</h2>
 <ul id="results">
 </ul>
 
@@ -72,6 +72,7 @@
   .ais-search-box {
     max-width: 100%;
     margin-bottom: 15px;
+    padding: 5px 10px;
   }
 
   .post-item {
