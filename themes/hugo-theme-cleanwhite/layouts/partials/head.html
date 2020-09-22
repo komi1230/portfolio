@@ -51,7 +51,7 @@
 
     <title>{{ if .Title }}{{ .Title }}{{ else }}{{ .Site.Params.SEOTitle }}{{ end }}</title>
 
-    <link rel="canonical" href="{{ .URL | relURL }}">
+    <link rel="canonical" href="{{ .Permalink | relURL }}">
 
     <link rel="stylesheet" href="{{ "css/iDisqus.min.css" | relURL }}"/>
 	
