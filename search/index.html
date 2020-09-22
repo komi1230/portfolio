@@ -17,7 +17,7 @@ post-container"><script src=https://cdn.jsdelivr.net/npm/instantsearch.js@2.6.0/
   
   
   
-  import { search, default as init } from './tinysearch_engine.js';
+  import { search, default as init } from '/wasm/tinysearch_engine.js';
   window.search = search;
 
   async function run() {
@@ -31,7 +31,7 @@ post-container"><script src=https://cdn.jsdelivr.net/npm/instantsearch.js@2.6.0/
     
     
     
-    await init('./tinysearch_engine_bg.wasm');
+    await init('/wasm/tinysearch_engine_bg.wasm');
   }
 
   run();
