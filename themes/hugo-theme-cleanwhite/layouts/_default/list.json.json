@@ -3,7 +3,7 @@
 {{- $section := $.Site.GetPage "section" .Section }}
 {{- range .Site.AllPages -}}
   {{- if and (eq .Section "post") (or (and (.IsDescendant $section) (and (not .Draft) (not .Params.private))) $section.IsHome) -}}
-    {{- $.Scratch.Add "index" (dict "objectID" .UniqueID "date" .Date.UTC.Unix "description" .Description "dir" .Dir "permalink" .Permalink "publishdate" .PublishDate "title" .Title "url" .URL "section" .Section "tags" .Params.Tags "categories" .Params.Categories "summary" .Summary)}}
+    {{- $.Scratch.Add "index" (dict "date" .Date.UTC.Unix "description" .Description "permalink" .Permalink "publishdate" .PublishDate "title" .Title "url" .URL "section" .Section "tags" .Params.Tags "categories" .Params.Categories "body" .Summary)}}
   {{- end -}}
 {{- end -}}
 {{- $.Scratch.Get "index" | jsonify -}}
