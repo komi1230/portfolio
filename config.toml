@@ -8,7 +8,7 @@ googleAnalytics = "UA-177061519-1"
 hasCJKLanguage = true
 
 [outputs]
-home = ["HTML", "RSS"]
+home = ["html", "rss", "json"]
 
 [params]
   custom_css = ["css/custom-font.css"]
