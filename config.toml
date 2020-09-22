@@ -26,6 +26,8 @@ home = ["html", "rss", "json"]
   title_404 = "Page Not Found :("
   omit_categories = false
 
+  algolia_search = true
+
   # Sidebar settings
   sidebar_about_description = "Software Developer, Rustacean, Open Source Enthusiast"
   sidebar_avatar = "img/me.jpg"
