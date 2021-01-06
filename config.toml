@@ -11,6 +11,7 @@ hasCJKLanguage = true
 home = ["html", "rss", "json"]
 
 [params]
+  custom_css = ["css/custom-font.css"]  
   header_image = "img/home.jpg"
   SEOTitle = "Yusuke Kominami"
   description = "Yusuke Kominami's Blog. About software engineering, career, lifestyle."
