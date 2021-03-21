@@ -3,7 +3,7 @@ layout:      post
 title:       "転職した理由"
 subtitle:    "新卒から1年足らずで転職した経緯について"
 description: "自分がキャリアとしてどんなことをしたいか、そのためになぜ今の会社が良い場所だと感じたかについて書く"
-date:        2021-03-21
+date:        2021-03-15
 author:      "Yusuke Kominami"
 image:       "https://atsukiomoi.com/wp-content/uploads/2020/06/spring-276014_1920-1.jpg"
 tags:        ["career"]
