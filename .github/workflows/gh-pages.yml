@@ -7,7 +7,7 @@ name: GitHub Pages
 on:
   push:
     branches:
-      - master
+      - main
 
 # A workflow run is made up of one or more jobs that can run sequentially or in parallel
 jobs:
@@ -29,7 +29,7 @@ jobs:
           hugo-version: '0.74.3'
 
       - name: Build
-        run: hugo --minify
+        run: hugo
       
       - name: Attach CNAME
         run: echo "komi.dev" > ./public/CNAME
