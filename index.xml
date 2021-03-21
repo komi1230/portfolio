@@ -1,4 +1,60 @@
-<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>Launch Today</title><link>http://komi.dev/</link><description>Recent content on Launch Today</description><generator>Hugo -- gohugo.io</generator><language>en-us</language><lastBuildDate>Tue, 19 Jan 2021 00:00:00 +0000</lastBuildDate><atom:link href="http://komi.dev/index.xml" rel="self" type="application/rss+xml"/><item><title>GitHub ActionsからCloud Runを叩く</title><link>http://komi.dev/post/2021-01-19-cloud-run-from-github-actions/</link><pubDate>Tue, 19 Jan 2021 00:00:00 +0000</pubDate><guid>http://komi.dev/post/2021-01-19-cloud-run-from-github-actions/</guid><description>GitHub ActionsとCloud Run CI/CDというと有名なのはCircle CIだろう。 他にはTravis CIやGitLab CIあたり？(Trav</description></item><item><title>WebRTCにおけるSDPを理解する</title><link>http://komi.dev/post/2021-01-06-about-sdp/</link><pubDate>Wed, 06 Jan 2021 00:00:00 +0000</pubDate><guid>http://komi.dev/post/2021-01-06-about-sdp/</guid><description>モチベーション 最近はWebRTCにハマっていて、別に何か作りたいものがあったからというわけでは無いのだけど単純に面白いから見ており、それに際</description></item><item><title/><link>http://komi.dev/search/placeholder/</link><pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate><guid>http://komi.dev/search/placeholder/</guid><description/></item><item><title/><link>http://komi.dev/top/about/</link><pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate><guid>http://komi.dev/top/about/</guid><description>About Introduction My name is Yusuke Kominami.
-I&amp;rsquo;m 23 years old and living in Tokyo. And I work as machine learning engineer and also as technical adviser.
-I graduated from the faculty of Science in Kyoto University, majored Biology at Takada Lab.
-About software engineering, I love Rust. It is a perfect programming language, I think. My expertise ranges from HTML/CSS/JavaScript to Low-level programming. Furthermore, I have solid knowledge on machine learning and data science based on mathematics.</description></item></channel></rss>
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>Launch Today</title>
+    <link>http://komi.dev/</link>
+    <description>Recent content on Launch Today</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>en-us</language>
+    <lastBuildDate>Sun, 21 Mar 2021 00:00:00 +0000</lastBuildDate>
+    
+	<atom:link href="http://komi.dev/index.xml" rel="self" type="application/rss+xml" />
+    
+    
+    <item>
+      <title>転職した理由</title>
+      <link>http://komi.dev/post/2021-03-21-why-i-choose-hey/</link>
+      <pubDate>Sun, 21 Mar 2021 00:00:00 +0000</pubDate>
+      
+      <guid>http://komi.dev/post/2021-03-21-why-i-choose-hey/</guid>
+      <description>今どんな仕事してるか 今年から新しい会社に転職し、1人目のデータエンジニアとして入社した。 組織規模はもうすでに300人を超えて(2021年3月</description>
+    </item>
+    
+    <item>
+      <title>GitHub ActionsからCloud Runを叩く</title>
+      <link>http://komi.dev/post/2021-01-19-cloud-run-from-github-actions/</link>
+      <pubDate>Tue, 19 Jan 2021 00:00:00 +0000</pubDate>
+      
+      <guid>http://komi.dev/post/2021-01-19-cloud-run-from-github-actions/</guid>
+      <description>GitHub ActionsとCloud Run CI/CDというと有名なのはCircle CIだろう。 他にはTravis CIやGitLab CIあたり？(Trav</description>
+    </item>
+    
+    <item>
+      <title>WebRTCにおけるSDPを理解する</title>
+      <link>http://komi.dev/post/2021-01-06-about-sdp/</link>
+      <pubDate>Wed, 06 Jan 2021 00:00:00 +0000</pubDate>
+      
+      <guid>http://komi.dev/post/2021-01-06-about-sdp/</guid>
+      <description>モチベーション 最近はWebRTCにハマっていて、別に何か作りたいものがあったからというわけでは無いのだけど単純に面白いから見ており、それに際</description>
+    </item>
+    
+    <item>
+      <title></title>
+      <link>http://komi.dev/search/placeholder/</link>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+      
+      <guid>http://komi.dev/search/placeholder/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title></title>
+      <link>http://komi.dev/top/about/</link>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+      
+      <guid>http://komi.dev/top/about/</guid>
+      <description>About 初めまして、小南佑介です。 現在はheyにてデータエンジニアとして働いています。 大学は京都大学理学部を卒業しており、高田研究室にて生物学(理</description>
+    </item>
+    
+  </channel>
+</rss>

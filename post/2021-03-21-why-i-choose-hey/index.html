@@ -1,0 +1,505 @@
+<!DOCTYPE html>
+<html lang="en-us">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    
+    <meta property="og:site_name" content="Launch Today" />
+    <meta property="og:type" content="article" />
+    <meta property="og:url" content="https://komi.dev/" />
+    <meta property="og:locale" content="ja_JP" />
+
+    <meta name="twitter:site" content="@komi_edtr_1230" />
+
+    
+    <meta property="og:image" content="http://komi.dev/img/home.jpg" />
+    <meta property="twitter:image" content="http://komi.dev/img/home.jpg" />
+    
+
+    
+    <meta name="title" content="転職した理由" />
+    <meta property="og:title" content="転職した理由" />
+    <meta property="twitter:title" content="転職した理由" />
+    
+
+    
+    <meta name="description" content="自分がキャリアとしてどんなことをしたいか、そのためになぜ今の会社が良い場所だと感じたかについて書く" />
+    <meta property="og:description" content="自分がキャリアとしてどんなことをしたいか、そのためになぜ今の会社が良い場所だと感じたかについて書く" />
+    <meta property="twitter:description" content="自分がキャリアとしてどんなことをしたいか、そのためになぜ今の会社が良い場所だと感じたかについて書く" />
+    
+
+    
+    <meta property="twitter:card" content="summary" />
+    
+    
+
+    <meta name="keyword"  content="Yusuke Kominami, 小南佑介, 小南 佑介, Rust, Emacs, Lisp, Web, Machine Learning, 機械学習">
+    <link rel="shortcut icon" href="/img/favicon.ico">
+
+    <title>転職した理由</title>
+
+    <link rel="canonical" href="/post/2021-03-21-why-i-choose-hey/">
+
+    <link rel="stylesheet" href="/css/iDisqus.min.css"/>
+	
+    
+    <link rel="stylesheet" href="/css/bootstrap.min.css">
+
+    
+    <link rel="stylesheet" href="/css/hux-blog.min.css">
+
+    
+    <link rel="stylesheet" href="/css/zanshang.css">
+    
+    
+    <link href="//cdnjs.cloudflare.com/ajax/libs/font-awesome/4.6.3/css/font-awesome.min.css" rel="stylesheet" type="text/css">
+
+    
+    <link rel="stylesheet" href="http://komi.dev/css/custom-font.css">
+
+    
+    
+    <script src="/js/jquery.min.js"></script>
+    
+    
+    <script src="/js/bootstrap.min.js"></script>
+    
+    
+    <script src="/js/hux-blog.min.js"></script>
+
+    
+    
+
+    
+    <script async src="https://www.googletagmanager.com/gtag/js?id=UA-177061519-1"></script>
+    <script>
+        window.dataLayer = window.dataLayer || [];
+        function gtag(){dataLayer.push(arguments);}
+        gtag('js', new Date());
+
+        gtag('config', 'UA-177061519-1');
+    </script>
+
+
+</head>
+
+
+
+<nav class="navbar navbar-default navbar-custom navbar-fixed-top">
+    <div class="container-fluid">
+        
+        <div class="navbar-header page-scroll">
+            <button type="button" class="navbar-toggle">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+            <a class="navbar-brand" href="/">Launch Today</a>
+        </div>
+
+        
+        
+        <div id="huxblog_navbar">
+            <div class="navbar-collapse">
+                <ul class="nav navbar-nav navbar-right">
+                    <li>
+                        <a href="/">Home</a>
+                    </li>
+                    
+                        
+                        <li>
+                            <a href="/categories/life">life</a>
+                        </li>
+                        
+                        <li>
+                            <a href="/categories/tech">tech</a>
+                        </li>
+                        
+                    
+                    
+		    
+                        <li><a href="/top/about/">ABOUT</a></li>
+                    
+
+                    
+		    <li>
+                        <a href="/search">SEARCH <img src="/img/search.png" height="15" style="cursor: pointer;" alt="Search"></a>
+		    </li>
+                    
+                </ul>
+            </div>
+        </div>
+        
+    </div>
+    
+</nav>
+<script>
+    
+    
+    
+    var $body   = document.body;
+    var $toggle = document.querySelector('.navbar-toggle');
+    var $navbar = document.querySelector('#huxblog_navbar');
+    var $collapse = document.querySelector('.navbar-collapse');
+
+    $toggle.addEventListener('click', handleMagic)
+    function handleMagic(e){
+        if ($navbar.className.indexOf('in') > 0) {
+        
+            $navbar.className = " ";
+            
+            setTimeout(function(){
+                
+                if($navbar.className.indexOf('in') < 0) {
+                    $collapse.style.height = "0px"
+                }
+            },400)
+        }else{
+        
+            $collapse.style.height = "auto"
+            $navbar.className += " in";
+        }
+    }
+</script>
+
+
+
+
+<style type="text/css">
+    header.intro-header {
+        background-image: url('https://atsukiomoi.com/wp-content/uploads/2020/06/spring-276014_1920-1.jpg')
+    }
+</style>
+<header class="intro-header">
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+                <div class="post-heading">
+                    <div class="tags">
+                        
+                        <a class="tag" href="/tags/career" title="career">
+                            career
+                        </a>
+                        
+                    </div>
+                    <h1>転職した理由</h1>
+                    <h2 class="subheading">新卒から1年足らずで転職した経緯について</h2>
+                    <span class="meta">
+                        Posted 
+                        on 
+                        Sunday, March 21, 2021
+                        
+                        
+                        
+                    </span>
+                </div>
+            </div>
+        </div>
+    </div>
+</header>
+
+
+
+
+<article>
+    <div class="container">
+        <div class="row">
+
+            
+            <div class="
+                col-lg-11 col-lg-offset-1
+                col-md-10 col-md-offset-1
+                post-container">
+
+                
+                <header>
+                    <h2>TOC</h2>
+                </header>
+                <nav id="TableOfContents">
+  <ul>
+    <li><a href="#今どんな仕事してるか">今どんな仕事してるか</a></li>
+    <li><a href="#どうして転職したのか">どうして転職したのか</a></li>
+    <li><a href="#自分は何をやりたいのか">自分は何をやりたいのか</a></li>
+    <li><a href="#今働いててどうか">今働いててどうか</a></li>
+  </ul>
+</nav>
+                
+                <h1 id="今どんな仕事してるか">今どんな仕事してるか</h1>
+<p>今年から新しい会社に転職し、1人目のデータエンジニアとして入社した。
+組織規模はもうすでに300人を超えて(2021年3月現在)、それなりの規模の会社になってきているが、データ系のチームについてはこれから拡大していくということで、去年の10月くらいに声をかけてもらい入社することにした。</p>
+<p>データチームを拡大/強化するといっても現在のデータチームはアナリストがほとんどで、基盤整備にあたる人間は正社員だとまだ自分だけという状況である。</p>
+<p>業務内容としてはまさに基盤整備といったところで、主に色々な部署にヒアリングしながらデータ連携をしたり分析しやすい形にデータを綺麗にしたり、というような業務を行なっている。
+技術スタックとしてはどちらかというとインフラ寄りで、最近はずっとDigdagとEmbulk、Kubernetes、Terraformと格闘している。</p>
+<h1 id="どうして転職したのか">どうして転職したのか</h1>
+<p>前職はソフトバンクで、新卒入社し、入社式では新入社員600人以上の代表として答辞をしたりもした(コロナで入社式はリモートだったので答辞は3/31に会社に集まって社長の前で喋る様子を録画し、それを4/1に配信という感じだった)</p>
+<p>自分はいわゆるAI系の部署に配属され、行なっていた業務としては社内向けのWebアプリの開発で、GUIで機械学習ができるというようなものの開発にあたっていた。</p>
+<p>余談として、ソフトバンクの新卒入社は600人以上いて、そのうちエンジニアは400人弱いるのだが、配属部署の希望では7割程度がAI系に出すものの実際にAI系に配属されるのは30人もいないということで、自分は割と配属ガチャで当たりを引いた方だった。(面接の時点である程度確約してもらっていたのだけど)
+実際、AI系の部署は非常にホワイトで、他部署からは羨ましがられる具合だった(セキュリティ系の部署だと非常に多忙らしい)</p>
+<p>当時働いていたときは本当に気楽で、心理的安全性が非常に高いので働くのはそこまで苦ではなく、在宅ということもあって学生時代から大して感覚が変わらずのんびりやっていた。</p>
+<p>そんな具合だったが、どうして転職したのかというと理由としては大きく2点あり、<strong>技術レベルの低さ</strong>と<strong>キャリアの低迷</strong>。</p>
+<p>業務では主にReactとDjangoを触っていたのだけど、あらゆるところでクソコードが蔓延しており、同時にどう考えても設計ミスとしか言えないようなクソ設計がちらほらあり、ハウルの動く城のようなアプリが出来上がっていた。
+どうしてこれがちゃんと動いているのだろうか、と思うような具合だった。
+具体的にどんなやばいコードがあったかというと、</p>
+<ul>
+<li>Reactでフックを使えば状態管理を関数の中に押し込められるのになぜかReduxで状態をグローバルに持ってきてpropsバケツリレーを20個以上のコンポーネントでやっており、おかげでメンテナンス性の著しい低下と超絶低速な動作</li>
+<li>API設計でJSONのボディで値に配列を入れられるようにすれば通信回数は1回で済むのにN個のパターンに対してN回APIを叩くというクソ設計で、超絶低速な動作</li>
+</ul>
+<p>当然、こんなものを作り上げた同じチームの人間の技術レベルはたかが知れていて、それなのに<strong>我々は最先端な開発をしているんだ</strong>という謎の陶酔があり、正直言ってもうこれは立て直しは厳しすぎるなと感じた。
+在籍していた当時はなんとかリファクタリングをしまくってバグを取りまくったりとかなりコミットしたが、解決されるクソコードに対して生成されるクソコードの方が多く、本当に精神が摩耗する日々だった。</p>
+<p>プロダクト自体もかなりひどかったが開発体制もかなり酷く、DBの中のレコードの文字列を置換するだけの簡単なAPIを書くのに(1時間もあれば終わるだろうに)同期はなぜか3ヶ月かかっていて、それを誰もフォローしないという状況だった。
+他にもドキュメントが全く整備されていないし誰も書かないのでAPIの仕様や設計が明文化されておらず、オンボーディングのハードルが超絶高い、という具合だった。</p>
+<p>もちろん働き方は非常にホワイトだったし自分自身も働き方に対して嫌な感情を抱くことはなかったが、とにかく働いてて楽しくなかった。</p>
+<p>こういう場所に長いこといると数年後には業界の最先端にすらついていけなくなると感じ、若手のうちにレベルの高い組織に身を置いておきたいという気持ちから転職を決意した。</p>
+<h1 id="自分は何をやりたいのか">自分は何をやりたいのか</h1>
+<p>さて、転職をすると決めたものの、どういう会社でどういうことをしようと考えなければならない。</p>
+<p>とりあえず動き出してみようということで転職したいとツイッターで表明した際は結構引く手は数多で、50社以上からDMをもらった。
+これ以外にも転職サービス系のところでも毎日1, 2社からスカウトが届くといった具合で、自分は割と市場価値が高いんだなと改めて感じた。</p>
+<p>ただ、自分がこうやって周りから欲しがられても自分自身何がしたいのか決めなければならない。</p>
+<p>色々考えた結果、自分はそこまでコードを書くことにはこだわりは無いなと思った。
+そもそもで自分はどちらかというと職業エンジニアで、寝ても覚めてもプログラミングが大好きという部類ではない。
+むしろ、少しの希少性と市場価値の高さからなんとなくエンジニアをやっているというだけで、技術に対してとても強い気持ちはあまりない。
+OSSコミットもコミュニティへの貢献の意味があるけど、それを通して自分の市場価値を上げるというモチベーションの方が比較的大きい。</p>
+<p>まず満たされるべきはお金。
+給料はある程度以上じゃないと自分は満足できないなと感じた。
+ソフトバンク時代はとにかく給料が低く(もちろん都内でちゃんと生活できるレベルだが)、技術レベルと自分の市場価値からすると低かった。</p>
+<p>別に生活レベルを上げたいみたいな気持ちはなくて、食材も普通に安いスーパーに遠くてもわざわざ行くし、服はGUやしまむら。
+お金を使いたいんじゃなくて、単純に口座にお金が貯まる様子を見るのが楽しいタイプの人間なので、そういう意味でお金は欲しかった。</p>
+<p>ただ、何か飲み会だったり遊びに行くとなったときにお金を払うのに躊躇しないレベルになりたいとは思っていて、要するに気持ちの問題だったりする。</p>
+<p>このお金を満たした上で何をしたいかと考えると、体験にお金を払いたいと思った。
+これは旅行だったり、もしくは何かしらの成功体験だったり。
+例えばゲームの課金もこれに類すると思う(自分はやらないけど)</p>
+<p>こういうことを考えたとき、体験を得るサービスを開発しているところに行けたらいいなと思い、マスに訴えかけるより小さな個人を応援するというような動きに魅力を感じるようになった。
+小さな八百屋さんだったり雑貨作りが趣味の人だったりを支えるという行為に尊さを感じた。</p>
+<p>このように考えたとき、今の会社は非常に考え方にマッチしているなと感じ、入社することにした。</p>
+<p>他に見ていた会社もいくつかあったけど、エンジニアのレベルが高くなかったり経営陣が微妙だったり、もしくは社風が明らかに自分と合わなかったりというのがあり、最終的に今の会社に落ち着いた。</p>
+<h1 id="今働いててどうか">今働いててどうか</h1>
+<p>今の会社に入ってもうすぐで3ヶ月が経つ。
+まだまだわからないことだったり大変なことはたくさんあるけど、今はすごく自分らしく働けていると思っている。</p>
+<p>プライベートも充実しており、変なストレスを抱えることも前に比べたらだいぶ減ったと思う。</p>
+<p>自分の技術レベルはそこまで高いわけでは無いけど、これからもなんとかキャッチアップしながらコミットしていきたいと感じている。</p>
+<p>将来的には起業したいと考えており、CEOじゃなくてCTOみたいなポジションでもいいのだけど、自分で事業をハンドリングできるようになりたくて、そのための修行としても今の環境は最高なんじゃないかと思う。
+今の社長も上場経験者ということもあって、経営陣とはかなり距離が近いので自分自身の将来のチャレンジのためにたくさん吸収できるものは吸収していきたい。</p>
+
+
+                
+
+                <hr>
+                <ul class="pager">
+                    
+                    <li class="previous">
+                        <a href="http://komi.dev/post/2021-01-19-cloud-run-from-github-actions/" data-toggle="tooltip" data-placement="top" title="GitHub ActionsからCloud Runを叩く">&larr;
+                            Previous Post</a>
+                    </li>
+                    
+                    
+                </ul>
+
+                
+<div id="disqus-comment"></div>
+
+
+
+            </div>
+            
+            <div class="
+                col-lg-11 col-lg-offset-1
+                col-md-10 col-md-offset-1
+                sidebar-container">
+
+                
+                
+                <section>
+                    <hr class="hidden-sm hidden-xs">
+                    <h5><a href="/tags/">FEATURED TAGS</a></h5>
+                    <div class="tags">
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                    </div>
+                </section>
+                
+
+                
+                
+            </div>
+        </div>
+    </div>
+</article>
+
+
+
+
+<footer>
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+                <ul class="list-inline text-center">
+                   
+                   <li>
+                       <a href='' rel="alternate" type="application/rss+xml" title="Launch Today" >
+                           <span class="fa-stack fa-lg">
+                               <i class="fa fa-circle fa-stack-2x"></i>
+                               <i class="fa fa-rss fa-stack-1x fa-inverse"></i>
+                           </span>
+                       </a>
+                   </li>
+                   
+                    
+                    <li>
+                        <a href="mailto:yusuke.kominami@gmail.com">
+                            <span class="fa-stack fa-lg">
+                                <i class="fa fa-circle fa-stack-2x"></i>
+                                <i class="fa fa-envelope fa-stack-1x fa-inverse"></i>
+                            </span>
+                        </a>
+                    </li>
+		    
+                    
+                    
+                    <li>
+                        <a href="https://twitter.com/komi_edtr_1230">
+                            <span class="fa-stack fa-lg">
+                                <i class="fa fa-circle fa-stack-2x"></i>
+                                <i class="fa fa-twitter fa-stack-1x fa-inverse"></i>
+                            </span>
+                        </a>
+                    </li>
+                    
+                    
+                    
+
+                    
+                    <li>
+                        <a target="_blank" href="https://www.facebook.com/1230komi/">
+                            <span class="fa-stack fa-lg">
+                                <i class="fa fa-circle fa-stack-2x"></i>
+                                <i class="fa fa-facebook fa-stack-1x fa-inverse"></i>
+                            </span>
+                        </a>
+                    </li>
+		    
+
+		    
+                    
+                    
+                    <li>
+                        <a target="_blank" href="https://github.com/komi1230">
+                            <span class="fa-stack fa-lg">
+                                <i class="fa fa-circle fa-stack-2x"></i>
+                                <i class="fa fa-github fa-stack-1x fa-inverse"></i>
+                            </span>
+                        </a>
+                    </li>
+		    
+                    
+                    
+                    
+                    <li>
+                        <a target="_blank" href="https://www.linkedin.com/in/yusuke-kominami-0419b1157/">
+                            <span class="fa-stack fa-lg">
+                                <i class="fa fa-circle fa-stack-2x"></i>
+                                <i class="fa fa-linkedin fa-stack-1x fa-inverse"></i>
+                            </span>
+                        </a>
+                    </li>
+		    
+                    
+                    
+                    <li>
+                        <a target="_blank" href="https://stackoverflow.com/users/12464570">
+                            <span class="fa-stack fa-lg">
+                                <i class="fa fa-circle fa-stack-2x"></i>
+                                <i class="fa fa-stack-overflow fa-stack-1x fa-inverse"></i>
+                            </span>
+                        </a>
+                    </li>
+            
+                    
+                    
+                    
+            
+            
+            
+                </ul>
+		<p class="copyright text-muted">
+                    Copyright &copy; Launch Today 2021
+                </p>
+            </div>
+        </div>
+    </div>
+</footer>
+
+
+
+
+<script>
+    function async(u, c) {
+      var d = document, t = 'script',
+          o = d.createElement(t),
+          s = d.getElementsByTagName(t)[0];
+      o.src = u;
+      if (c) { o.addEventListener('load', function (e) { c(null, e); }, false); }
+      s.parentNode.insertBefore(o, s);
+    }
+</script>
+
+
+
+
+
+
+<script>
+    
+    if($('#tag_cloud').length !== 0){
+        async("/js/jquery.tagcloud.js",function(){
+            $.fn.tagcloud.defaults = {
+                
+                color: {start: '#bbbbee', end: '#0085a1'},
+            };
+            $('#tag_cloud a').tagcloud();
+        })
+    }
+</script>
+
+
+<script>
+    async("https://cdnjs.cloudflare.com/ajax/libs/fastclick/1.0.6/fastclick.js", function(){
+        var $nav = document.querySelector("nav");
+        if($nav) FastClick.attach($nav);
+    })
+</script>
+
+
+
+
+
+
+<script type="application/javascript">
+var doNotTrack = false;
+if (!doNotTrack) {
+	window.ga=window.ga||function(){(ga.q=ga.q||[]).push(arguments)};ga.l=+new Date;
+	ga('create', 'UA-177061519-1', 'auto');
+	
+	ga('send', 'pageview');
+}
+</script>
+<script async src='https://www.google-analytics.com/analytics.js'></script>
+
+
+
+</body>
+</html>
