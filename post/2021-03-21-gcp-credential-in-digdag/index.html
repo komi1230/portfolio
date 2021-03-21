@@ -19,15 +19,15 @@
     
 
     
-    <meta name="title" content="Launch Today" />
-    <meta property="og:title" content="Launch Today" />
-    <meta property="twitter:title" content="Launch Today" />
+    <meta name="title" content="GKEにおけるDigdagでのGCPのクレデンシャルの取り扱い" />
+    <meta property="og:title" content="GKEにおけるDigdagでのGCPのクレデンシャルの取り扱い" />
+    <meta property="twitter:title" content="GKEにおけるDigdagでのGCPのクレデンシャルの取り扱い" />
     
 
     
-    <meta name="description" content="Yusuke Kominami&#39;s Blog. About software engineering, career, lifestyle." />
-    <meta property="og:description" content="Yusuke Kominami&#39;s Blog. About software engineering, career, lifestyle." />
-    <meta property="twitter:description" content="Yusuke Kominami&#39;s Blog. About software engineering, career, lifestyle." />
+    <meta name="description" content="DigdagとEmbulkでBigQueryにデータを流す際にクレデンシャルのスイッチでハマったポイント" />
+    <meta property="og:description" content="DigdagとEmbulkでBigQueryにデータを流す際にクレデンシャルのスイッチでハマったポイント" />
+    <meta property="twitter:description" content="DigdagとEmbulkでBigQueryにデータを流す際にクレデンシャルのスイッチでハマったポイント" />
     
 
     
@@ -38,9 +38,9 @@
     <meta name="keyword"  content="Yusuke Kominami, 小南佑介, 小南 佑介, Rust, Emacs, Lisp, Web, Machine Learning, 機械学習">
     <link rel="shortcut icon" href="/img/favicon.ico">
 
-    <title>Tops</title>
+    <title>GKEにおけるDigdagでのGCPのクレデンシャルの取り扱い</title>
 
-    <link rel="canonical" href="/top/">
+    <link rel="canonical" href="/post/2021-03-21-gcp-credential-in-digdag/">
 
     <link rel="stylesheet" href="/css/iDisqus.min.css"/>
 	
@@ -167,14 +167,38 @@
 
 
 
-<header class="intro-header" style="background-image: url('/img/home.jpg')">
+
+<style type="text/css">
+    header.intro-header {
+        background-image: url('https://churchwithoutwallsinternational.org/wp-content/uploads/2018/03/sydney-opera-house-australia-UNITEDSYDNEY1217.jpg')
+    }
+</style>
+<header class="intro-header">
     <div class="container">
         <div class="row">
-            <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1 ">
-                <div class="site-heading">
-                    <h1>Launch Today </h1>
-                    
-		    <span class="subheading">Playground and Workspace for Awesome Ideas</span>
+            <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+                <div class="post-heading">
+                    <div class="tags">
+                        
+                        <a class="tag" href="/tags/digdag" title="digdag">
+                            digdag
+                        </a>
+                        
+                        <a class="tag" href="/tags/gcp" title="gcp">
+                            gcp
+                        </a>
+                        
+                    </div>
+                    <h1>GKEにおけるDigdagでのGCPのクレデンシャルの取り扱い</h1>
+                    <h2 class="subheading">bqオペレータとgcloudコマンドのクレデンシャルのズレ</h2>
+                    <span class="meta">
+                        Posted 
+                        on 
+                        Sunday, March 21, 2021
+                        
+                        
+                        
+                    </span>
                 </div>
             </div>
         </div>
@@ -187,13 +211,70 @@
 <article>
     <div class="container">
         <div class="row">
+
             
             <div class="
-                col-lg-8 col-lg-offset-2
+                col-lg-11 col-lg-offset-1
                 col-md-10 col-md-offset-1
                 post-container">
 
-         	
+                
+                <header>
+                    <h2>TOC</h2>
+                </header>
+                <nav id="TableOfContents">
+  <ul>
+    <li><a href="#digdagとgcp">DigdagとGCP</a></li>
+    <li><a href="#gkeでのクレデンシャルのセット">GKEでのクレデンシャルのセット</a></li>
+    <li><a href="#サービスアカウントの有効化">サービスアカウントの有効化</a></li>
+  </ul>
+</nav>
+                
+                <h1 id="digdagとgcp">DigdagとGCP</h1>
+<p>Digdagはワークフローエンジンとして有名なソフトで、複数個のタスク間の依存関係からなるワークフローを定義し、そのワークフローの実行及び管理を行う。</p>
+<p>具体的に、複数テーブルのインポートを行いたいとなったとき、それらに対して逐次的にEmbulkを手で叩くのではなく、DigdagがうまいことEmbulkを叩いてくれる。</p>
+<pre><code>+some_job:
+  sh&gt;: embulk run some_table.yaml.liquid
+</code></pre><p>そんなDigdagであるが、バッチ処理に非常によく使われるため、GCPやAWSに対応したコマンドがDigdag側に用意されている。
+これは本来ならば上記のように<code>sh&gt;</code>オペレータでシェルでコマンドを叩くが、BigQuery関係だと<code>bq&gt;</code>とか<code>bq_ddl&gt;</code>といったコマンドが用意されている。</p>
+<pre><code>+some_bq_job:
+  bq&gt;: queries/step.sql
+  destination_table: other_project:other_dataset.other_table
+</code></pre><p>これは実質的に<code>sh&gt;: bq ...</code>コマンドの糖衣構文だけど、これは比較的便利なのでよく利用される。</p>
+<h1 id="gkeでのクレデンシャルのセット">GKEでのクレデンシャルのセット</h1>
+<p>Digdagの公式ドキュメントには<code>bq&gt;</code>オペレータを利用する際はDigdagのSecretsにサービスアカウントキーをセットするよう書いてある。</p>
+<p>Digdagが動いているコンテナ内で以下のコマンドを叩けば良い。</p>
+<div class="highlight"><pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-sh" data-lang="sh">$ digdag secret --project <span style="color:#666">[</span>YOUR_PROJECT_NAME<span style="color:#666">]</span> --set gcp.credential<span style="color:#666">=</span>@/path/to/sa_key.json
+</code></pre></div><p>こうすると<code>bq&gt;</code>オペレータを叩く際にこのサービスアカウントとして実行される。</p>
+<p>しかし、ここでポイントとして、このクレデンシャルはコンテナ全体でサービスアカウントが有効化されているわけではない。</p>
+<p>GKEでポッドの中に入ってクレデンシャルを叩くと、GKEを動作しているサービスアカウントが出てくる。</p>
+<div class="highlight"><pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-sh" data-lang="sh">$ gcloud config list
+</code></pre></div><h1 id="サービスアカウントの有効化">サービスアカウントの有効化</h1>
+<p><code>bq&gt;</code>オペレータや<code>bq_ddl&gt;</code>オペレータでは微妙にやりきれない作業などはたまにあり、その際は直接シェルで<code>bq</code>を叩きたいケースがある。</p>
+<p>例えばテーブルのスキーマに説明を付与したくて、そのスキーマ情報はJSONで保存されているときなど。</p>
+<p>こうした際はSQLに<code>CREATE TABLE</code>文でやる方法もあるが、それよりも<code>bq update</code>でテーブル情報をアップデートする方が簡単だったりする。</p>
+<p>この場合、意図的にDigdag内でサービスアカウントを有効化させるジョブを挟み込む必要があり、</p>
+<pre><code>+auth_sa:
+  sh&gt;: gcloud auth activate-service-account --key-file=/path/to/sa_key.json
+
++some_job:
+  sh&gt;: bq update my_dataset.my_table schema/my_table.json
+</code></pre><p>というようにすればサービスアカウントで実行ができる。</p>
+
+
+                
+
+                <hr>
+                <ul class="pager">
+                    
+                    <li class="previous">
+                        <a href="http://komi.dev/post/2021-03-15-why-i-change-job/" data-toggle="tooltip" data-placement="top" title="転職した理由">&larr;
+                            Previous Post</a>
+                    </li>
+                    
+                    
+                </ul>
+
                 
 <div id="disqus-comment"></div>
 
@@ -202,7 +283,7 @@
             </div>
             
             <div class="
-                col-lg-8 col-lg-offset-2
+                col-lg-11 col-lg-offset-1
                 col-md-10 col-md-offset-1
                 sidebar-container">
 
@@ -222,7 +303,7 @@
                         
                         
                         <a href="/tags/gcp" title="gcp">
-                        gcp
+                            gcp
                         </a>
                         
                         
@@ -253,7 +334,7 @@
                 <ul class="list-inline text-center">
                    
                    <li>
-                       <a href='/top/index.xml' rel="alternate" type="application/rss+xml" title="Launch Today" >
+                       <a href='' rel="alternate" type="application/rss+xml" title="Launch Today" >
                            <span class="fa-stack fa-lg">
                                <i class="fa fa-circle fa-stack-2x"></i>
                                <i class="fa fa-rss fa-stack-1x fa-inverse"></i>

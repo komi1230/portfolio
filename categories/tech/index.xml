@@ -6,10 +6,19 @@
     <description>Recent content in Tech on Launch Today</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
-    <lastBuildDate>Tue, 19 Jan 2021 00:00:00 +0000</lastBuildDate>
+    <lastBuildDate>Sun, 21 Mar 2021 00:00:00 +0000</lastBuildDate>
     
 	<atom:link href="http://komi.dev/categories/tech/index.xml" rel="self" type="application/rss+xml" />
     
+    
+    <item>
+      <title>GKEにおけるDigdagでのGCPのクレデンシャルの取り扱い</title>
+      <link>http://komi.dev/post/2021-03-21-gcp-credential-in-digdag/</link>
+      <pubDate>Sun, 21 Mar 2021 00:00:00 +0000</pubDate>
+      
+      <guid>http://komi.dev/post/2021-03-21-gcp-credential-in-digdag/</guid>
+      <description>DigdagとGCP Digdagはワークフローエンジンとして有名なソフトで、複数個のタスク間の依存関係からなるワークフローを定義し、そのワー</description>
+    </item>
     
     <item>
       <title>GitHub ActionsからCloud Runを叩く</title>

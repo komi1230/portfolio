@@ -13,6 +13,21 @@
   </url>
   
   <url>
+    <loc>http://komi.dev/tags/digdag/</loc>
+    <lastmod>2021-03-21T00:00:00+00:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>http://komi.dev/tags/gcp/</loc>
+    <lastmod>2021-03-21T00:00:00+00:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>http://komi.dev/post/2021-03-21-gcp-credential-in-digdag/</loc>
+    <lastmod>2021-03-21T00:00:00+00:00</lastmod>
+  </url>
+  
+  <url>
     <loc>http://komi.dev/</loc>
     <lastmod>2021-03-21T00:00:00+00:00</lastmod>
   </url>
@@ -33,17 +48,17 @@
   </url>
   
   <url>
-    <loc>http://komi.dev/post/2021-03-21-why-i-change-job/</loc>
+    <loc>http://komi.dev/categories/tech/</loc>
+    <lastmod>2021-03-21T00:00:00+00:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>http://komi.dev/post/2021-03-15-why-i-change-job/</loc>
     <lastmod>2021-03-21T00:00:00+00:00</lastmod>
   </url>
   
   <url>
     <loc>http://komi.dev/tags/ci/</loc>
-    <lastmod>2021-01-19T00:00:00+00:00</lastmod>
-  </url>
-  
-  <url>
-    <loc>http://komi.dev/tags/gcp/</loc>
     <lastmod>2021-01-19T00:00:00+00:00</lastmod>
   </url>
   
@@ -54,11 +69,6 @@
   
   <url>
     <loc>http://komi.dev/post/2021-01-19-cloud-run-from-github-actions/</loc>
-    <lastmod>2021-01-19T00:00:00+00:00</lastmod>
-  </url>
-  
-  <url>
-    <loc>http://komi.dev/categories/tech/</loc>
     <lastmod>2021-01-19T00:00:00+00:00</lastmod>
   </url>
   

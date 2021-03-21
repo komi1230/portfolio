@@ -12,11 +12,20 @@
     
     
     <item>
-      <title>転職した理由</title>
-      <link>http://komi.dev/post/2021-03-21-why-i-change-job/</link>
+      <title>GKEにおけるDigdagでのGCPのクレデンシャルの取り扱い</title>
+      <link>http://komi.dev/post/2021-03-21-gcp-credential-in-digdag/</link>
       <pubDate>Sun, 21 Mar 2021 00:00:00 +0000</pubDate>
       
-      <guid>http://komi.dev/post/2021-03-21-why-i-change-job/</guid>
+      <guid>http://komi.dev/post/2021-03-21-gcp-credential-in-digdag/</guid>
+      <description>DigdagとGCP Digdagはワークフローエンジンとして有名なソフトで、複数個のタスク間の依存関係からなるワークフローを定義し、そのワー</description>
+    </item>
+    
+    <item>
+      <title>転職した理由</title>
+      <link>http://komi.dev/post/2021-03-15-why-i-change-job/</link>
+      <pubDate>Sun, 21 Mar 2021 00:00:00 +0000</pubDate>
+      
+      <guid>http://komi.dev/post/2021-03-15-why-i-change-job/</guid>
       <description>今どんな仕事してるか 今年から新しい会社に転職し、1人目のデータエンジニアとして入社した。 組織規模はもうすでに300人を超えて(2021年3月</description>
     </item>
     
