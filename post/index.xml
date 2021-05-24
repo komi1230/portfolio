@@ -21,15 +21,6 @@
     </item>
     
     <item>
-      <title>転職した理由</title>
-      <link>http://komi.dev/post/2021-03-15-why-i-change-job/</link>
-      <pubDate>Mon, 15 Mar 2021 00:00:00 +0000</pubDate>
-      
-      <guid>http://komi.dev/post/2021-03-15-why-i-change-job/</guid>
-      <description>今どんな仕事してるか 今年から新しい会社に転職し、1人目のデータエンジニアとして入社した。 組織規模はもうすでに300人を超えて(2021年3月</description>
-    </item>
-    
-    <item>
       <title>GitHub ActionsからCloud Runを叩く</title>
       <link>http://komi.dev/post/2021-01-19-cloud-run-from-github-actions/</link>
       <pubDate>Tue, 19 Jan 2021 00:00:00 +0000</pubDate>
