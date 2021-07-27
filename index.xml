@@ -6,10 +6,19 @@
     <description>Recent content on Launch Today</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
-    <lastBuildDate>Sun, 21 Mar 2021 00:00:00 +0000</lastBuildDate>
+    <lastBuildDate>Tue, 20 Jul 2021 00:00:00 +0000</lastBuildDate>
     
 	<atom:link href="http://komi.dev/index.xml" rel="self" type="application/rss+xml" />
     
+    
+    <item>
+      <title>Alacrittyが日本語入力がおかしいのを直した</title>
+      <link>http://komi.dev/post/2021-07-20-enabling-ime-in-alacritty/</link>
+      <pubDate>Tue, 20 Jul 2021 00:00:00 +0000</pubDate>
+      
+      <guid>http://komi.dev/post/2021-07-20-enabling-ime-in-alacritty/</guid>
+      <description>背景 先日なんとなくネットサーフィンしていたらターミナルアプリ一覧みたいな記事を見かけた。 自分は今まで惰性でmacOSでデフォルトでついている</description>
+    </item>
     
     <item>
       <title>GKEにおけるDigdagでのGCPのクレデンシャルの取り扱い</title>

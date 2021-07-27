@@ -19,9 +19,9 @@
     
 
     
-    <meta name="title" content="Launch Today" />
-    <meta property="og:title" content="Launch Today" />
-    <meta property="twitter:title" content="Launch Today" />
+    <meta name="title" content="macOS" />
+    <meta property="og:title" content="macOS" />
+    <meta property="twitter:title" content="macOS" />
     
 
     
@@ -38,9 +38,9 @@
     <meta name="keyword"  content="Yusuke Kominami, 小南佑介, 小南 佑介, Rust, Emacs, Lisp, Web, Machine Learning, 機械学習">
     <link rel="shortcut icon" href="/img/favicon.ico">
 
-    <title>Searches</title>
+    <title>macOS</title>
 
-    <link rel="canonical" href="/search/">
+    <link rel="canonical" href="/tags/macos/">
 
     <link rel="stylesheet" href="/css/iDisqus.min.css"/>
 	
@@ -179,6 +179,7 @@
 
 
 
+  
 <div class="container">
     <div class="row">
         
@@ -191,96 +192,37 @@
             post-container
         ">
             
-<script src="https://cdn.jsdelivr.net/npm/instantsearch.js@2.6.0/dist/instantsearch.min.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.20.1/moment.min.js"></script>
-<link rel="stylesheet" type="text/css"
-  href="https://cdn.jsdelivr.net/npm/instantsearch.js@2.6.0/dist/instantsearch.min.css">
-<link rel="stylesheet" type="text/css"
-  href="https://cdn.jsdelivr.net/npm/instantsearch.js@2.6.0/dist/instantsearch-theme-algolia.min.css">
 
-<div id="search-searchbar"></div>
-<div class="post-list" id="search-hits">
+<div class="post-preview">
+    <a href="http://komi.dev/post/2021-07-20-enabling-ime-in-alacritty/">
+        <h2 class="post-title">
+            Alacrittyが日本語入力がおかしいのを直した
+        </h2>
+	
+        <h3 class="post-subtitle">
+            macOSのIME APIを叩く
+        </h3>
+	
+        <div class="post-content-preview">
+	
+            日本語のインライン入力を行うためのTextInputClientにおいて実装のメモ
+        
+        </div>
+    </a>
+    <p class="post-meta">
+    Posted on Tuesday, July 20, 2021
+    
+    
+    </p>
+
 </div>
+<hr>
 
 
-<script type="module">
-  
-  
-  
-  
-  
-  
-  
-  
-  import { search, default as init } from '/wasm/tinysearch_engine.js';
-  window.search = search;
+            
 
-  async function run() {
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    await init('/wasm/tinysearch_engine_bg.wasm');
-  }
 
-  run();
-</script>
 
-<script>
-  
-  function doSearch() {
-    let query = document.getElementById("search").value;
-    const arr = search(query, 10);
-    let ul = document.getElementById("results");
-    ul.innerHTML = "";
-    console.log(arr)
-
-    for (i = 0; i < arr.length; i++) {
-      var li = document.createElement("li");
-      li.className += "search-item"
-
-      let elem = arr[i];
-      let elemlink = document.createElement('a');
-      elemlink.innerHTML = elem[0];
-      elemlink.setAttribute('href', elem[1]);
-      li.appendChild(elemlink);
-
-      ul.appendChild(li);
-    }
-  }
-</script>
-
-<h2>Search</h2>
-<input type="text" id="search" onkeyup="doSearch()" class="ais-search-box">
-<h2>Results</h2>
-<ul id="results" class="search-list"></ul>
-
-<style>
-  .ais-search-box {
-    max-width: 100%;
-    margin-bottom: 15px;
-    padding: 5px 10px;
-  }
-
-  .search-list {
-    list-style-type: none;
-    padding: 0;
-  }
-
-  .search-item {
-    border-bottom: 2px #dadada;
-    background: whitesmoke;
-    margin-bottom: 20px;
-    padding: 1.0em;
-    font-weight: bold;
-  }
-</style>
        	</div>
         
 
@@ -340,7 +282,7 @@
            <ul class="list-inline"> 
                
                <li>
-                   <a href='/search/index.xml' rel="alternate" type="application/rss+xml" title="Launch Today" >
+                   <a href='/tags/macos/index.xml' rel="alternate" type="application/rss+xml" title="Launch Today" >
                        <span class="fa-stack fa-lg">
                            <i class="fa fa-circle fa-stack-2x"></i>
                            <i class="fa fa-rss fa-stack-1x fa-inverse"></i>
@@ -426,6 +368,8 @@
 
 
 
+
+
 <footer>
     <div class="container">
         <div class="row">
@@ -433,7 +377,7 @@
                 <ul class="list-inline text-center">
                    
                    <li>
-                       <a href='/search/index.xml' rel="alternate" type="application/rss+xml" title="Launch Today" >
+                       <a href='/tags/macos/index.xml' rel="alternate" type="application/rss+xml" title="Launch Today" >
                            <span class="fa-stack fa-lg">
                                <i class="fa fa-circle fa-stack-2x"></i>
                                <i class="fa fa-rss fa-stack-1x fa-inverse"></i>

@@ -1,0 +1,666 @@
+<!DOCTYPE html>
+<html lang="en-us">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    
+    <meta property="og:site_name" content="Launch Today" />
+    <meta property="og:type" content="article" />
+    <meta property="og:url" content="https://komi.dev/" />
+    <meta property="og:locale" content="ja_JP" />
+
+    <meta name="twitter:site" content="@komi_edtr_1230" />
+
+    
+    <meta property="og:image" content="http://komi.dev/img/home.jpg" />
+    <meta property="twitter:image" content="http://komi.dev/img/home.jpg" />
+    
+
+    
+    <meta name="title" content="Alacrittyが日本語入力がおかしいのを直した" />
+    <meta property="og:title" content="Alacrittyが日本語入力がおかしいのを直した" />
+    <meta property="twitter:title" content="Alacrittyが日本語入力がおかしいのを直した" />
+    
+
+    
+    <meta name="description" content="日本語のインライン入力を行うためのTextInputClientにおいて実装のメモ" />
+    <meta property="og:description" content="日本語のインライン入力を行うためのTextInputClientにおいて実装のメモ" />
+    <meta property="twitter:description" content="日本語のインライン入力を行うためのTextInputClientにおいて実装のメモ" />
+    
+
+    
+    <meta property="twitter:card" content="summary" />
+    
+    
+
+    <meta name="keyword"  content="Yusuke Kominami, 小南佑介, 小南 佑介, Rust, Emacs, Lisp, Web, Machine Learning, 機械学習">
+    <link rel="shortcut icon" href="/img/favicon.ico">
+
+    <title>Alacrittyが日本語入力がおかしいのを直した</title>
+
+    <link rel="canonical" href="/post/2021-07-20-enabling-ime-in-alacritty/">
+
+    <link rel="stylesheet" href="/css/iDisqus.min.css"/>
+	
+    
+    <link rel="stylesheet" href="/css/bootstrap.min.css">
+
+    
+    <link rel="stylesheet" href="/css/hux-blog.min.css">
+
+    
+    <link rel="stylesheet" href="/css/zanshang.css">
+    
+    
+    <link href="//cdnjs.cloudflare.com/ajax/libs/font-awesome/4.6.3/css/font-awesome.min.css" rel="stylesheet" type="text/css">
+
+    
+    <link rel="stylesheet" href="http://komi.dev/css/custom-font.css">
+
+    
+    
+    <script src="/js/jquery.min.js"></script>
+    
+    
+    <script src="/js/bootstrap.min.js"></script>
+    
+    
+    <script src="/js/hux-blog.min.js"></script>
+
+    
+    
+
+    
+    <script async src="https://www.googletagmanager.com/gtag/js?id=UA-177061519-1"></script>
+    <script>
+        window.dataLayer = window.dataLayer || [];
+        function gtag(){dataLayer.push(arguments);}
+        gtag('js', new Date());
+
+        gtag('config', 'UA-177061519-1');
+    </script>
+
+
+</head>
+
+
+
+<nav class="navbar navbar-default navbar-custom navbar-fixed-top">
+    <div class="container-fluid">
+        
+        <div class="navbar-header page-scroll">
+            <button type="button" class="navbar-toggle">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+            <a class="navbar-brand" href="/">Launch Today</a>
+        </div>
+
+        
+        
+        <div id="huxblog_navbar">
+            <div class="navbar-collapse">
+                <ul class="nav navbar-nav navbar-right">
+                    <li>
+                        <a href="/">Home</a>
+                    </li>
+                    
+                        
+                        <li>
+                            <a href="/categories/tech">tech</a>
+                        </li>
+                        
+                    
+                    
+		    
+                        <li><a href="/top/about/">ABOUT</a></li>
+                    
+
+                    
+		    <li>
+                        <a href="/search">SEARCH <img src="/img/search.png" height="15" style="cursor: pointer;" alt="Search"></a>
+		    </li>
+                    
+                </ul>
+            </div>
+        </div>
+        
+    </div>
+    
+</nav>
+<script>
+    
+    
+    
+    var $body   = document.body;
+    var $toggle = document.querySelector('.navbar-toggle');
+    var $navbar = document.querySelector('#huxblog_navbar');
+    var $collapse = document.querySelector('.navbar-collapse');
+
+    $toggle.addEventListener('click', handleMagic)
+    function handleMagic(e){
+        if ($navbar.className.indexOf('in') > 0) {
+        
+            $navbar.className = " ";
+            
+            setTimeout(function(){
+                
+                if($navbar.className.indexOf('in') < 0) {
+                    $collapse.style.height = "0px"
+                }
+            },400)
+        }else{
+        
+            $collapse.style.height = "auto"
+            $navbar.className += " in";
+        }
+    }
+</script>
+
+
+
+
+<style type="text/css">
+    header.intro-header {
+        background-image: url('https://s3-ap-northeast-1.amazonaws.com/cdn.appli-world.jp/production/imgs/images/000/052/006/original.jpg?1542708167')
+    }
+</style>
+<header class="intro-header">
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+                <div class="post-heading">
+                    <div class="tags">
+                        
+                        <a class="tag" href="/tags/ime" title="IME">
+                            IME
+                        </a>
+                        
+                        <a class="tag" href="/tags/macos" title="macOS">
+                            macOS
+                        </a>
+                        
+                    </div>
+                    <h1>Alacrittyが日本語入力がおかしいのを直した</h1>
+                    <h2 class="subheading">macOSのIME APIを叩く</h2>
+                    <span class="meta">
+                        Posted 
+                        on 
+                        Tuesday, July 20, 2021
+                        
+                        
+                        
+                    </span>
+                </div>
+            </div>
+        </div>
+    </div>
+</header>
+
+
+
+
+<article>
+    <div class="container">
+        <div class="row">
+
+            
+            <div class="
+                col-lg-11 col-lg-offset-1
+                col-md-10 col-md-offset-1
+                post-container">
+
+                
+                <header>
+                    <h2>TOC</h2>
+                </header>
+                <nav id="TableOfContents">
+  <ul>
+    <li><a href="#背景">背景</a></li>
+    <li><a href="#objective-c何もわからん問題">Objective-C何もわからん問題</a></li>
+    <li><a href="#調査を進めていく">調査を進めていく</a>
+      <ul>
+        <li><a href="#nsviewとかnstextviewてかnsって何の略">NSViewとかNSTextView？てかNSって何の略？</a></li>
+        <li><a href="#imeを使うにはnstextinputclientプロトコルを実装する">IMEを使うにはNSTextInputClientプロトコルを実装する(?)</a></li>
+      </ul>
+    </li>
+    <li><a href="#試験的に動かす">試験的に動かす</a></li>
+    <li><a href="#nstextinputclientの挙動を修正する">NSTextInputClientの挙動を修正する</a>
+      <ul>
+        <li><a href="#setmarkedtextとinserttextとdocommandbyselector"><code>setMarkedText</code>と<code>insertText</code>と<code>doCommandBySelector</code></a></li>
+        <li><a href="#setmarkedtextでフロントに都度入力する"><code>setMarkedText</code>でフロントに都度入力する</a></li>
+        <li><a href="#inserttextとsetmarkedtextの二重発火"><code>insertText</code>と<code>setMarkedText</code>の二重発火</a></li>
+        <li><a href="#予測変換への対応">予測変換への対応</a></li>
+      </ul>
+    </li>
+    <li><a href="#まとめ">まとめ</a></li>
+  </ul>
+</nav>
+                
+                <h1 id="背景">背景</h1>
+<p>先日なんとなく<a href="https://zenn.dev/kawarimidoll/articles/007449407cc78d">ネットサーフィンしていたらターミナルアプリ一覧みたいな記事</a>を見かけた。
+自分は今まで惰性でmacOSでデフォルトでついているターミナルアプリを使っていて、特に不満はなかった。
+範囲選択したときのハイライトが弱くて見にくかったというのはあるが&hellip;.</p>
+<p>この記事を見て色々試して、最初に紹介されていたAlacrittyというのを使ってみることにした。
+どうやらRust製ということで速いらしい。</p>
+<p>早速試してみて、確かに速い。
+ものすごく操作している感じが良く、URLをクリックするとブラウザに飛べるというありがたい機能も付いていた。</p>
+<p>しかし完璧ではなくて、日本語のIMEとあまり相性が良くなかった。
+具体的にどういう症状があったかというと、</p>
+<ul>
+<li>予測変換している段階だとターミナル上に字が出てこない</li>
+<li>予測変換の際に候補を矢印キーで選択するとコマンドヒストリーが起動してしまう</li>
+</ul>
+<p>などの問題があった。</p>
+<p>ただ、自分は基本的にターミナルでは英語しか打ち込まないので問題ないと判断し、Alacriittyを普段使いに採用することにした。</p>
+<p>しかしやはり日本語入力が微妙なのは気になるもので、思い切って自分で直してみることにした。
+気合を入れて本家のコードをforkしてきて「さあやってやるぞ」と手を入れ始めたのだが、これが地獄の入り口だった。</p>
+<h1 id="objective-c何もわからん問題">Objective-C何もわからん問題</h1>
+<p><a href="https://github.com/alacritty/alacritty">Alacrittyのコード</a>を見てみると、GlutinというOpenGLユーティリティのようなクレートを使って画面を作ってるらしい。
+つまりキー入力自体のハンドリングについては丸ごとそちら側に任せて、Alacritty自体はGlutinから受け取ったWindowEventをもとに表示をどうするかなどAPIを整えているという機能分割を行っていた。</p>
+<p>Issueを眺めていくとどうやらIMEの問題については既知だったらしく、いくつかIssueが立っていた(<a href="https://github.com/alacritty/alacritty/issues/1101">Cannot input japanese characters #1101</a>, <a href="https://github.com/alacritty/alacritty/issues/1613">Support inline &ldquo;input method&rdquo; input #1613</a>)</p>
+<p>ディスカッションの様子を見ていると、どうやらAlacritty側に問題があるわけではなくWinitという低レベルOpenGLクレート側に問題があるらしい。</p>
+<p>依存関係としては Alacritty &gt; Glutin &gt; Winit となっているのだが、Glutinは内部で <code>use winit::*</code> ということをしていて実質的に何もしておらず、結論としてWinitを直せばAlacrittyが直るとのこと。(<a href="https://github.com/alacritty/alacritty/issues/1101#issuecomment-649986976">#comment</a>)</p>
+<p>ということでWinitの中身を見てみるが、やっていたことはObjective-Cのコードをひたすらラップしていたのである。
+もちろん最終的には使いやすい形となるようWindowEvent関連の綺麗なstructやenumがまとまっているが、OSごとの差分をうまいこと吸収するために色々泥臭いことが行われており、そのうちmacOSの場合に行われていたのがObjective-Cのラップだった。</p>
+<p>ちなみに最初のこの時点でIMEについては全く知らないしmacOSネイティブのアプリ開発の経験も無いからmacOSでのIME APIなんて何も知らない。
+おかげさまで最初はWinitのコードを書いても何もわからなかった。</p>
+<h1 id="調査を進めていく">調査を進めていく</h1>
+<p>何も知識が無くRustのコードが読み書きできる状態だったのでまずはコードを読んでわからない概念・単語を全てググっていく。</p>
+<h2 id="nsviewとかnstextviewてかnsって何の略">NSViewとかNSTextView？てかNSって何の略？</h2>
+<p>コードを読んでいくとNSViewとかNSTextView、他にもNSRangeなどNSというPrefixがついた色々なものが出てくる。
+もちろん知らない。</p>
+<p>ググってみると以下の情報が出てきた。</p>
+<blockquote>
+<p>NeXTSTEP の権利がアップル社に移る時に開発言語のObjective-Cの権利もアップル社に移りました。そしてこのNeXTSTEPが現在のMac OS Xのベースになりました。また今から学習をはじめるObjective-Cには“NS”という文字で始まるクラスや関数が多数存在しています（クラスについては後の章で説明いたします）。このNSはNeXTSTEPの略称です。</p>
+</blockquote>
+<p>かつてAppleを追われたスティーブ・ジョブズはNeXTという会社を作ってNEXTSTEPというOSを販売していたが、Appleに吸収されその技術をベースに現在のmacOSができあがったため、NS〇〇というのはNeXT社の由来というものらしい。(<a href="https://vivacocoa.jp/objective-c3e/chapter1a.html">引用元</a>)</p>
+<p>逆に、今回Winitのデバッグで出てくるオブジェクトでNSというPrefixがついていればWinitではなくmacOS側のオブジェクトということになる。</p>
+<h2 id="imeを使うにはnstextinputclientプロトコルを実装する">IMEを使うにはNSTextInputClientプロトコルを実装する(?)</h2>
+<p>NSがmacOS側のオブジェクトというのはわかったが、ググってみると<a href="https://qiita.com/496_/items/4ad166f4104d0bb24e80">NSTextInputClientプロトコルを実装すればIMEが機能するようになるらしい</a>。</p>
+<p>プロトコルを実装するというのはピンとこなかったが、NSTextInputClientプロトコル内で使われる<code>hasMarkedText</code>や<code>selectedRange</code>、<code>insertText</code>などの関数をアプリケーション内で動くように実装すればいいらしい。</p>
+<p>具体的に、例えば未確定文字列が存在するか確認する<code>hasMarkedText</code>は以下のように実装する。</p>
+<div class="highlight"><pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-rust" data-lang="rust"><span style="color:#a2f;font-weight:bold">extern</span><span style="color:#bbb"> </span><span style="color:#b44">&#34;C&#34;</span><span style="color:#bbb"> </span><span style="color:#a2f;font-weight:bold">fn</span> <span style="color:#00a000">has_marked_text</span>(this: <span style="color:#a2f">&amp;</span><span style="color:#00f">Object</span>,<span style="color:#bbb"> </span>_sel: <span style="color:#00f">Sel</span>)<span style="color:#bbb"> </span>-&gt; <span style="color:#00f">BOOL</span><span style="color:#bbb"> </span>{<span style="color:#bbb">
+</span><span style="color:#bbb">    </span><span style="color:#a2f;font-weight:bold">unsafe</span><span style="color:#bbb"> </span>{<span style="color:#bbb">
+</span><span style="color:#bbb">        </span>trace<span style="color:#666">!</span>(<span style="color:#b44">&#34;Triggered `hasMarkedText`&#34;</span>);<span style="color:#bbb">
+</span><span style="color:#bbb">        </span><span style="color:#a2f;font-weight:bold">let</span><span style="color:#bbb"> </span>marked_text: <span style="color:#00f">id</span><span style="color:#bbb"> </span><span style="color:#666">=</span><span style="color:#bbb"> </span><span style="color:#666">*</span>this.get_ivar(<span style="color:#b44">&#34;markedText&#34;</span>);<span style="color:#bbb">
+</span><span style="color:#bbb">        </span>trace<span style="color:#666">!</span>(<span style="color:#b44">&#34;Completed `hasMarkedText`&#34;</span>);<span style="color:#bbb">
+</span><span style="color:#bbb">        </span>(marked_text.length()<span style="color:#bbb"> </span><span style="color:#666">&gt;</span><span style="color:#bbb"> </span><span style="color:#666">0</span>)<span style="color:#bbb"> </span><span style="color:#a2f;font-weight:bold">as</span><span style="color:#bbb"> </span>BOOL<span style="color:#bbb">
+</span><span style="color:#bbb">    </span>}<span style="color:#bbb">
+</span><span style="color:#bbb"></span>}<span style="color:#bbb">
+</span></code></pre></div><p>また、<code>setMarkedText</code>は以下のようになる。</p>
+<div class="highlight"><pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-rust" data-lang="rust"><span style="color:#a2f;font-weight:bold">extern</span><span style="color:#bbb"> </span><span style="color:#b44">&#34;C&#34;</span><span style="color:#bbb"> </span><span style="color:#a2f;font-weight:bold">fn</span> <span style="color:#00a000">set_marked_text</span>(<span style="color:#bbb">
+</span><span style="color:#bbb">    </span>this: <span style="color:#a2f">&amp;</span><span style="color:#00f">mut</span><span style="color:#bbb"> </span>Object,<span style="color:#bbb">
+</span><span style="color:#bbb">    </span>_sel: <span style="color:#00f">Sel</span>,<span style="color:#bbb">
+</span><span style="color:#bbb">    </span>string: <span style="color:#00f">id</span>,<span style="color:#bbb">
+</span><span style="color:#bbb">    </span>_selected_range: <span style="color:#00f">NSRange</span>,<span style="color:#bbb">
+</span><span style="color:#bbb">    </span>_replacement_range: <span style="color:#00f">NSRange</span>,<span style="color:#bbb">
+</span><span style="color:#bbb"></span>)<span style="color:#bbb"> </span>{<span style="color:#bbb">
+</span><span style="color:#bbb">    </span>trace<span style="color:#666">!</span>(<span style="color:#b44">&#34;Triggered `setMarkedText`&#34;</span>);<span style="color:#bbb">
+</span><span style="color:#bbb">    </span><span style="color:#a2f;font-weight:bold">unsafe</span><span style="color:#bbb"> </span>{<span style="color:#bbb">
+</span><span style="color:#bbb">        </span><span style="color:#a2f;font-weight:bold">let</span><span style="color:#bbb"> </span>marked_text_ref: <span style="color:#a2f">&amp;</span><span style="color:#00f">mut</span><span style="color:#bbb"> </span>id<span style="color:#bbb"> </span><span style="color:#666">=</span><span style="color:#bbb"> </span>this.get_mut_ivar(<span style="color:#b44">&#34;markedText&#34;</span>);<span style="color:#bbb">
+</span><span style="color:#bbb">        </span><span style="color:#a2f;font-weight:bold">let</span><span style="color:#bbb"> </span>_: ()<span style="color:#bbb"> </span><span style="color:#666">=</span><span style="color:#bbb"> </span>msg_send<span style="color:#666">!</span>[(<span style="color:#666">*</span>marked_text_ref),<span style="color:#bbb"> </span>release];<span style="color:#bbb">
+</span><span style="color:#bbb">        </span><span style="color:#a2f;font-weight:bold">let</span><span style="color:#bbb"> </span>marked_text<span style="color:#bbb"> </span><span style="color:#666">=</span><span style="color:#bbb"> </span>NSMutableAttributedString::alloc(nil);<span style="color:#bbb">
+</span><span style="color:#bbb">        </span><span style="color:#a2f;font-weight:bold">let</span><span style="color:#bbb"> </span>has_attr<span style="color:#bbb"> </span><span style="color:#666">=</span><span style="color:#bbb"> </span>msg_send<span style="color:#666">!</span>[string,<span style="color:#bbb"> </span>isKindOfClass: <span style="color:#00f">class</span><span style="color:#666">!</span>(NSAttributedString)];<span style="color:#bbb">
+</span><span style="color:#bbb">        </span><span style="color:#a2f;font-weight:bold">if</span><span style="color:#bbb"> </span>has_attr<span style="color:#bbb"> </span>{<span style="color:#bbb">
+</span><span style="color:#bbb">            </span>marked_text.initWithAttributedString(string);<span style="color:#bbb">
+</span><span style="color:#bbb">        </span>}<span style="color:#bbb"> </span><span style="color:#a2f;font-weight:bold">else</span><span style="color:#bbb"> </span>{<span style="color:#bbb">
+</span><span style="color:#bbb">            </span>marked_text.initWithString(string);<span style="color:#bbb">
+</span><span style="color:#bbb">        </span>};<span style="color:#bbb">
+</span><span style="color:#bbb">        </span><span style="color:#666">*</span>marked_text_ref<span style="color:#bbb"> </span><span style="color:#666">=</span><span style="color:#bbb"> </span>marked_text;<span style="color:#bbb">
+</span><span style="color:#bbb">    </span>}<span style="color:#bbb">
+</span><span style="color:#bbb">    </span>trace<span style="color:#666">!</span>(<span style="color:#b44">&#34;Completed `setMarkedText`&#34;</span>);<span style="color:#bbb">
+</span><span style="color:#bbb"></span>}<span style="color:#bbb">
+</span></code></pre></div><p>この場合、事前に<code>NSView</code>オブジェクト内に<code>markedText</code>という変数を用意しておき、仮に日本語入力をしていて確定されてない文字列(未確定文字列、下線がついているやつ)があればOS側が<code>setMarkedText</code>を発火してこの<code>markedText</code>に値を当て、<code>hasMarkedText</code>はそれを参照する。</p>
+<p>NSTextInputClientとはこのようにキーを押したイベントに際して文字列入力の際の一連の処理を行ってくれる規則であり関数の発火を行ってくれるもので、プロトコルを実装するとは実際のアプリケーションでIMEを叩くために各関数の具体的な動作を定義する必要があるのである。</p>
+<h1 id="試験的に動かす">試験的に動かす</h1>
+<p>今回Alacrittyを直すためだったが、修正に際して登場するクレートが3つもあるため、それぞれcloneしてくる。</p>
+<p>ディレクトリの位置関係としては以下のようになる。</p>
+<pre><code>.
+├── alacritty/
+│   ├── alacritty/
+│   ├── alacritty_config_derive
+│   ├── alacritty_terminal
+│   ├── docs
+│   ├── extra
+├── glutin
+│   ├── glutin
+│   ├── glutin_egl_sys
+│   ├── glutin_emscripten_sys
+│   ├── glutin_examples
+│   ├── glutin_gles2_sys
+│   ├── glutin_glx_sys
+│   └── glutin_wgl_sys
+└── winit
+    ├── examples
+    ├── src
+    └── tests
+</code></pre><p>そしてAlacrittyをローカルで叩くが、依存するクレートをcrates.ioからとってくるのではなくローカルのものをとってきて欲しいので<code>Cargo.toml</code>の依存クレートを以下のように直す。</p>
+<pre><code>glutin = { version = &quot;0.27.0&quot;, default-features = false, features = [&quot;serde&quot;] }
+
+↓
+
+glutin = { path = &quot;../../glutin/glutin&quot;, version = &quot;0.27.0&quot;, default-features = false, features = [&quot;serde&quot;] }
+</code></pre><p>これでローカルのものを参照してくれる。
+Glutinでも同様にローカルのWinitを参照するように直す。</p>
+<p>これらをやった上でAlacrittyのリポジトリで<code>cargo run</code>をすればターミナルが立ち上がる。</p>
+<p>これで準備OKになった。</p>
+<h1 id="nstextinputclientの挙動を修正する">NSTextInputClientの挙動を修正する</h1>
+<p>下調べなどでものすごく時間がかかってしまったが、ようやく作業に取り掛かる。</p>
+<p>WinitではIMEの挙動を直すために色々structの仕様変更が入ったりしていたが、現在ではKeyboardInputというstructで未確定文字列の有無を格納するフィールドがある。
+AlacrittyもWinitもIMEの修正に真っ最中らしく、Alacritty本体でもまだ未確定文字列の処理についてのハンドリングはfixされていない。(Alacrittyの中に<code>skip_events</code>という関数があり、その中に<code>KeyboardInput { is_synthetic: true, ..}</code>がある)</p>
+<p>今回動作確認するためにはまずAlacrittyがハンドリングするWindowEventで未確定文字列が存在する場合もキャッチして処理するよう<a href="https://github.com/alacritty/alacritty/blob/4c9ecd3479b6cce0493532561ef78ba410c3b51a/alacritty/src/event.rs#L1250">パターンマッチングの分岐条件</a>を変更する。</p>
+<div class="highlight"><pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-rust" data-lang="rust">WindowEvent::KeyboardInput<span style="color:#bbb"> </span>{<span style="color:#bbb"> </span>input,<span style="color:#bbb"> </span>is_synthetic: <span style="color:#00f">false</span>,<span style="color:#bbb"> </span>..<span style="color:#bbb"> </span>}<span style="color:#bbb"> </span><span style="color:#666">=&gt;</span><span style="color:#bbb"> </span>{<span style="color:#bbb">
+</span><span style="color:#bbb">    </span>processor.key_input(input);<span style="color:#bbb">
+</span><span style="color:#bbb"></span>},<span style="color:#bbb">
+</span><span style="color:#bbb">
+</span><span style="color:#bbb"></span><span style="">↓</span><span style="color:#bbb">
+</span><span style="color:#bbb">
+</span><span style="color:#bbb"></span>WindowEvent::KeyboardInput<span style="color:#bbb"> </span>{<span style="color:#bbb"> </span>input,<span style="color:#bbb"> </span>..<span style="color:#bbb"> </span>}<span style="color:#bbb"> </span><span style="color:#666">=&gt;</span><span style="color:#bbb"> </span>{<span style="color:#bbb">
+</span><span style="color:#bbb">    </span>processor.key_input(input);<span style="color:#bbb">
+</span><span style="color:#bbb"></span>},<span style="color:#bbb">
+</span></code></pre></div><p>次にWinitにて適切に<code>KeyboardInput</code>というstruct内に<code>is_synthetic</code>のboolが適切に入っているか確認する。</p>
+<p>が、見てみるとmacOSについてはまだ暫定的に全てfalseでは入るようになっている。
+macOSについてはまだIME対応が完了していない中でstructの仕様を変更が入った経緯ということで、このようなコードになっていた。</p>
+<p>一旦これをいじって直して、早速実際のIMEのコードの修正に取り掛かる。</p>
+<h2 id="setmarkedtextとinserttextとdocommandbyselector"><code>setMarkedText</code>と<code>insertText</code>と<code>doCommandBySelector</code></h2>
+<p>IMEの修正にはmacOSのAPIを叩いているコードを障ればよく、Winitの<a href="https://github.com/komi1230/winit/blob/master/src/platform_impl/macos/view.rs"><code>src/platform_impl/macos/view.rs</code></a>がそれに該当する。</p>
+<p>コードの見方として、中段くらいにある<code>lazy_static! { ... }</code>の部分でクラスの宣言を行なっていてこの中にクラスメソッドや変数の宣言を行う。
+宣言された関数についてはその後<code>extern &quot;C&quot; fn ...</code>のようにして具体的な関数の実装を行う。</p>
+<p>宣言されたクラスメソッドは色々あるが、この中でキー入力を担うのが<code>setMarkedText</code>と<code>insertText</code>と<code>doCommandBySelector</code>の3つで、それぞれの役割として</p>
+<table>
+<thead>
+<tr>
+<th align="center">関数名</th>
+<th align="center">役割</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td align="center"><code>setMarkedText</code></td>
+<td align="center">日本語などの入力の際に未確定の文字列をどう扱うかを決める。</td>
+</tr>
+<tr>
+<td align="center"><code>insertText</code></td>
+<td align="center">確定文字列をフロントエンドに送る。英語入力の際はデフォルトでこれになる。</td>
+</tr>
+<tr>
+<td align="center"><code>doCommandBySelector</code></td>
+<td align="center">Cmd-sみたいなキーバインド。文字入力ではなくウィンドウ操作などが対象。</td>
+</tr>
+</tbody>
+</table>
+<p>となっている。
+文字列をフロントエンドに渡す操作は<code>setMarkedText</code>と<code>insertText</code>が担っている。</p>
+<h2 id="setmarkedtextでフロントに都度入力する"><code>setMarkedText</code>でフロントに都度入力する</h2>
+<p>フロントエンドに文字列を渡す方法として、以下のようにイベント情報のキューにpushしていく。</p>
+<div class="highlight"><pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-rust" data-lang="rust"><span style="color:#a2f;font-weight:bold">let</span><span style="color:#bbb"> </span><span style="color:#a2f;font-weight:bold">mut</span><span style="color:#bbb"> </span>events<span style="color:#bbb"> </span><span style="color:#666">=</span><span style="color:#bbb"> </span>VecDeque::with_capacity(characters.len());<span style="color:#bbb">
+</span><span style="color:#bbb"></span>events.push_back(EventWrapper::StaticEvent(Event::WindowEvent<span style="color:#bbb"> </span>{<span style="color:#bbb">
+</span><span style="color:#bbb">    </span>window_id: <span style="color:#00f">WindowId</span>(get_window_id(state.ns_window)),<span style="color:#bbb">
+</span><span style="color:#bbb">    </span>event: <span style="color:#00f">WindowEvent</span>::ReceivedCharacter(character),<span style="color:#bbb">
+</span><span style="color:#bbb"></span>}));<span style="color:#bbb">
+</span><span style="color:#bbb">
+</span><span style="color:#bbb"></span>AppState::queue_events(events);<span style="color:#bbb">
+</span></code></pre></div><p>この中の<code>event: WindowEvent::ReceivedCharacter(character)</code>が肝で、<code>insertText</code>ではこのような操作を行なってくれているのだが<code>setMarkedText</code>はこの実装が行われていなかった。過去のログを探ってみたところ、どうやら実装者が英語圏の人で<code>setMarkedText</code>が何のためにあるのか知らなかったらしい。</p>
+<p>そんなわけで<code>setMarkedText</code>にも毎度フロントに文字列をpushするように変更。
+<code>setmarkedText</code>は各キー入力に対して毎回発火するので、全部入力するようにしていると<code>ねこ</code>と入力したら<code>nねねkねこ</code>と何度も入力されまくることになる。
+そのため毎回<code>setMarkedText</code>が起動すると同時に直前の未確定文字列分だけDeleteキーを押す操作を擬似的に行わせる。</p>
+<p>この操作として直前のカーソル位置の分だけまず全部削除して、その後新規の未確定文字列を全部入力させるという方針を取る。
+つまり</p>
+<pre><code>こんにちh
+↓
+(全部削除)
+↓
+こんにちは
+</code></pre><p>とした。
+これで重複を無くすことができる。</p>
+<p>一つ要注意ポイントとして、Rustでは文字列型として<code>String</code>と<code>&amp;str</code>があるが、これらに対して<code>text.len()</code>としてもUTF-8のデータ長が帰ってきてしまう。
+つまり<code>&quot;こんにちは&quot;.len()</code>の値は<code>15</code>となってしまう。
+そのため文字数をカウントする場合は<code>&quot;こんにちは&quot;.chars().count()</code>を使うのが正しい。</p>
+<h2 id="inserttextとsetmarkedtextの二重発火"><code>insertText</code>と<code>setMarkedText</code>の二重発火</h2>
+<p>これで完成かというとそうでもなく、macOSのAPIとして未確定文字列がある場合は毎回のキー入力に対して<code>setMarkedText</code>が起動するが、未確定文字列が確定された時は<code>insertText</code>が起動する。
+つまりこのままだと<code>こんにちは</code>と入力した際に<code>こんにちはこんにちは</code>と2回入力される。
+これを防ぐべく、<code>isIMEActivated</code>という状態を示す変数をViewクラスに実装し、未確定文字列がある場合はtrueとなるようにした上で、これを起点に<code>insertText</code>の処理を適切にスキップさせれば良い。</p>
+<h2 id="予測変換への対応">予測変換への対応</h2>
+<p>日本語入力を考えた時、漢字への変換などがある。
+この変換は多くの場合はSpaceキーや矢印キーを用いて行われる(はず)なのだが、現状のままだと予測変換のためにSpaceキーを押したのに空白が入力されてしまったり、もしくは矢印キーを触ってコマンドヒストリーを取りに行ってしまったりする。</p>
+<p>そのため予測変換のためのキー操作をしているとき(未確定文字列が存在しているとき)、Spaceキーや矢印キーが押されたときは別の動作をさせる必要がある。
+この処理は<code>keyDown</code>の実装をいじれば良く、自前で<code>is_arrow_or_space_key</code>のような関数を実装した上で、適切に処理をさせれば良い。</p>
+<p>以上でようやくmacOSにてAlacrittyでIMEが有効化されるようになった。</p>
+<h1 id="まとめ">まとめ</h1>
+<p>今回バグを直すためにIMEってナニソレ状態から調査を始めて、無事にバグを修正するところまで持っていけた。</p>
+<p>CocoaやAppkitの周辺の日本語情報はあまり転がっていなかったのでなかなか苦労したが、とても良い経験になった気がする。</p>
+<p>最後に出したPRは<a href="https://github.com/rust-windowing/winit/pull/1979">こちら</a>。</p>
+
+
+                
+
+                <hr>
+                <ul class="pager">
+                    
+                    <li class="previous">
+                        <a href="http://komi.dev/post/2021-03-21-gcp-credential-in-digdag/" data-toggle="tooltip" data-placement="top" title="GKEにおけるDigdagでのGCPのクレデンシャルの取り扱い">&larr;
+                            Previous Post</a>
+                    </li>
+                    
+                    
+                </ul>
+
+                
+<div id="disqus-comment"></div>
+
+
+
+            </div>
+            
+            <div class="
+                col-lg-11 col-lg-offset-1
+                col-md-10 col-md-offset-1
+                sidebar-container">
+
+                
+                
+                <section>
+                    <hr class="hidden-sm hidden-xs">
+                    <h5><a href="/tags/">FEATURED TAGS</a></h5>
+                    <div class="tags">
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        <a href="/tags/gcp" title="gcp">
+                            gcp
+                        </a>
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                    </div>
+                </section>
+                
+
+                
+                
+            </div>
+        </div>
+    </div>
+</article>
+
+
+
+
+<footer>
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+                <ul class="list-inline text-center">
+                   
+                   <li>
+                       <a href='' rel="alternate" type="application/rss+xml" title="Launch Today" >
+                           <span class="fa-stack fa-lg">
+                               <i class="fa fa-circle fa-stack-2x"></i>
+                               <i class="fa fa-rss fa-stack-1x fa-inverse"></i>
+                           </span>
+                       </a>
+                   </li>
+                   
+                    
+                    <li>
+                        <a href="mailto:yusuke.kominami@gmail.com">
+                            <span class="fa-stack fa-lg">
+                                <i class="fa fa-circle fa-stack-2x"></i>
+                                <i class="fa fa-envelope fa-stack-1x fa-inverse"></i>
+                            </span>
+                        </a>
+                    </li>
+		    
+                    
+                    
+                    <li>
+                        <a href="https://twitter.com/komi_edtr_1230">
+                            <span class="fa-stack fa-lg">
+                                <i class="fa fa-circle fa-stack-2x"></i>
+                                <i class="fa fa-twitter fa-stack-1x fa-inverse"></i>
+                            </span>
+                        </a>
+                    </li>
+                    
+                    
+                    
+
+                    
+                    <li>
+                        <a target="_blank" href="https://www.facebook.com/1230komi/">
+                            <span class="fa-stack fa-lg">
+                                <i class="fa fa-circle fa-stack-2x"></i>
+                                <i class="fa fa-facebook fa-stack-1x fa-inverse"></i>
+                            </span>
+                        </a>
+                    </li>
+		    
+
+		    
+                    
+                    
+                    <li>
+                        <a target="_blank" href="https://github.com/komi1230">
+                            <span class="fa-stack fa-lg">
+                                <i class="fa fa-circle fa-stack-2x"></i>
+                                <i class="fa fa-github fa-stack-1x fa-inverse"></i>
+                            </span>
+                        </a>
+                    </li>
+		    
+                    
+                    
+                    
+                    <li>
+                        <a target="_blank" href="https://www.linkedin.com/in/yusuke-kominami-0419b1157/">
+                            <span class="fa-stack fa-lg">
+                                <i class="fa fa-circle fa-stack-2x"></i>
+                                <i class="fa fa-linkedin fa-stack-1x fa-inverse"></i>
+                            </span>
+                        </a>
+                    </li>
+		    
+                    
+                    
+                    <li>
+                        <a target="_blank" href="https://stackoverflow.com/users/12464570">
+                            <span class="fa-stack fa-lg">
+                                <i class="fa fa-circle fa-stack-2x"></i>
+                                <i class="fa fa-stack-overflow fa-stack-1x fa-inverse"></i>
+                            </span>
+                        </a>
+                    </li>
+            
+                    
+                    
+                    
+            
+            
+            
+                </ul>
+		<p class="copyright text-muted">
+                    Copyright &copy; Launch Today 2021
+                </p>
+            </div>
+        </div>
+    </div>
+</footer>
+
+
+
+
+<script>
+    function async(u, c) {
+      var d = document, t = 'script',
+          o = d.createElement(t),
+          s = d.getElementsByTagName(t)[0];
+      o.src = u;
+      if (c) { o.addEventListener('load', function (e) { c(null, e); }, false); }
+      s.parentNode.insertBefore(o, s);
+    }
+</script>
+
+
+
+
+
+
+<script>
+    
+    if($('#tag_cloud').length !== 0){
+        async("/js/jquery.tagcloud.js",function(){
+            $.fn.tagcloud.defaults = {
+                
+                color: {start: '#bbbbee', end: '#0085a1'},
+            };
+            $('#tag_cloud a').tagcloud();
+        })
+    }
+</script>
+
+
+<script>
+    async("https://cdnjs.cloudflare.com/ajax/libs/fastclick/1.0.6/fastclick.js", function(){
+        var $nav = document.querySelector("nav");
+        if($nav) FastClick.attach($nav);
+    })
+</script>
+
+
+
+
+
+
+<script type="application/javascript">
+var doNotTrack = false;
+if (!doNotTrack) {
+	window.ga=window.ga||function(){(ga.q=ga.q||[]).push(arguments)};ga.l=+new Date;
+	ga('create', 'UA-177061519-1', 'auto');
+	
+	ga('send', 'pageview');
+}
+</script>
+<script async src='https://www.google-analytics.com/analytics.js'></script>
+
+
+
+</body>
+</html>
