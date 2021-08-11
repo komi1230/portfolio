@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>Chrome on Launch Today</title>
+    <link>http://komi.dev/tags/chrome/</link>
+    <description>Recent content in Chrome on Launch Today</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>en-us</language>
+    <lastBuildDate>Wed, 11 Aug 2021 00:00:00 +0000</lastBuildDate><atom:link href="http://komi.dev/tags/chrome/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>Chromeでfont-familyを正しく設定する</title>
+      <link>http://komi.dev/post/2021-08-11-font-in-chrome-and-safari/</link>
+      <pubDate>Wed, 11 Aug 2021 00:00:00 +0000</pubDate>
+      
+      <guid>http://komi.dev/post/2021-08-11-font-in-chrome-and-safari/</guid>
+      <description>Chromeでのみフォントが正しく読まれない問題 先日にブログを作り直し、現在はHugoを使ってGitHub Pages上でホスティングしている</description>
+    </item>
+    
+  </channel>
+</rss>

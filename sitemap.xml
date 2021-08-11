@@ -2,28 +2,37 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"
   xmlns:xhtml="http://www.w3.org/1999/xhtml">
   <url>
+    <loc>http://komi.dev/categories/</loc>
+    <lastmod>2021-08-11T00:00:00+00:00</lastmod>
+  </url><url>
+    <loc>http://komi.dev/tags/chrome/</loc>
+    <lastmod>2021-08-11T00:00:00+00:00</lastmod>
+  </url><url>
+    <loc>http://komi.dev/post/2021-08-11-font-in-chrome-and-safari/</loc>
+    <lastmod>2021-08-11T00:00:00+00:00</lastmod>
+  </url><url>
+    <loc>http://komi.dev/tags/font/</loc>
+    <lastmod>2021-08-11T00:00:00+00:00</lastmod>
+  </url><url>
+    <loc>http://komi.dev/</loc>
+    <lastmod>2021-08-11T00:00:00+00:00</lastmod>
+  </url><url>
+    <loc>http://komi.dev/tags/macos/</loc>
+    <lastmod>2021-08-11T00:00:00+00:00</lastmod>
+  </url><url>
+    <loc>http://komi.dev/post/</loc>
+    <lastmod>2021-08-11T00:00:00+00:00</lastmod>
+  </url><url>
+    <loc>http://komi.dev/tags/</loc>
+    <lastmod>2021-08-11T00:00:00+00:00</lastmod>
+  </url><url>
+    <loc>http://komi.dev/categories/tech/</loc>
+    <lastmod>2021-08-11T00:00:00+00:00</lastmod>
+  </url><url>
     <loc>http://komi.dev/post/2021-07-20-enabling-ime-in-alacritty/</loc>
     <lastmod>2021-07-20T00:00:00+00:00</lastmod>
   </url><url>
-    <loc>http://komi.dev/categories/</loc>
-    <lastmod>2021-07-20T00:00:00+00:00</lastmod>
-  </url><url>
     <loc>http://komi.dev/tags/ime/</loc>
-    <lastmod>2021-07-20T00:00:00+00:00</lastmod>
-  </url><url>
-    <loc>http://komi.dev/</loc>
-    <lastmod>2021-07-20T00:00:00+00:00</lastmod>
-  </url><url>
-    <loc>http://komi.dev/tags/macos/</loc>
-    <lastmod>2021-07-20T00:00:00+00:00</lastmod>
-  </url><url>
-    <loc>http://komi.dev/post/</loc>
-    <lastmod>2021-07-20T00:00:00+00:00</lastmod>
-  </url><url>
-    <loc>http://komi.dev/tags/</loc>
-    <lastmod>2021-07-20T00:00:00+00:00</lastmod>
-  </url><url>
-    <loc>http://komi.dev/categories/tech/</loc>
     <lastmod>2021-07-20T00:00:00+00:00</lastmod>
   </url><url>
     <loc>http://komi.dev/tags/digdag/</loc>

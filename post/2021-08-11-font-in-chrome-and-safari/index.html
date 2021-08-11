@@ -19,15 +19,15 @@
     
 
     
-    <meta name="title" content="GitHub Actions" />
-    <meta property="og:title" content="GitHub Actions" />
-    <meta property="twitter:title" content="GitHub Actions" />
+    <meta name="title" content="Chromeでfont-familyを正しく設定する" />
+    <meta property="og:title" content="Chromeでfont-familyを正しく設定する" />
+    <meta property="twitter:title" content="Chromeでfont-familyを正しく設定する" />
     
 
     
-    <meta name="description" content="Yusuke Kominami&#39;s Blog. About software engineering, career, lifestyle." />
-    <meta property="og:description" content="Yusuke Kominami&#39;s Blog. About software engineering, career, lifestyle." />
-    <meta property="twitter:description" content="Yusuke Kominami&#39;s Blog. About software engineering, career, lifestyle." />
+    <meta name="description" content="このブログで日本語フォントが中華フォントに化けてしまう問題とその直し方" />
+    <meta property="og:description" content="このブログで日本語フォントが中華フォントに化けてしまう問題とその直し方" />
+    <meta property="twitter:description" content="このブログで日本語フォントが中華フォントに化けてしまう問題とその直し方" />
     
 
     
@@ -38,9 +38,9 @@
     <meta name="keyword"  content="Yusuke Kominami, 小南佑介, 小南 佑介, Rust, Emacs, Lisp, Web, Machine Learning, 機械学習">
     <link rel="shortcut icon" href="/img/favicon.ico">
 
-    <title>GitHub Actions</title>
+    <title>Chromeでfont-familyを正しく設定する</title>
 
-    <link rel="canonical" href="/tags/github-actions/">
+    <link rel="canonical" href="/post/2021-08-11-font-in-chrome-and-safari/">
 
     <link rel="stylesheet" href="/css/iDisqus.min.css"/>
 	
@@ -163,14 +163,42 @@
 
 
 
-<header class="intro-header" style="background-image: url('/img/home.jpg')">
+
+<style type="text/css">
+    header.intro-header {
+        background-image: url('https://i1.wp.com/nobon.me/wp-content/uploads/2013/03/1920x1080_08-001.jpg?fit=1920%2C1080&ssl=1')
+    }
+</style>
+<header class="intro-header">
     <div class="container">
         <div class="row">
-            <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1 ">
-                <div class="site-heading">
-                    <h1>Launch Today </h1>
-                    
-		    <span class="subheading">Playground and Workspace for Awesome Ideas</span>
+            <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+                <div class="post-heading">
+                    <div class="tags">
+                        
+                        <a class="tag" href="/tags/chrome" title="Chrome">
+                            Chrome
+                        </a>
+                        
+                        <a class="tag" href="/tags/macos" title="macOS">
+                            macOS
+                        </a>
+                        
+                        <a class="tag" href="/tags/font" title="font">
+                            font
+                        </a>
+                        
+                    </div>
+                    <h1>Chromeでfont-familyを正しく設定する</h1>
+                    <h2 class="subheading">-apple-systemとBlinkMacSystemFont</h2>
+                    <span class="meta">
+                        Posted 
+                        on 
+                        Wednesday, August 11, 2021
+                        
+                        
+                        
+                    </span>
                 </div>
             </div>
         </div>
@@ -179,201 +207,118 @@
 
 
 
-  
-<div class="container">
-    <div class="row">
-        
-        
-   	    <div class="
-            col-lg-8 col-lg-offset-1
-            col-md-8 col-md-offset-1
-            col-sm-12
-            col-xs-12
-            post-container
-        ">
-            
 
-<div class="post-preview">
-    <a href="http://komi.dev/post/2021-01-19-cloud-run-from-github-actions/">
-        <h2 class="post-title">
-            GitHub ActionsからCloud Runを叩く
-        </h2>
-	
-        <h3 class="post-subtitle">
-            各種のセットアップで陥る罠について
-        </h3>
-	
-        <div class="post-content-preview">
-	
-            GitHub ActionsとCloud Runは便利だがCI/CDの設定で今回陥った罠についてツラツラと書く
-        
-        </div>
-    </a>
-    <p class="post-meta">
-    Posted on Tuesday, January 19, 2021
-    
-    
-    </p>
-
-</div>
-<hr>
-
+<article>
+    <div class="container">
+        <div class="row">
 
             
+            <div class="
+                col-lg-11 col-lg-offset-1
+                col-md-10 col-md-offset-1
+                post-container">
+
+                
+                <header>
+                    <h2>TOC</h2>
+                </header>
+                <nav id="TableOfContents">
+  <ul>
+    <li><a href="#chromeでのみフォントが正しく読まれない問題">Chromeでのみフォントが正しく読まれない問題</a></li>
+    <li><a href="#-apple-systemとblinkmacsystemfont"><code>-apple-system</code>と<code>BlinkMacSystemFont</code></a></li>
+    <li><a href="#結局どうしたか">結局どうしたか</a></li>
+  </ul>
+</nav>
+                
+                <h1 id="chromeでのみフォントが正しく読まれない問題">Chromeでのみフォントが正しく読まれない問題</h1>
+<p>先日にブログを作り直し、現在はHugoを使ってGitHub Pages上でホスティングしている。
+前までブログにははてなブログを利用していたのだが、広告が鬱陶しいと感じたため自分でホスティングし直すことにした。</p>
+<p>そんなわけでHugoのデザインテンプレートを利用したりして現在のブログがあるわけだけど、いつからかフォントが妙な動作をしていた。
+というのも、SafariやiPhoneで見てみると正しく日本語のフォントが見えているが、なぜかChromeでのみフォントが中華フォントになっていた。</p>
+<p>コードを読み直してみてもカスタムCSSが適切に配置してある。
+前まではChromeでもちゃんと動いていた気がするが、なにが起きていたのだろう。</p>
+<h1 id="-apple-systemとblinkmacsystemfont"><code>-apple-system</code>と<code>BlinkMacSystemFont</code></h1>
+<p>使用していたデザインテンプレートのCSSではfont-familyに<code>-apple-system</code>と書いてあった。
+これをググってみると、どうやらSafariでは<code>-apple-system</code>というのをfont-familyに指定しておけば英字書体にAppley用の英字フォント(San Francisco)が適用されるらしい。</p>
+<p>ChromeでApple用英字フォントを使うには<code>BlinkMacSystemFont</code>を指定する必要があるらしく、どうやらこれはWebkitから派生したレンダリングエンジン用フォントらしい。</p>
+<p>これを適切に動作させるには<code>-apple-system</code>と同時に<code>BlinkMacSystemFont</code>とも書いておく必要があったとのこと。</p>
+<h1 id="結局どうしたか">結局どうしたか</h1>
+<p>特段フォントに対してこだわりはないので全て以下の通りに設定した。</p>
+<div class="highlight"><pre tabindex="0" style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-css" data-lang="css"><span style="color:#008000;font-weight:bold">font-family</span><span style="color:#666">:</span> <span style="color:#008000;font-weight:bold">Helvetica</span><span style="color:#666">,</span><span style="color:#b44">&#34;Sawarabi Gothic&#34;</span><span style="color:#666">,</span><span style="color:#008000;font-weight:bold">Meiryo</span><span style="color:#666">,</span><span style="color:#b44">&#34;メイリオ&#34;</span><span style="color:#666">,</span><span style="color:#b44">&#34;Hiragino Kaku Gothic ProN&#34;</span><span style="color:#666">,</span> <span style="color:#b44">&#34;ヒラギノ角ゴ ProN&#34;</span><span style="color:#666">,</span><span style="color:#008000;font-weight:bold">YuGothic</span><span style="color:#666">,</span><span style="color:#b44">&#34;游ゴシック&#34;</span><span style="color:#666">,</span><span style="color:#008000;font-weight:bold">Arial</span><span style="color:#666">,</span><span style="color:#008000;font-weight:bold">sans-serif</span><span style="color:#666">;</span> 
+</code></pre></div><p>これでブラウザ依存の無いようにフォントが表示されるようになった。</p>
 
 
+                
 
-       	</div>
-        
-
-<div class="
-    col-lg-3 col-lg-offset-0
-    col-md-3 col-md-offset-0
-    col-sm-12
-    col-xs-12
-    sidebar-container
-">
-    
-    
-    <section>
-        <hr class="hidden-sm hidden-xs">
-        <h5>FEATURED TAGS</h5>
-        <div class="tags">
-             
-            
-                
-            
-                
-            
-                
-            
-                
-            
-                
-                    <a href="/tags/gcp" title="gcp">
-                        gcp
-                    </a>
-                
-            
-                
-            
-                
-            
-                
-                    <a href="/tags/macos" title="macos">
-                        macos
-                    </a>
-                
-            
-                
-            
-                
-            
-        </div>
-    </section>
-    
-
-    
-	
-    <section class="visible-md visible-lg">
-	<hr><h5><a href="/top/about">ABOUT ME</a></h5>
-        <div class="short-about">
-            
-            <a href="/top/about">
-               <img src="/img/me.jpg" alt="avatar" style="cursor: pointer" />
-            </a>
-            
-            
-                <p>Software Developer, Rustacean, Open Source Enthusiast</p>
-            
-           
-           <ul class="list-inline"> 
-               
-               <li>
-                   <a href='/tags/github-actions/index.xml' rel="alternate" type="application/rss+xml" title="Launch Today" >
-                       <span class="fa-stack fa-lg">
-                           <i class="fa fa-circle fa-stack-2x"></i>
-                           <i class="fa fa-rss fa-stack-1x fa-inverse"></i>
-                       </span>
-                   </a>
-               </li>
-               
-               
-               <li>
-                   <a href="https://twitter.com/komi_edtr_1230">
-                       <span class="fa-stack fa-lg">
-                           <i class="fa fa-circle fa-stack-2x"></i>
-                           <i class="fa fa-twitter fa-stack-1x fa-inverse"></i>
-                       </span>
-                   </a>
-               </li>
-               
-               
-               
-               
-               <li>
-                   <a target="_blank" href="https://www.facebook.com/1230komi/">
-                       <span class="fa-stack fa-lg">
-                           <i class="fa fa-circle fa-stack-2x"></i>
-                           <i class="fa fa-facebook fa-stack-1x fa-inverse"></i>
-                       </span>
-                   </a>
-               </li>
-               
-               
-               
-               <li>
-                   <a target="_blank" href="https://github.com/komi1230">
-                       <span class="fa-stack fa-lg">
-                           <i class="fa fa-circle fa-stack-2x"></i>
-                           <i class="fa fa-github fa-stack-1x fa-inverse"></i>
-                       </span>
-                   </a>
-               </li>
-               
-               
-               
-               
-               <li>
-                   <a target="_blank" href="https://www.linkedin.com/in/yusuke-kominami-0419b1157/">
-                       <span class="fa-stack fa-lg">
-                           <i class="fa fa-circle fa-stack-2x"></i>
-                           <i class="fa fa-linkedin fa-stack-1x fa-inverse"></i>
-                       </span>
-                   </a>
-               </li>
-               
-               
-               
-                    <li>
-                        <a target="_blank" href="https://stackoverflow.com/users/12464570">
-                            <span class="fa-stack fa-lg">
-                                <i class="fa fa-circle fa-stack-2x"></i>
-                                <i class="fa fa-stack-overflow fa-stack-1x fa-inverse"></i>
-                            </span>
-                        </a>
+                <hr>
+                <ul class="pager">
+                    
+                    <li class="previous">
+                        <a href="http://komi.dev/post/2021-07-20-enabling-ime-in-alacritty/" data-toggle="tooltip" data-placement="top" title="Alacrittyが日本語入力がおかしいのを直した">&larr;
+                            Previous Post</a>
                     </li>
-            
-            
-            
-               
-               
-               
-               
+                    
+                    
                 </ul>
+
+                
+<div id="disqus-comment"></div>
+
+
+
             </div>
-    </section>
-	
-    
-    
+            
+            <div class="
+                col-lg-11 col-lg-offset-1
+                col-md-10 col-md-offset-1
+                sidebar-container">
 
-    
-    
-</div>
+                
+                
+                <section>
+                    <hr class="hidden-sm hidden-xs">
+                    <h5><a href="/tags/">FEATURED TAGS</a></h5>
+                    <div class="tags">
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        <a href="/tags/gcp" title="gcp">
+                            gcp
+                        </a>
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        <a href="/tags/macos" title="macos">
+                            macos
+                        </a>
+                        
+                        
+                        
+                        
+                        
+                        
+                    </div>
+                </section>
+                
 
-	</div>
-</div>
-
+                
+                
+            </div>
+        </div>
+    </div>
+</article>
 
 
 
@@ -385,7 +330,7 @@
                 <ul class="list-inline text-center">
                    
                    <li>
-                       <a href='/tags/github-actions/index.xml' rel="alternate" type="application/rss+xml" title="Launch Today" >
+                       <a href='' rel="alternate" type="application/rss+xml" title="Launch Today" >
                            <span class="fa-stack fa-lg">
                                <i class="fa fa-circle fa-stack-2x"></i>
                                <i class="fa fa-rss fa-stack-1x fa-inverse"></i>
