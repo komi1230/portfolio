@@ -6,11 +6,7 @@
     <description>Recent content in digdag on Launch Today</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
-    <lastBuildDate>Sun, 21 Mar 2021 00:00:00 +0000</lastBuildDate>
-    
-	<atom:link href="http://komi.dev/tags/digdag/index.xml" rel="self" type="application/rss+xml" />
-    
-    
+    <lastBuildDate>Sun, 21 Mar 2021 00:00:00 +0000</lastBuildDate><atom:link href="http://komi.dev/tags/digdag/index.xml" rel="self" type="application/rss+xml" />
     <item>
       <title>GKEにおけるDigdagでのGCPのクレデンシャルの取り扱い</title>
       <link>http://komi.dev/post/2021-03-21-gcp-credential-in-digdag/</link>

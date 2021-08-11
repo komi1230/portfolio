@@ -248,61 +248,61 @@
 <p>これらのCI/CDツールはそれぞれで文法が異なっていたりしたことや、Cloud Runのサービスアカウントのセットにミスったことなどたくさん学んだことがあったので今回はここでまとめておこうと思う。</p>
 <h1 id="設定ファイル">設定ファイル</h1>
 <p>最終的な設定ファイルとしてはこのようになっている。</p>
-<div class="highlight"><pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-yaml" data-lang="yaml"><span style="color:#a2f;font-weight:bold">name</span>:<span style="color:#bbb"> </span>Deploy<span style="color:#bbb"> </span>to<span style="color:#bbb"> </span>Cloud<span style="color:#bbb"> </span>Run<span style="color:#bbb">
+<div class="highlight"><pre tabindex="0" style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-yaml" data-lang="yaml"><span style="color:#008000;font-weight:bold">name</span>:<span style="color:#bbb"> </span>Deploy to Cloud Run<span style="color:#bbb">
 </span><span style="color:#bbb">
-</span><span style="color:#bbb"></span><span style="color:#a2f;font-weight:bold">on</span>:<span style="color:#bbb">
-</span><span style="color:#bbb">  </span><span style="color:#a2f;font-weight:bold">push</span>:<span style="color:#bbb">
-</span><span style="color:#bbb">    </span><span style="color:#a2f;font-weight:bold">branches</span>:<span style="color:#bbb">
+</span><span style="color:#bbb"></span><span style="color:#008000;font-weight:bold">on</span>:<span style="color:#bbb">
+</span><span style="color:#bbb">  </span><span style="color:#008000;font-weight:bold">push</span>:<span style="color:#bbb">
+</span><span style="color:#bbb">    </span><span style="color:#008000;font-weight:bold">branches</span>:<span style="color:#bbb">
 </span><span style="color:#bbb">      </span>- master<span style="color:#bbb">
 </span><span style="color:#bbb">
-</span><span style="color:#bbb"></span><span style="color:#a2f;font-weight:bold">env</span>:<span style="color:#bbb">
-</span><span style="color:#bbb">  </span><span style="color:#a2f;font-weight:bold">ENVIRONMENT</span>:<span style="color:#bbb"> </span>production<span style="color:#bbb">
-</span><span style="color:#bbb">  </span><span style="color:#a2f;font-weight:bold">GCP_SA_KEY</span>:<span style="color:#bbb"> </span>${{<span style="color:#bbb"> </span>secrets.GCP_SERVICE_ACCOUNT_KEY<span style="color:#bbb"> </span>}}<span style="color:#bbb">
-</span><span style="color:#bbb">  </span><span style="color:#a2f;font-weight:bold">GCP_PROJECT_ID</span>:<span style="color:#bbb"> </span>${{<span style="color:#bbb"> </span>secrets.GCP_PROJECT_ID<span style="color:#bbb"> </span>}}<span style="color:#bbb">
-</span><span style="color:#bbb">  </span><span style="color:#a2f;font-weight:bold">GCP_REGION</span>:<span style="color:#bbb"> </span>${{<span style="color:#bbb"> </span>secrets.GCP_REGION<span style="color:#bbb"> </span>}}<span style="color:#bbb">
+</span><span style="color:#bbb"></span><span style="color:#008000;font-weight:bold">env</span>:<span style="color:#bbb">
+</span><span style="color:#bbb">  </span><span style="color:#008000;font-weight:bold">ENVIRONMENT</span>:<span style="color:#bbb"> </span>production<span style="color:#bbb">
+</span><span style="color:#bbb">  </span><span style="color:#008000;font-weight:bold">GCP_SA_KEY</span>:<span style="color:#bbb"> </span>${{ secrets.GCP_SERVICE_ACCOUNT_KEY }}<span style="color:#bbb">
+</span><span style="color:#bbb">  </span><span style="color:#008000;font-weight:bold">GCP_PROJECT_ID</span>:<span style="color:#bbb"> </span>${{ secrets.GCP_PROJECT_ID }}<span style="color:#bbb">
+</span><span style="color:#bbb">  </span><span style="color:#008000;font-weight:bold">GCP_REGION</span>:<span style="color:#bbb"> </span>${{ secrets.GCP_REGION }}<span style="color:#bbb">
 </span><span style="color:#bbb">
-</span><span style="color:#bbb"></span><span style="color:#a2f;font-weight:bold">jobs</span>:<span style="color:#bbb">
-</span><span style="color:#bbb">  </span><span style="color:#a2f;font-weight:bold">deploy</span>:<span style="color:#bbb">
-</span><span style="color:#bbb">    </span><span style="color:#a2f;font-weight:bold">name</span>:<span style="color:#bbb"> </span>Setup<span style="color:#bbb"> </span>EC<span style="color:#bbb">
-</span><span style="color:#bbb">    </span><span style="color:#a2f;font-weight:bold">runs-on</span>:<span style="color:#bbb"> </span>ubuntu-latest<span style="color:#bbb">
+</span><span style="color:#bbb"></span><span style="color:#008000;font-weight:bold">jobs</span>:<span style="color:#bbb">
+</span><span style="color:#bbb">  </span><span style="color:#008000;font-weight:bold">deploy</span>:<span style="color:#bbb">
+</span><span style="color:#bbb">    </span><span style="color:#008000;font-weight:bold">name</span>:<span style="color:#bbb"> </span>Setup EC<span style="color:#bbb">
+</span><span style="color:#bbb">    </span><span style="color:#008000;font-weight:bold">runs-on</span>:<span style="color:#bbb"> </span>ubuntu-latest<span style="color:#bbb">
 </span><span style="color:#bbb">
-</span><span style="color:#bbb">    </span><span style="color:#a2f;font-weight:bold">steps</span>:<span style="color:#bbb">
-</span><span style="color:#bbb">    </span>- <span style="color:#a2f;font-weight:bold">name</span>:<span style="color:#bbb"> </span>Checkout<span style="color:#bbb">
-</span><span style="color:#bbb">      </span><span style="color:#a2f;font-weight:bold">uses</span>:<span style="color:#bbb"> </span>actions/checkout@v2<span style="color:#bbb">
+</span><span style="color:#bbb">    </span><span style="color:#008000;font-weight:bold">steps</span>:<span style="color:#bbb">
+</span><span style="color:#bbb">    </span>- <span style="color:#008000;font-weight:bold">name</span>:<span style="color:#bbb"> </span>Checkout<span style="color:#bbb">
+</span><span style="color:#bbb">      </span><span style="color:#008000;font-weight:bold">uses</span>:<span style="color:#bbb"> </span>actions/checkout@v2<span style="color:#bbb">
 </span><span style="color:#bbb">    
 </span><span style="color:#bbb">    </span><span style="color:#080;font-style:italic"># gcloudコマンドの設定</span><span style="color:#bbb">
-</span><span style="color:#bbb">    </span>- <span style="color:#a2f;font-weight:bold">name</span>:<span style="color:#bbb"> </span>Install<span style="color:#bbb"> </span>gcloud<span style="color:#bbb"> </span>command<span style="color:#bbb"> </span>and<span style="color:#bbb"> </span>configure<span style="color:#bbb"> </span>credentials<span style="color:#bbb">
-</span><span style="color:#bbb">      </span><span style="color:#a2f;font-weight:bold">uses</span>:<span style="color:#bbb"> </span>google-github-actions/setup-gcloud@v0<span style="color:#666">.2.0</span><span style="color:#bbb">
-</span><span style="color:#bbb">      </span><span style="color:#a2f;font-weight:bold">with</span>:<span style="color:#bbb">
-</span><span style="color:#bbb">        </span><span style="color:#a2f;font-weight:bold">service_account_key</span>:<span style="color:#bbb"> </span>${{<span style="color:#bbb"> </span>env.GCP_SA_KEY<span style="color:#bbb"> </span>}}<span style="color:#bbb">
-</span><span style="color:#bbb">        </span><span style="color:#a2f;font-weight:bold">project_id</span>:<span style="color:#bbb"> </span>${{<span style="color:#bbb"> </span>env.GCP_PROJECT_ID<span style="color:#bbb"> </span>}}<span style="color:#bbb">
+</span><span style="color:#bbb">    </span>- <span style="color:#008000;font-weight:bold">name</span>:<span style="color:#bbb"> </span>Install gcloud command and configure credentials<span style="color:#bbb">
+</span><span style="color:#bbb">      </span><span style="color:#008000;font-weight:bold">uses</span>:<span style="color:#bbb"> </span>google-github-actions/setup-gcloud@v0.2.0<span style="color:#bbb">
+</span><span style="color:#bbb">      </span><span style="color:#008000;font-weight:bold">with</span>:<span style="color:#bbb">
+</span><span style="color:#bbb">        </span><span style="color:#008000;font-weight:bold">service_account_key</span>:<span style="color:#bbb"> </span>${{ env.GCP_SA_KEY }}<span style="color:#bbb">
+</span><span style="color:#bbb">        </span><span style="color:#008000;font-weight:bold">project_id</span>:<span style="color:#bbb"> </span>${{ env.GCP_PROJECT_ID }}<span style="color:#bbb">
 </span><span style="color:#bbb">    
 </span><span style="color:#bbb">    </span><span style="color:#080;font-style:italic"># DockerにgcloudコマンドのCredentialを使わせる</span><span style="color:#bbb">
-</span><span style="color:#bbb">    </span>- <span style="color:#a2f;font-weight:bold">name</span>:<span style="color:#bbb"> </span>Auth<span style="color:#bbb"> </span>Docker<span style="color:#bbb"> </span>with<span style="color:#bbb"> </span>gcloud<span style="color:#bbb"> </span>credentials<span style="color:#bbb">
-</span><span style="color:#bbb">      </span><span style="color:#a2f;font-weight:bold">run</span>:<span style="color:#bbb"> </span><span style="color:#b44;font-style:italic">|
-</span><span style="color:#b44;font-style:italic">        gcloud --quiet auth configure-docker</span><span style="color:#bbb">
+</span><span style="color:#bbb">    </span>- <span style="color:#008000;font-weight:bold">name</span>:<span style="color:#bbb"> </span>Auth Docker with gcloud credentials<span style="color:#bbb">
+</span><span style="color:#bbb">      </span><span style="color:#008000;font-weight:bold">run</span>:<span style="color:#bbb"> </span>|<span style="color:#b44;font-style:italic">
+</span><span style="color:#b44;font-style:italic">        </span><span style="color:#bbb">        </span>gcloud --quiet auth configure-docker<span style="color:#bbb">
 </span><span style="color:#bbb">
 </span><span style="color:#bbb">    </span><span style="color:#080;font-style:italic"># Dockerイメージを作成 (今回はとりあえずEcho Serverで)</span><span style="color:#bbb">
-</span><span style="color:#bbb">    </span>- <span style="color:#a2f;font-weight:bold">name</span>:<span style="color:#bbb"> </span>Build<span style="color:#bbb"> </span>Docker<span style="color:#bbb"> </span>image<span style="color:#bbb">
-</span><span style="color:#bbb">      </span><span style="color:#a2f;font-weight:bold">run</span>:<span style="color:#bbb"> </span><span style="color:#b44;font-style:italic">|
-</span><span style="color:#b44;font-style:italic">        docker pull ealen/echo-server</span><span style="color:#bbb">
+</span><span style="color:#bbb">    </span>- <span style="color:#008000;font-weight:bold">name</span>:<span style="color:#bbb"> </span>Build Docker image<span style="color:#bbb">
+</span><span style="color:#bbb">      </span><span style="color:#008000;font-weight:bold">run</span>:<span style="color:#bbb"> </span>|<span style="color:#b44;font-style:italic">
+</span><span style="color:#b44;font-style:italic">        </span><span style="color:#bbb">        </span>docker pull ealen/echo-server<span style="color:#bbb">
 </span><span style="color:#bbb">    
 </span><span style="color:#bbb">    </span><span style="color:#080;font-style:italic"># DockerイメージをContainer RegistryにPush</span><span style="color:#bbb">
-</span><span style="color:#bbb">    </span>- <span style="color:#a2f;font-weight:bold">name</span>:<span style="color:#bbb"> </span>Publish<span style="color:#bbb"> </span>image<span style="color:#bbb">
-</span><span style="color:#bbb">      </span><span style="color:#a2f;font-weight:bold">run</span>:<span style="color:#bbb"> </span><span style="color:#b44;font-style:italic">|
-</span><span style="color:#b44;font-style:italic">        export IMAGE_NAME=${ENVIRONMENT}_server</span><span style="color:#bbb">
-</span><span style="color:#bbb">        </span>export<span style="color:#bbb"> </span>DOCKER_TAG=asia.gcr.io/${GCP_PROJECT_ID}/${IMAGE_NAME}:${GITHUB_SHA::<span style="color:#666">8</span>}<span style="color:#bbb">
-</span><span style="color:#bbb">        </span>docker<span style="color:#bbb"> </span>tag<span style="color:#bbb"> </span>ealen/echo-server<span style="color:#bbb"> </span>$DOCKER_TAG<span style="color:#bbb">
-</span><span style="color:#bbb">        </span>docker<span style="color:#bbb"> </span>push<span style="color:#bbb"> </span>$DOCKER_TAG<span style="color:#bbb">
+</span><span style="color:#bbb">    </span>- <span style="color:#008000;font-weight:bold">name</span>:<span style="color:#bbb"> </span>Publish image<span style="color:#bbb">
+</span><span style="color:#bbb">      </span><span style="color:#008000;font-weight:bold">run</span>:<span style="color:#bbb"> </span>|<span style="color:#b44;font-style:italic">
+</span><span style="color:#b44;font-style:italic">        export IMAGE_NAME=${ENVIRONMENT}_server
+</span><span style="color:#b44;font-style:italic">        export DOCKER_TAG=asia.gcr.io/${GCP_PROJECT_ID}/${IMAGE_NAME}:${GITHUB_SHA::8}
+</span><span style="color:#b44;font-style:italic">        docker tag ealen/echo-server $DOCKER_TAG
+</span><span style="color:#b44;font-style:italic">        docker push $DOCKER_TAG</span><span style="color:#bbb">        
 </span><span style="color:#bbb">    
-</span><span style="color:#bbb">    </span>- <span style="color:#a2f;font-weight:bold">name</span>:<span style="color:#bbb"> </span>Deploy<span style="color:#bbb">
-</span><span style="color:#bbb">      </span><span style="color:#a2f;font-weight:bold">run</span>:<span style="color:#bbb"> </span><span style="color:#b44;font-style:italic">|
-</span><span style="color:#b44;font-style:italic">        gcloud run deploy sample-server \</span><span style="color:#bbb">
-</span><span style="color:#bbb">          </span>--image<span style="color:#bbb"> </span>$DOCKER_TAG<span style="color:#bbb"> </span>\<span style="color:#bbb">
-</span><span style="color:#bbb">          </span>--project<span style="color:#bbb"> </span>$GCP_PROJECT_ID<span style="color:#bbb"> </span>\<span style="color:#bbb">
-</span><span style="color:#bbb">          </span>--region<span style="color:#bbb"> </span>$GCP_REGION<span style="color:#bbb"> </span>\<span style="color:#bbb">
-</span><span style="color:#bbb">          </span>--platform<span style="color:#bbb"> </span>managed<span style="color:#bbb"> </span>\<span style="color:#bbb">
-</span><span style="color:#bbb">          </span>--quiet<span style="color:#bbb">
+</span><span style="color:#bbb">    </span>- <span style="color:#008000;font-weight:bold">name</span>:<span style="color:#bbb"> </span>Deploy<span style="color:#bbb">
+</span><span style="color:#bbb">      </span><span style="color:#008000;font-weight:bold">run</span>:<span style="color:#bbb"> </span>|<span style="color:#b44;font-style:italic">
+</span><span style="color:#b44;font-style:italic">        gcloud run deploy sample-server \
+</span><span style="color:#b44;font-style:italic">          --image $DOCKER_TAG \
+</span><span style="color:#b44;font-style:italic">          --project $GCP_PROJECT_ID \
+</span><span style="color:#b44;font-style:italic">          --region $GCP_REGION \
+</span><span style="color:#b44;font-style:italic">          --platform managed \
+</span><span style="color:#b44;font-style:italic">          --quiet</span><span style="color:#bbb">        
 </span></code></pre></div><p>割と簡単な感じなのだけど地味にハマったポイントがいくつかあったのでまとめておく。</p>
 <h2 id="dockerにcloud-sdkのcredentialを使わせる">DockerにCloud SDKのCredentialを使わせる</h2>
 <p>当初はGitHub Actionsでgcloudコマンドを使えれば良いと思っていて、<a href="https://github.com/google-github-actions/setup-gcloud">google-github-actions/setup-gcloud</a>のREADMEに書いてある通りのことだけを設定ファイルに記述していた。</p>

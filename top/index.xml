@@ -5,11 +5,7 @@
     <link>http://komi.dev/top/</link>
     <description>Recent content in Tops on Launch Today</description>
     <generator>Hugo -- gohugo.io</generator>
-    <language>en-us</language>
-    
-	<atom:link href="http://komi.dev/top/index.xml" rel="self" type="application/rss+xml" />
-    
-    
+    <language>en-us</language><atom:link href="http://komi.dev/top/index.xml" rel="self" type="application/rss+xml" />
     <item>
       <title></title>
       <link>http://komi.dev/top/about/</link>

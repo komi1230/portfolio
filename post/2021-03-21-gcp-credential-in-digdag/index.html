@@ -240,11 +240,11 @@
 <h1 id="gkeでのクレデンシャルのセット">GKEでのクレデンシャルのセット</h1>
 <p>Digdagの公式ドキュメントには<code>bq&gt;</code>オペレータを利用する際はDigdagのSecretsにサービスアカウントキーをセットするよう書いてある。</p>
 <p>Digdagが動いているコンテナ内で以下のコマンドを叩けば良い。</p>
-<div class="highlight"><pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-sh" data-lang="sh">$ digdag secret --project <span style="color:#666">[</span>YOUR_PROJECT_NAME<span style="color:#666">]</span> --set gcp.credential<span style="color:#666">=</span>@/path/to/sa_key.json
+<div class="highlight"><pre tabindex="0" style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-sh" data-lang="sh">$ digdag secret --project <span style="color:#666">[</span>YOUR_PROJECT_NAME<span style="color:#666">]</span> --set gcp.credential<span style="color:#666">=</span>@/path/to/sa_key.json
 </code></pre></div><p>こうすると<code>bq&gt;</code>オペレータを叩く際にこのサービスアカウントとして実行される。</p>
 <p>しかし、ここでポイントとして、このクレデンシャルはコンテナ全体でサービスアカウントが有効化されているわけではない。</p>
 <p>GKEでポッドの中に入ってクレデンシャルを叩くと、GKEを動作しているサービスアカウントが出てくる。</p>
-<div class="highlight"><pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-sh" data-lang="sh">$ gcloud config list
+<div class="highlight"><pre tabindex="0" style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-sh" data-lang="sh">$ gcloud config list
 </code></pre></div><h1 id="サービスアカウントの有効化">サービスアカウントの有効化</h1>
 <p><code>bq&gt;</code>オペレータや<code>bq_ddl&gt;</code>オペレータでは微妙にやりきれない作業などはたまにあり、その際は直接シェルで<code>bq</code>を叩きたいケースがある。</p>
 <p>例えばテーブルのスキーマに説明を付与したくて、そのスキーマ情報はJSONで保存されているときなど。</p>

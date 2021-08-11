@@ -1,106 +1,64 @@
 <?xml version="1.0" encoding="utf-8" standalone="yes"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"
   xmlns:xhtml="http://www.w3.org/1999/xhtml">
-  
   <url>
     <loc>http://komi.dev/post/2021-07-20-enabling-ime-in-alacritty/</loc>
     <lastmod>2021-07-20T00:00:00+00:00</lastmod>
-  </url>
-  
-  <url>
+  </url><url>
     <loc>http://komi.dev/categories/</loc>
     <lastmod>2021-07-20T00:00:00+00:00</lastmod>
-  </url>
-  
-  <url>
+  </url><url>
     <loc>http://komi.dev/tags/ime/</loc>
     <lastmod>2021-07-20T00:00:00+00:00</lastmod>
-  </url>
-  
-  <url>
+  </url><url>
     <loc>http://komi.dev/</loc>
     <lastmod>2021-07-20T00:00:00+00:00</lastmod>
-  </url>
-  
-  <url>
+  </url><url>
     <loc>http://komi.dev/tags/macos/</loc>
     <lastmod>2021-07-20T00:00:00+00:00</lastmod>
-  </url>
-  
-  <url>
+  </url><url>
     <loc>http://komi.dev/post/</loc>
     <lastmod>2021-07-20T00:00:00+00:00</lastmod>
-  </url>
-  
-  <url>
+  </url><url>
     <loc>http://komi.dev/tags/</loc>
     <lastmod>2021-07-20T00:00:00+00:00</lastmod>
-  </url>
-  
-  <url>
+  </url><url>
     <loc>http://komi.dev/categories/tech/</loc>
     <lastmod>2021-07-20T00:00:00+00:00</lastmod>
-  </url>
-  
-  <url>
+  </url><url>
     <loc>http://komi.dev/tags/digdag/</loc>
     <lastmod>2021-03-21T00:00:00+00:00</lastmod>
-  </url>
-  
-  <url>
+  </url><url>
     <loc>http://komi.dev/tags/gcp/</loc>
     <lastmod>2021-03-21T00:00:00+00:00</lastmod>
-  </url>
-  
-  <url>
+  </url><url>
     <loc>http://komi.dev/post/2021-03-21-gcp-credential-in-digdag/</loc>
     <lastmod>2021-03-21T00:00:00+00:00</lastmod>
-  </url>
-  
-  <url>
+  </url><url>
     <loc>http://komi.dev/tags/ci/</loc>
     <lastmod>2021-01-19T00:00:00+00:00</lastmod>
-  </url>
-  
-  <url>
+  </url><url>
     <loc>http://komi.dev/tags/github-actions/</loc>
     <lastmod>2021-01-19T00:00:00+00:00</lastmod>
-  </url>
-  
-  <url>
+  </url><url>
     <loc>http://komi.dev/post/2021-01-19-cloud-run-from-github-actions/</loc>
     <lastmod>2021-01-19T00:00:00+00:00</lastmod>
-  </url>
-  
-  <url>
+  </url><url>
     <loc>http://komi.dev/tags/sdp/</loc>
     <lastmod>2021-01-06T00:00:00+00:00</lastmod>
-  </url>
-  
-  <url>
+  </url><url>
     <loc>http://komi.dev/tags/webrtc/</loc>
     <lastmod>2021-01-06T00:00:00+00:00</lastmod>
-  </url>
-  
-  <url>
+  </url><url>
     <loc>http://komi.dev/post/2021-01-06-about-sdp/</loc>
     <lastmod>2021-01-06T00:00:00+00:00</lastmod>
-  </url>
-  
-  <url>
+  </url><url>
     <loc>http://komi.dev/search/placeholder/</loc>
-  </url>
-  
-  <url>
+  </url><url>
     <loc>http://komi.dev/top/about/</loc>
-  </url>
-  
-  <url>
+  </url><url>
     <loc>http://komi.dev/search/</loc>
-  </url>
-  
-  <url>
+  </url><url>
     <loc>http://komi.dev/top/</loc>
   </url>
-  
 </urlset>
