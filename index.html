@@ -110,21 +110,24 @@
                         <a href="/">Home</a>
                     </li>
                     
-                        
-                        <li>
-                            <a href="/categories/tech">tech</a>
-                        </li>
-                        
                     
+                    <li>
+                        <a href="/categories/tech">tech</a>
+                    </li>
                     
-		    
-                        <li><a href="/top/about/">ABOUT</a></li>
                     
 
                     
-		    <li>
-                        <a href="/search">SEARCH <img src="/img/search.png" height="15" style="cursor: pointer;" alt="Search"></a>
-		    </li>
+                    <li><a href="/about/">ABOUT</a></li>
+                    
+                    <li><a href="/money/">MONEY</a></li>
+                    
+
+                    
+                    <li>
+                        <a href="/search">SEARCH <img src="/img/search.png"
+                                height="15" style="cursor: pointer;" alt="Search"></a>
+                    </li>
                     
                 </ul>
             </div>
@@ -137,31 +140,30 @@
     
     
     
-    var $body   = document.body;
+    var $body = document.body;
     var $toggle = document.querySelector('.navbar-toggle');
     var $navbar = document.querySelector('#huxblog_navbar');
     var $collapse = document.querySelector('.navbar-collapse');
 
     $toggle.addEventListener('click', handleMagic)
-    function handleMagic(e){
+    function handleMagic(e) {
         if ($navbar.className.indexOf('in') > 0) {
-        
+            
             $navbar.className = " ";
             
-            setTimeout(function(){
+            setTimeout(function () {
                 
-                if($navbar.className.indexOf('in') < 0) {
+                if ($navbar.className.indexOf('in') < 0) {
                     $collapse.style.height = "0px"
                 }
-            },400)
-        }else{
-        
+            }, 400)
+        } else {
+            
             $collapse.style.height = "auto"
             $navbar.className += " in";
         }
     }
 </script>
-
 
 
 <header class="intro-header" style="background-image: url('/img/home.jpg')">
@@ -377,10 +379,10 @@
     
 	
     <section class="visible-md visible-lg">
-	<hr><h5><a href="/top/about">ABOUT ME</a></h5>
+	<hr><h5><a href="/about">ABOUT ME</a></h5>
         <div class="short-about">
             
-            <a href="/top/about">
+            <a href="/about">
                <img src="/img/me.jpg" alt="avatar" style="cursor: pointer" />
             </a>
             

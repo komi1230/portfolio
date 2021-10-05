@@ -54,20 +54,34 @@
     
     <item>
       <title></title>
+      <link>http://komi.dev/about/</link>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+      
+      <guid>http://komi.dev/about/</guid>
+      <description>About  初めまして、小南佑介です。 現在はheyにてデータエンジニアとして働いています。
+大学は京都大学理学部を卒業しており、高田研究室にて生物学(理論生物物理学)を専攻していました。
+好きなプログラミング言語はRustですが、Pythonなどもよく書きます。 スキルとしてはHTMLやCSS、JavaScriptといったマークアップから低レベルプログラミングまで可能で、Web開発においてはフロントはReact、バックエンドはRustやPythonが得意です。 機械学習系のスキルセットも揃っており、データサイエンス系の業務なども担当可能です。
+これ以外に、OSSへのコントリビュートも定期的に行っています。
+レジュメについてはGitHubに置いてありますので参照ください。
+職務経歴書についてはLinkedInを見てください。</description>
+    </item>
+    
+    <item>
+      <title></title>
+      <link>http://komi.dev/money/</link>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+      
+      <guid>http://komi.dev/money/</guid>
+      <description>Crypto Currency Address  BTC: 3L5skrpwrtq6EATAuJunVGD3LawnwN9xCv SOL: 3vZWxyB2Bpn2QRthCZZuFTnQjimG1a4qMDVAGTTr7cS2  Salary    year base bonus sub      2020 3,500,000 yen 1,000,000 yen 1,500,000 yen    2021 7,500,000 yen  2,000,000 yen     </description>
+    </item>
+    
+    <item>
+      <title></title>
       <link>http://komi.dev/search/placeholder/</link>
       <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
       
       <guid>http://komi.dev/search/placeholder/</guid>
       <description></description>
-    </item>
-    
-    <item>
-      <title></title>
-      <link>http://komi.dev/top/about/</link>
-      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
-      
-      <guid>http://komi.dev/top/about/</guid>
-      <description>About 初めまして、小南佑介です。 現在はheyにてデータエンジニアとして働いています。 大学は京都大学理学部を卒業しており、高田研究室にて生物学(理</description>
     </item>
     
   </channel>

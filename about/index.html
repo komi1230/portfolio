@@ -40,7 +40,7 @@
 
     <title>Yusuke Kominami</title>
 
-    <link rel="canonical" href="/top/about/">
+    <link rel="canonical" href="/about/">
 
     <link rel="stylesheet" href="/css/iDisqus.min.css"/>
 	
@@ -109,21 +109,24 @@
                         <a href="/">Home</a>
                     </li>
                     
-                        
-                        <li>
-                            <a href="/categories/tech">tech</a>
-                        </li>
-                        
                     
+                    <li>
+                        <a href="/categories/tech">tech</a>
+                    </li>
                     
-		    
-                        <li><a href="/top/about/">ABOUT</a></li>
                     
 
                     
-		    <li>
-                        <a href="/search">SEARCH <img src="/img/search.png" height="15" style="cursor: pointer;" alt="Search"></a>
-		    </li>
+                    <li><a href="/about/">ABOUT</a></li>
+                    
+                    <li><a href="/money/">MONEY</a></li>
+                    
+
+                    
+                    <li>
+                        <a href="/search">SEARCH <img src="/img/search.png"
+                                height="15" style="cursor: pointer;" alt="Search"></a>
+                    </li>
                     
                 </ul>
             </div>
@@ -136,25 +139,25 @@
     
     
     
-    var $body   = document.body;
+    var $body = document.body;
     var $toggle = document.querySelector('.navbar-toggle');
     var $navbar = document.querySelector('#huxblog_navbar');
     var $collapse = document.querySelector('.navbar-collapse');
 
     $toggle.addEventListener('click', handleMagic)
-    function handleMagic(e){
+    function handleMagic(e) {
         if ($navbar.className.indexOf('in') > 0) {
-        
+            
             $navbar.className = " ";
             
-            setTimeout(function(){
+            setTimeout(function () {
                 
-                if($navbar.className.indexOf('in') < 0) {
+                if ($navbar.className.indexOf('in') < 0) {
                     $collapse.style.height = "0px"
                 }
-            },400)
-        }else{
-        
+            }, 400)
+        } else {
+            
             $collapse.style.height = "auto"
             $navbar.className += " in";
         }
@@ -163,14 +166,29 @@
 
 
 
-<header class="intro-header" style="background-image: url('/img/home.jpg')">
+<style type="text/css">
+    header.intro-header {
+        background-image: url('/img/home.jpg')
+    }
+</style>
+<header class="intro-header">
     <div class="container">
         <div class="row">
-            <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1 ">
-                <div class="site-heading">
-                    <h1>Launch Today </h1>
-                    
-		    <span class="subheading">Playground and Workspace for Awesome Ideas</span>
+            <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+                <div class="post-heading">
+                    <div class="tags">
+                        
+                    </div>
+                    <h1></h1>
+                    <h2 class="subheading"></h2>
+                    <span class="meta">
+                        Posted 
+                        on 
+                        Monday, January 1, 0001
+                        
+                        
+                        
+                    </span>
                 </div>
             </div>
         </div>
@@ -190,7 +208,17 @@
                 col-md-10 col-md-offset-1
                 post-container">
 
-         	<h1 id="about">About</h1>
+                
+                <header>
+                    <h2>TOC</h2>
+                </header>
+                <nav id="TableOfContents">
+  <ul>
+    <li><a href="#about">About</a></li>
+  </ul>
+</nav>
+                
+                <h1 id="about">About</h1>
 <p>
   <img src="/img/me.jpg" alt="my image">
 
@@ -204,6 +232,20 @@
 <p>これ以外に、OSSへのコントリビュートも定期的に行っています。</p>
 <p>レジュメについては<a href="https://github.com/komi1230/Resume">GitHubに置いてあります</a>ので参照ください。</p>
 <p>職務経歴書については<a href="https://www.linkedin.com/in/yusuke-kominami-0419b1157/">LinkedIn</a>を見てください。</p>
+
+
+                
+
+                <hr>
+                <ul class="pager">
+                    
+                    <li class="previous">
+                        <a href="http://komi.dev/money/" data-toggle="tooltip" data-placement="top" title="">&larr;
+                            Previous Post</a>
+                    </li>
+                    
+                    
+                </ul>
 
                 
 <div id="disqus-comment"></div>
@@ -235,7 +277,7 @@
                         
                         
                         <a href="/tags/gcp" title="gcp">
-                        gcp
+                            gcp
                         </a>
                         
                         
@@ -245,7 +287,7 @@
                         
                         
                         <a href="/tags/macos" title="macos">
-                        macos
+                            macos
                         </a>
                         
                         

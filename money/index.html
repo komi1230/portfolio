@@ -38,9 +38,9 @@
     <meta name="keyword"  content="Yusuke Kominami, 小南佑介, 小南 佑介, Rust, Emacs, Lisp, Web, Machine Learning, 機械学習">
     <link rel="shortcut icon" href="/img/favicon.ico">
 
-    <title>Tops</title>
+    <title>Yusuke Kominami</title>
 
-    <link rel="canonical" href="/top/">
+    <link rel="canonical" href="/money/">
 
     <link rel="stylesheet" href="/css/iDisqus.min.css"/>
 	
@@ -109,21 +109,24 @@
                         <a href="/">Home</a>
                     </li>
                     
-                        
-                        <li>
-                            <a href="/categories/tech">tech</a>
-                        </li>
-                        
                     
+                    <li>
+                        <a href="/categories/tech">tech</a>
+                    </li>
                     
-		    
-                        <li><a href="/top/about/">ABOUT</a></li>
                     
 
                     
-		    <li>
-                        <a href="/search">SEARCH <img src="/img/search.png" height="15" style="cursor: pointer;" alt="Search"></a>
-		    </li>
+                    <li><a href="/about/">ABOUT</a></li>
+                    
+                    <li><a href="/money/">MONEY</a></li>
+                    
+
+                    
+                    <li>
+                        <a href="/search">SEARCH <img src="/img/search.png"
+                                height="15" style="cursor: pointer;" alt="Search"></a>
+                    </li>
                     
                 </ul>
             </div>
@@ -136,25 +139,25 @@
     
     
     
-    var $body   = document.body;
+    var $body = document.body;
     var $toggle = document.querySelector('.navbar-toggle');
     var $navbar = document.querySelector('#huxblog_navbar');
     var $collapse = document.querySelector('.navbar-collapse');
 
     $toggle.addEventListener('click', handleMagic)
-    function handleMagic(e){
+    function handleMagic(e) {
         if ($navbar.className.indexOf('in') > 0) {
-        
+            
             $navbar.className = " ";
             
-            setTimeout(function(){
+            setTimeout(function () {
                 
-                if($navbar.className.indexOf('in') < 0) {
+                if ($navbar.className.indexOf('in') < 0) {
                     $collapse.style.height = "0px"
                 }
-            },400)
-        }else{
-        
+            }, 400)
+        } else {
+            
             $collapse.style.height = "auto"
             $navbar.className += " in";
         }
@@ -163,14 +166,29 @@
 
 
 
-<header class="intro-header" style="background-image: url('/img/home.jpg')">
+<style type="text/css">
+    header.intro-header {
+        background-image: url('/img/home.jpg')
+    }
+</style>
+<header class="intro-header">
     <div class="container">
         <div class="row">
-            <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1 ">
-                <div class="site-heading">
-                    <h1>Launch Today </h1>
-                    
-		    <span class="subheading">Playground and Workspace for Awesome Ideas</span>
+            <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+                <div class="post-heading">
+                    <div class="tags">
+                        
+                    </div>
+                    <h1></h1>
+                    <h2 class="subheading"></h2>
+                    <span class="meta">
+                        Posted 
+                        on 
+                        Monday, January 1, 0001
+                        
+                        
+                        
+                    </span>
                 </div>
             </div>
         </div>
@@ -183,13 +201,72 @@
 <article>
     <div class="container">
         <div class="row">
+
             
             <div class="
-                col-lg-8 col-lg-offset-2
+                col-lg-11 col-lg-offset-1
                 col-md-10 col-md-offset-1
                 post-container">
 
-         	
+                
+                <header>
+                    <h2>TOC</h2>
+                </header>
+                <nav id="TableOfContents">
+  <ul>
+    <li><a href="#crypto-currency-address">Crypto Currency Address</a></li>
+    <li><a href="#salary">Salary</a></li>
+  </ul>
+</nav>
+                
+                <h1 id="crypto-currency-address">Crypto Currency Address</h1>
+<ul>
+<li>BTC: 3L5skrpwrtq6EATAuJunVGD3LawnwN9xCv</li>
+<li>SOL: 3vZWxyB2Bpn2QRthCZZuFTnQjimG1a4qMDVAGTTr7cS2</li>
+</ul>
+<h1 id="salary">Salary</h1>
+<table>
+<thead>
+<tr>
+<th style="text-align:center">year</th>
+<th style="text-align:center">base</th>
+<th style="text-align:center">bonus</th>
+<th style="text-align:center">sub</th>
+<th></th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:center">2020</td>
+<td style="text-align:center">3,500,000 yen</td>
+<td style="text-align:center">1,000,000 yen</td>
+<td style="text-align:center">1,500,000 yen</td>
+<td></td>
+</tr>
+<tr>
+<td style="text-align:center">2021</td>
+<td style="text-align:center">7,500,000 yen</td>
+<td style="text-align:center"></td>
+<td style="text-align:center">2,000,000 yen</td>
+<td></td>
+</tr>
+</tbody>
+</table>
+
+
+                
+
+                <hr>
+                <ul class="pager">
+                    
+                    
+                    <li class="next">
+                        <a href="http://komi.dev/about/" data-toggle="tooltip" data-placement="top" title="">Next
+                            Post &rarr;</a>
+                    </li>
+                    
+                </ul>
+
                 
 <div id="disqus-comment"></div>
 
@@ -198,7 +275,7 @@
             </div>
             
             <div class="
-                col-lg-8 col-lg-offset-2
+                col-lg-11 col-lg-offset-1
                 col-md-10 col-md-offset-1
                 sidebar-container">
 
@@ -220,7 +297,7 @@
                         
                         
                         <a href="/tags/gcp" title="gcp">
-                        gcp
+                            gcp
                         </a>
                         
                         
@@ -230,7 +307,7 @@
                         
                         
                         <a href="/tags/macos" title="macos">
-                        macos
+                            macos
                         </a>
                         
                         
@@ -259,7 +336,7 @@
                 <ul class="list-inline text-center">
                    
                    <li>
-                       <a href='/top/index.xml' rel="alternate" type="application/rss+xml" title="Launch Today" >
+                       <a href='' rel="alternate" type="application/rss+xml" title="Launch Today" >
                            <span class="fa-stack fa-lg">
                                <i class="fa fa-circle fa-stack-2x"></i>
                                <i class="fa fa-rss fa-stack-1x fa-inverse"></i>
