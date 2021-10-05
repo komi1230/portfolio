@@ -25,21 +25,22 @@
                         <a href="{{ "/" | relLangURL }}">Home</a>
                     </li>
                     {{ if not .Site.Params.omit_categories }}
-                        {{ range $name, $taxonomy := .Site.Taxonomies.categories }}
-                        <li>
-                            <a href="{{ "categories/" | relLangURL }}{{ $name | urlize }}">{{ $name }}</a>
-                        </li>
-                        {{ end }}
+                    {{ range $name, $taxonomy := .Site.Taxonomies.categories }}
+                    <li>
+                        <a href="{{ "categories/" | relLangURL }}{{ $name | urlize }}">{{ $name }}</a>
+                    </li>
                     {{ end }}
-                    
-		    {{ range .Site.Params.addtional_menus }}
-                        <li><a href="{{.href | relLangURL}}">{{.title}}</a></li>
+                    {{ end }}
+
+                    {{ range .Site.Params.addtional_menus }}
+                    <li><a href="{{.href | relLangURL}}">{{.title}}</a></li>
                     {{ end }}
 
                     {{ if .Site.Params.algolia_search }}
-		    <li>
-                        <a href="{{ "search" | relURL }}">SEARCH <img src="{{ "img/search.png" | relURL }}" height="15" style="cursor: pointer;" alt="Search"></a>
-		    </li>
+                    <li>
+                        <a href="{{ "search" | relURL }}">SEARCH <img src="{{ "img/search.png" | relURL }}"
+                                height="15" style="cursor: pointer;" alt="Search"></a>
+                    </li>
                     {{ end }}
                 </ul>
             </div>
@@ -52,25 +53,25 @@
     // Drop Bootstarp low-performance Navbar
     // Use customize navbar with high-quality material design animation
     // in high-perf jank-free CSS3 implementation
-    var $body   = document.body;
+    var $body = document.body;
     var $toggle = document.querySelector('.navbar-toggle');
     var $navbar = document.querySelector('#huxblog_navbar');
     var $collapse = document.querySelector('.navbar-collapse');
 
     $toggle.addEventListener('click', handleMagic)
-    function handleMagic(e){
+    function handleMagic(e) {
         if ($navbar.className.indexOf('in') > 0) {
-        // CLOSE
+            // CLOSE
             $navbar.className = " ";
             // wait until animation end.
-            setTimeout(function(){
+            setTimeout(function () {
                 // prevent frequently toggle
-                if($navbar.className.indexOf('in') < 0) {
+                if ($navbar.className.indexOf('in') < 0) {
                     $collapse.style.height = "0px"
                 }
-            },400)
-        }else{
-        // OPEN
+            }, 400)
+        } else {
+            // OPEN
             $collapse.style.height = "auto"
             $navbar.className += " in";
         }
