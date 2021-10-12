@@ -1,0 +1,620 @@
+<!DOCTYPE html>
+<html lang="en-us">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    
+    <meta property="og:site_name" content="Launch Today" />
+    <meta property="og:type" content="article" />
+    <meta property="og:url" content="https://komi.dev/" />
+    <meta property="og:locale" content="ja_JP" />
+
+    <meta name="twitter:site" content="@komi_edtr_1230" />
+
+    
+    <meta property="og:image" content="http://komi.dev/img/home.jpg" />
+    <meta property="twitter:image" content="http://komi.dev/img/home.jpg" />
+    
+
+    
+    <meta name="title" content="Cloud DNSでのサブサブドメインの設定" />
+    <meta property="og:title" content="Cloud DNSでのサブサブドメインの設定" />
+    <meta property="twitter:title" content="Cloud DNSでのサブサブドメインの設定" />
+    
+
+    
+    <meta name="description" content="Cloud DNSでサブドメインを設定する際のマネージドゾーンなどについて" />
+    <meta property="og:description" content="Cloud DNSでサブドメインを設定する際のマネージドゾーンなどについて" />
+    <meta property="twitter:description" content="Cloud DNSでサブドメインを設定する際のマネージドゾーンなどについて" />
+    
+
+    
+    <meta property="twitter:card" content="summary" />
+    
+    
+
+    <meta name="keyword"  content="Yusuke Kominami, 小南佑介, 小南 佑介, Rust, Emacs, Lisp, Web, Machine Learning, 機械学習">
+    <link rel="shortcut icon" href="/img/favicon.ico">
+
+    <title>Cloud DNSでのサブサブドメインの設定</title>
+
+    <link rel="canonical" href="/post/2021-10-12-subdomain-with-cloud-dns/">
+
+    <link rel="stylesheet" href="/css/iDisqus.min.css"/>
+	
+    
+    <link rel="stylesheet" href="/css/bootstrap.min.css">
+
+    
+    <link rel="stylesheet" href="/css/hux-blog.min.css">
+
+    
+    <link rel="stylesheet" href="/css/zanshang.css">
+    
+    
+    <link href="//cdnjs.cloudflare.com/ajax/libs/font-awesome/4.6.3/css/font-awesome.min.css" rel="stylesheet" type="text/css">
+
+    
+    <link rel="stylesheet" href="http://komi.dev/css/custom-font.css">
+
+    
+    
+    <script src="/js/jquery.min.js"></script>
+    
+    
+    <script src="/js/bootstrap.min.js"></script>
+    
+    
+    <script src="/js/hux-blog.min.js"></script>
+
+    
+    
+
+    
+    <script async src="https://www.googletagmanager.com/gtag/js?id=UA-177061519-1"></script>
+    <script>
+        window.dataLayer = window.dataLayer || [];
+        function gtag(){dataLayer.push(arguments);}
+        gtag('js', new Date());
+
+        gtag('config', 'UA-177061519-1');
+    </script>
+
+
+</head>
+
+
+
+<nav class="navbar navbar-default navbar-custom navbar-fixed-top">
+    <div class="container-fluid">
+        
+        <div class="navbar-header page-scroll">
+            <button type="button" class="navbar-toggle">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+            <a class="navbar-brand" href="/">Launch Today</a>
+        </div>
+
+        
+        
+        <div id="huxblog_navbar">
+            <div class="navbar-collapse">
+                <ul class="nav navbar-nav navbar-right">
+                    <li>
+                        <a href="/">Home</a>
+                    </li>
+                    
+                    
+                    <li>
+                        <a href="/categories/tech">tech</a>
+                    </li>
+                    
+                    
+
+                    
+                    <li><a href="/about/">ABOUT</a></li>
+                    
+                    <li><a href="/money/">MONEY</a></li>
+                    
+
+                    
+                    <li>
+                        <a href="/search">SEARCH <img src="/img/search.png"
+                                height="15" style="cursor: pointer;" alt="Search"></a>
+                    </li>
+                    
+                </ul>
+            </div>
+        </div>
+        
+    </div>
+    
+</nav>
+<script>
+    
+    
+    
+    var $body = document.body;
+    var $toggle = document.querySelector('.navbar-toggle');
+    var $navbar = document.querySelector('#huxblog_navbar');
+    var $collapse = document.querySelector('.navbar-collapse');
+
+    $toggle.addEventListener('click', handleMagic)
+    function handleMagic(e) {
+        if ($navbar.className.indexOf('in') > 0) {
+            
+            $navbar.className = " ";
+            
+            setTimeout(function () {
+                
+                if ($navbar.className.indexOf('in') < 0) {
+                    $collapse.style.height = "0px"
+                }
+            }, 400)
+        } else {
+            
+            $collapse.style.height = "auto"
+            $navbar.className += " in";
+        }
+    }
+</script>
+
+
+
+<style type="text/css">
+    header.intro-header {
+        background-image: url('https://www.jrtours.co.jp/plan/kyoto/nav/images/03/mv.jpg')
+    }
+</style>
+<header class="intro-header">
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+                <div class="post-heading">
+                    <div class="tags">
+                        
+                        <a class="tag" href="/tags/dns" title="DNS">
+                            DNS
+                        </a>
+                        
+                        <a class="tag" href="/tags/terraform" title="Terraform">
+                            Terraform
+                        </a>
+                        
+                        <a class="tag" href="/tags/gcp" title="GCP">
+                            GCP
+                        </a>
+                        
+                    </div>
+                    <h1>Cloud DNSでのサブサブドメインの設定</h1>
+                    <h2 class="subheading">Terraformを用いた実装</h2>
+                    <span class="meta">
+                        Posted 
+                        on 
+                        Tuesday, October 12, 2021
+                        
+                        
+                        
+                    </span>
+                </div>
+            </div>
+        </div>
+    </div>
+</header>
+
+
+
+
+<article>
+    <div class="container">
+        <div class="row">
+
+            
+            <div class="
+                col-lg-11 col-lg-offset-1
+                col-md-10 col-md-offset-1
+                post-container">
+
+                
+                <header>
+                    <h2>TOC</h2>
+                </header>
+                <nav id="TableOfContents">
+  <ul>
+    <li><a href="#cloud-dnsとgoogle-domainscloud-domains">Cloud DNSとGoogle Domains、Cloud Domains</a></li>
+    <li><a href="#やってみる">やってみる</a>
+      <ul>
+        <li><a href="#google-domainsにてドメインを取得する">Google Domainsにてドメインを取得する</a></li>
+        <li><a href="#cloud-dnsでゾーンを構成する">Cloud DNSでゾーンを構成する</a></li>
+        <li><a href="#google-domainsにてネームサーバーを設定する">Google Domainsにてネームサーバーを設定する</a></li>
+      </ul>
+    </li>
+    <li><a href="#まとめ">まとめ</a></li>
+  </ul>
+</nav>
+                
+                <h1 id="cloud-dnsとgoogle-domainscloud-domains">Cloud DNSとGoogle Domains、Cloud Domains</h1>
+<p>Googleが提供しているDNS系のサービスとしてCloud DNSとGoogle Domains、Cloud Domainsの3つがある。
+これらの違いは何かというと、</p>
+<table>
+<thead>
+<tr>
+<th style="text-align:center"></th>
+<th style="text-align:center">機能</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:center">Cloud DNS</td>
+<td style="text-align:center">ゾーンとレコードの設定</td>
+</tr>
+<tr>
+<td style="text-align:center">Google Domains</td>
+<td style="text-align:center">ドメインの取得、ネームサーバーの設定</td>
+</tr>
+<tr>
+<td style="text-align:center">Cloud Domains</td>
+<td style="text-align:center">ドメインの取得、ネームサーバーの設定</td>
+</tr>
+</tbody>
+</table>
+<p>となっている。
+Google DomainsとCloud Domainsの機能はほぼ完全に被っているが、これはCloud Domainsが割と最近のサービスでGCPのコンソールからGoogle Domainsと同様のことができるようになったというのが理由となっている。
+参考としては<a href="https://cloud.google.com/blog/ja/products/networking/introducing-cloud-domains">Cloud Domains のご紹介: カスタム ドメインの登録と管理を簡素化</a>がちょうど良さそう。
+なお、Cloud Domainsはこのドキュメントに書いてある通り、背後ではGoogle Domainsを登録事業者としているため、インターフェースの違いはあれど実質的に同じものと見て良い気がする。</p>
+<h1 id="やってみる">やってみる</h1>
+<p>今回の流れとして、何かしら自分のWebサイトにてドメインを当てたいケースを考える。
+手元には複数サービスを立てたいため、<code>example.com</code>以外に<code>foo.example.com</code>というようなサブドメインを作って各サービスを立てるものとする。
+また、staging環境とproduction環境は分けたいため、staging環境では<code>hoge.staging.example.com</code>というようなサブサブドメインで吸収する。</p>
+<p>以下、これをTerraformで実装していく。</p>
+<h2 id="google-domainsにてドメインを取得する">Google Domainsにてドメインを取得する</h2>
+<p>これはサイトの通りに従って購入する。</p>
+<h2 id="cloud-dnsでゾーンを構成する">Cloud DNSでゾーンを構成する</h2>
+<p>最初はProduction環境について。</p>
+<p>まず大元となるマネージドゾーンを構成する。</p>
+<div class="highlight"><pre tabindex="0" style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-terraform" data-lang="terraform"><span style="color:#a2f;font-weight:bold">resource</span> <span style="color:#b44">&#34;google_dns_managed_zone&#34;</span> <span style="color:#b44">&#34;production&#34;</span> {
+  <span style="color:#b44">name</span>        = <span style="color:#b44">&#34;production&#34;</span>
+  <span style="color:#b44">dns_name</span>    = <span style="color:#b44">&#34;example.com.&#34;</span>
+  <span style="color:#b44">description</span> = <span style="color:#b44">&#34;some description&#34;</span>
+}
+<span style="color:#a2f;font-weight:bold">
+</span><span style="color:#a2f;font-weight:bold">output</span> <span style="color:#b44">&#34;managed_zone&#34;</span> {
+  <span style="color:#b44">description</span> = <span style="">&lt;</span><span style="color:#666">&lt;</span>DESC
+  some description
+  <span style="color:#666">&gt;&gt;</span>
+  <span style="color:#b44">value</span> = google_dns_managed_zone.production.name_servers
+}
+</code></pre></div><p>フィールドの<code>dns_name</code>では最後にピリオド<code>.</code>が必要だが、これは<strong>これがドメインの末尾です</strong>というのを示すために最後にピリオドをつける必要があり、注意。</p>
+<p>ゾーンが構成されたら、立てたいサービスの分のグローバルIPを確保し、そのIPを用いてAレコードを構成する。</p>
+<div class="highlight"><pre tabindex="0" style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-terraform" data-lang="terraform"><span style="color:#080;font-style:italic">// example.comに立てるサービス
+</span><span style="color:#080;font-style:italic"></span><span style="color:#a2f;font-weight:bold">resource</span> <span style="color:#b44">&#34;google_compute_global_address&#34;</span> <span style="color:#b44">&#34;service1_production&#34;</span> {
+  <span style="color:#b44">name</span> = <span style="color:#b44">&#34;service1-production&#34;</span>
+}
+<span style="color:#a2f;font-weight:bold">
+</span><span style="color:#a2f;font-weight:bold">resource</span> <span style="color:#b44">&#34;google_dns_record_set&#34;</span> <span style="color:#b44">&#34;service1&#34;</span> {
+  <span style="color:#b44">name</span> = google_dns_managed_zone.production.dns_name
+  <span style="color:#b44">type</span> = <span style="color:#b44">&#34;A&#34;</span>
+  <span style="color:#b44">ttl</span>  = <span style="color:#666">300</span>
+
+  <span style="color:#b44">managed_zone</span> = google_dns_managed_zone.production.name
+
+  <span style="color:#b44">rrdatas</span> = [google_compute_global_address.service1_production.address]
+}<span style="color:#080;font-style:italic">
+</span><span style="color:#080;font-style:italic">
+</span><span style="color:#080;font-style:italic">// service2.example.comに立てるサービス
+</span><span style="color:#080;font-style:italic"></span><span style="color:#a2f;font-weight:bold">resource</span> <span style="color:#b44">&#34;google_compute_global_address&#34;</span> <span style="color:#b44">&#34;service2_production&#34;</span> {
+  <span style="color:#b44">name</span> = <span style="color:#b44">&#34;service2-production&#34;</span>
+}
+<span style="color:#a2f;font-weight:bold">
+</span><span style="color:#a2f;font-weight:bold">resource</span> <span style="color:#b44">&#34;google_dns_record_set&#34;</span> <span style="color:#b44">&#34;service1&#34;</span> {
+  <span style="color:#b44">name</span> = <span style="color:#b44">&#34;service2.</span><span style="color:#b68;font-weight:bold">${</span>google_dns_managed_zone.production.dns_name<span style="color:#b68;font-weight:bold">}</span><span style="color:#b44">&#34;</span>
+  <span style="color:#b44">type</span> = <span style="color:#b44">&#34;A&#34;</span>
+  <span style="color:#b44">ttl</span>  = <span style="color:#666">300</span>
+
+  <span style="color:#b44">managed_zone</span> = google_dns_managed_zone.production.name
+
+  <span style="color:#b44">rrdatas</span> = [google_compute_global_address.service2_production.address]
+}
+</code></pre></div><p>さて、Production環境についてはこれで<code>example.com</code>にservice1が、<code>service2.example.com</code>にservice2が立つようになった。</p>
+<p>次にStaging環境でこれを構成する。</p>
+<p>基本的には上記の通りIPを確保してAレコードを当てれば良いのだが、キーポイントとして<code>service2.staging.example.com</code>というようなサブドメインを駆使して環境差分(production/staging)を吸収するケースでは<code>staging.example.com</code>といった各環境ごとにゾーンを構成する方が構成として綺麗である。</p>
+<p>各環境ごとにゾーンを構成するためにはメインのゾーンから各環境を示すサブドメインに対してNSレコードを貼っておく必要がある。</p>
+<div class="highlight"><pre tabindex="0" style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-terraform" data-lang="terraform"><span style="color:#080;font-style:italic">// NS record for staging
+</span><span style="color:#080;font-style:italic"></span><span style="color:#a2f;font-weight:bold">resource</span> <span style="color:#b44">&#34;google_dns_record_set&#34;</span> <span style="color:#b44">&#34;staging&#34;</span> {
+  <span style="color:#b44">name</span> = <span style="color:#b44">&#34;staging.</span><span style="color:#b68;font-weight:bold">${</span>google_dns_managed_zone.production.dns_name<span style="color:#b68;font-weight:bold">}</span><span style="color:#b44">&#34;</span>
+  <span style="color:#b44">type</span> = <span style="color:#b44">&#34;NS&#34;</span>
+  <span style="color:#b44">ttl</span>  = <span style="color:#666">300</span>
+
+  <span style="color:#b44">managed_zone</span> = google_dns_managed_zone.production.name
+
+  <span style="color:#b44">rrdatas</span> = google_dns_managed_zone.production.name_servers
+}
+</code></pre></div><p>この上で、ゾーンを構成し、各サービスについてのIPとレコードを構成する。</p>
+<div class="highlight"><pre tabindex="0" style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-terraform" data-lang="terraform"><span style="color:#080;font-style:italic">// Staging Zone
+</span><span style="color:#080;font-style:italic"></span><span style="color:#a2f;font-weight:bold">resource</span> <span style="color:#b44">&#34;google_dns_managed_zone&#34;</span> <span style="color:#b44">&#34;staging&#34;</span> {
+  <span style="color:#b44">name</span>        = <span style="color:#b44">&#34;staging&#34;</span>
+  <span style="color:#b44">dns_name</span>    = <span style="color:#b44">&#34;example.com.&#34;</span>
+  <span style="color:#b44">description</span> = <span style="color:#b44">&#34;some description&#34;</span>
+}<span style="color:#080;font-style:italic">
+</span><span style="color:#080;font-style:italic">
+</span><span style="color:#080;font-style:italic">// staging.example.comに立てるサービス
+</span><span style="color:#080;font-style:italic"></span><span style="color:#a2f;font-weight:bold">resource</span> <span style="color:#b44">&#34;google_compute_global_address&#34;</span> <span style="color:#b44">&#34;service1_staging&#34;</span> {
+  <span style="color:#b44">name</span> = <span style="color:#b44">&#34;service1-staging&#34;</span>
+}
+<span style="color:#a2f;font-weight:bold">
+</span><span style="color:#a2f;font-weight:bold">resource</span> <span style="color:#b44">&#34;google_dns_record_set&#34;</span> <span style="color:#b44">&#34;service1&#34;</span> {
+  <span style="color:#b44">name</span> = google_dns_managed_zone.staging.dns_name
+  <span style="color:#b44">type</span> = <span style="color:#b44">&#34;A&#34;</span>
+  <span style="color:#b44">ttl</span>  = <span style="color:#666">300</span>
+
+  <span style="color:#b44">managed_zone</span> = google_dns_managed_zone.staging.name
+
+  <span style="color:#b44">rrdatas</span> = [google_compute_global_address.service1.address]
+}<span style="color:#080;font-style:italic">
+</span><span style="color:#080;font-style:italic">
+</span><span style="color:#080;font-style:italic">// service2.staging.example.comに立てるサービス
+</span><span style="color:#080;font-style:italic"></span><span style="color:#a2f;font-weight:bold">resource</span> <span style="color:#b44">&#34;google_compute_global_address&#34;</span> <span style="color:#b44">&#34;service2_staging&#34;</span> {
+  <span style="color:#b44">name</span> = <span style="color:#b44">&#34;service2-staging&#34;</span>
+}
+<span style="color:#a2f;font-weight:bold">
+</span><span style="color:#a2f;font-weight:bold">resource</span> <span style="color:#b44">&#34;google_dns_record_set&#34;</span> <span style="color:#b44">&#34;service1&#34;</span> {
+  <span style="color:#b44">name</span> = <span style="color:#b44">&#34;service2.</span><span style="color:#b68;font-weight:bold">${</span>google_dns_managed_zone.staging.dns_name<span style="color:#b68;font-weight:bold">}</span><span style="color:#b44">&#34;</span>
+  <span style="color:#b44">type</span> = <span style="color:#b44">&#34;A&#34;</span>
+  <span style="color:#b44">ttl</span>  = <span style="color:#666">300</span>
+
+  <span style="color:#b44">managed_zone</span> = google_dns_managed_zone.staging.name
+
+  <span style="color:#b44">rrdatas</span> = [google_compute_global_address.service2.address]
+}
+</code></pre></div><h2 id="google-domainsにてネームサーバーを設定する">Google Domainsにてネームサーバーを設定する</h2>
+<p>ここまでできたらGoogle Domainsのカスタムネームサーバーにてゾーン構成時のネームサーバーを設定する。
+ネームサーバーは<code>google_dns_managed_zone</code>リソースを実行した際にネームサーバーが自動的に設定される。</p>
+<h1 id="まとめ">まとめ</h1>
+<p>自分がこの作業をした際、<code>staging.example.com</code>のNSレコードを構成していなかったためstaging環境についてはドメインが無効で、これで数日溶かした。</p>
+<p>ひとまずこれにて各環境差分を吸収しつつ複数サービスのドメインを設定できた。</p>
+
+
+                
+
+                <hr>
+                <ul class="pager">
+                    
+                    <li class="previous">
+                        <a href="http://komi.dev/post/2021-08-11-font-in-chrome-and-safari/" data-toggle="tooltip" data-placement="top" title="Chromeでfont-familyを正しく設定する">&larr;
+                            Previous Post</a>
+                    </li>
+                    
+                    
+                </ul>
+
+                
+<div id="disqus-comment"></div>
+
+
+
+            </div>
+            
+            <div class="
+                col-lg-11 col-lg-offset-1
+                col-md-10 col-md-offset-1
+                sidebar-container">
+
+                
+                
+                <section>
+                    <hr class="hidden-sm hidden-xs">
+                    <h5><a href="/tags/">FEATURED TAGS</a></h5>
+                    <div class="tags">
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        <a href="/tags/gcp" title="gcp">
+                            gcp
+                        </a>
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        <a href="/tags/macos" title="macos">
+                            macos
+                        </a>
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                    </div>
+                </section>
+                
+
+                
+                
+            </div>
+        </div>
+    </div>
+</article>
+
+
+
+
+<footer>
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+                <ul class="list-inline text-center">
+                   
+                   <li>
+                       <a href='' rel="alternate" type="application/rss+xml" title="Launch Today" >
+                           <span class="fa-stack fa-lg">
+                               <i class="fa fa-circle fa-stack-2x"></i>
+                               <i class="fa fa-rss fa-stack-1x fa-inverse"></i>
+                           </span>
+                       </a>
+                   </li>
+                   
+                    
+                    <li>
+                        <a href="mailto:yusuke.kominami@gmail.com">
+                            <span class="fa-stack fa-lg">
+                                <i class="fa fa-circle fa-stack-2x"></i>
+                                <i class="fa fa-envelope fa-stack-1x fa-inverse"></i>
+                            </span>
+                        </a>
+                    </li>
+		    
+                    
+                    
+                    <li>
+                        <a href="https://twitter.com/komi_edtr_1230">
+                            <span class="fa-stack fa-lg">
+                                <i class="fa fa-circle fa-stack-2x"></i>
+                                <i class="fa fa-twitter fa-stack-1x fa-inverse"></i>
+                            </span>
+                        </a>
+                    </li>
+                    
+                    
+                    
+
+                    
+                    <li>
+                        <a target="_blank" href="https://www.facebook.com/1230komi/">
+                            <span class="fa-stack fa-lg">
+                                <i class="fa fa-circle fa-stack-2x"></i>
+                                <i class="fa fa-facebook fa-stack-1x fa-inverse"></i>
+                            </span>
+                        </a>
+                    </li>
+		    
+
+		    
+                    
+                    
+                    <li>
+                        <a target="_blank" href="https://github.com/komi1230">
+                            <span class="fa-stack fa-lg">
+                                <i class="fa fa-circle fa-stack-2x"></i>
+                                <i class="fa fa-github fa-stack-1x fa-inverse"></i>
+                            </span>
+                        </a>
+                    </li>
+		    
+                    
+                    
+                    
+                    <li>
+                        <a target="_blank" href="https://www.linkedin.com/in/yusuke-kominami-0419b1157/">
+                            <span class="fa-stack fa-lg">
+                                <i class="fa fa-circle fa-stack-2x"></i>
+                                <i class="fa fa-linkedin fa-stack-1x fa-inverse"></i>
+                            </span>
+                        </a>
+                    </li>
+		    
+                    
+                    
+                    <li>
+                        <a target="_blank" href="https://stackoverflow.com/users/12464570">
+                            <span class="fa-stack fa-lg">
+                                <i class="fa fa-circle fa-stack-2x"></i>
+                                <i class="fa fa-stack-overflow fa-stack-1x fa-inverse"></i>
+                            </span>
+                        </a>
+                    </li>
+            
+                    
+                    
+                    
+            
+            
+            
+                </ul>
+		<p class="copyright text-muted">
+                    Copyright &copy; Launch Today 2021
+                </p>
+            </div>
+        </div>
+    </div>
+</footer>
+
+
+
+
+<script>
+    function async(u, c) {
+      var d = document, t = 'script',
+          o = d.createElement(t),
+          s = d.getElementsByTagName(t)[0];
+      o.src = u;
+      if (c) { o.addEventListener('load', function (e) { c(null, e); }, false); }
+      s.parentNode.insertBefore(o, s);
+    }
+</script>
+
+
+
+
+
+
+<script>
+    
+    if($('#tag_cloud').length !== 0){
+        async("/js/jquery.tagcloud.js",function(){
+            $.fn.tagcloud.defaults = {
+                
+                color: {start: '#bbbbee', end: '#0085a1'},
+            };
+            $('#tag_cloud a').tagcloud();
+        })
+    }
+</script>
+
+
+<script>
+    async("https://cdnjs.cloudflare.com/ajax/libs/fastclick/1.0.6/fastclick.js", function(){
+        var $nav = document.querySelector("nav");
+        if($nav) FastClick.attach($nav);
+    })
+</script>
+
+
+
+
+
+
+<script type="application/javascript">
+var doNotTrack = false;
+if (!doNotTrack) {
+	window.ga=window.ga||function(){(ga.q=ga.q||[]).push(arguments)};ga.l=+new Date;
+	ga('create', 'UA-177061519-1', 'auto');
+	
+	ga('send', 'pageview');
+}
+</script>
+<script async src='https://www.google-analytics.com/analytics.js'></script>
+
+
+
+</body>
+</html>
