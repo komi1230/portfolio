@@ -3,18 +3,14 @@ if [ ! -f "scripts/setup-tinysearch.sh" ]; then
   exit 1
 fi
 
-if [ ! -f "public/index.json" ]; then
-  echo "Build project..."
-  echo "  => $ hugo"
-  hugo
-fi
-
 PROJECT_ROOT=$(pwd)
 
-
+echo "Build project..."
+echo "  => $ hugo --minify"
+hugo --minify
 
 echo "Make tinysearch..."
 echo "  => $ tinysearch"
 cd static/wasm
-tinysearch -o ../../public/index.json
+tinysearch ../../public/index.json
 cd $PROJECT_ROOT
