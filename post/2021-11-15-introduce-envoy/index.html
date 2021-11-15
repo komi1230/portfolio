@@ -1,0 +1,624 @@
+<!DOCTYPE html>
+<html lang="en-us">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    
+    <meta property="og:site_name" content="Launch Today" />
+    <meta property="og:type" content="article" />
+    <meta property="og:url" content="https://komi.dev/" />
+    <meta property="og:locale" content="ja_JP" />
+
+    <meta name="twitter:site" content="@komi_edtr_1230" />
+
+    
+    <meta property="og:image" content="http://komi.dev/img/home.jpg" />
+    <meta property="twitter:image" content="http://komi.dev/img/home.jpg" />
+    
+
+    
+    <meta name="title" content="LoadBalancerとしてEnvoyを導入する" />
+    <meta property="og:title" content="LoadBalancerとしてEnvoyを導入する" />
+    <meta property="twitter:title" content="LoadBalancerとしてEnvoyを導入する" />
+    
+
+    
+    <meta name="description" content="gRPCアプリケーションにてIngressからのリクエストに対してL7レイヤで動作するロードバランサを構築する" />
+    <meta property="og:description" content="gRPCアプリケーションにてIngressからのリクエストに対してL7レイヤで動作するロードバランサを構築する" />
+    <meta property="twitter:description" content="gRPCアプリケーションにてIngressからのリクエストに対してL7レイヤで動作するロードバランサを構築する" />
+    
+
+    
+    <meta property="twitter:card" content="summary" />
+    
+    
+
+    <meta name="keyword"  content="Yusuke Kominami, 小南佑介, 小南 佑介, Rust, Emacs, Lisp, Web, Machine Learning, 機械学習">
+    <link rel="shortcut icon" href="/img/favicon.ico">
+
+    <title>LoadBalancerとしてEnvoyを導入する</title>
+
+    <link rel="canonical" href="/post/2021-11-15-introduce-envoy/">
+
+    <link rel="stylesheet" href="/css/iDisqus.min.css"/>
+	
+    
+    <link rel="stylesheet" href="/css/bootstrap.min.css">
+
+    
+    <link rel="stylesheet" href="/css/hux-blog.min.css">
+
+    
+    <link rel="stylesheet" href="/css/zanshang.css">
+    
+    
+    <link href="//cdnjs.cloudflare.com/ajax/libs/font-awesome/4.6.3/css/font-awesome.min.css" rel="stylesheet" type="text/css">
+
+    
+    <link rel="stylesheet" href="http://komi.dev/css/custom-font.css">
+
+    
+    
+    <script src="/js/jquery.min.js"></script>
+    
+    
+    <script src="/js/bootstrap.min.js"></script>
+    
+    
+    <script src="/js/hux-blog.min.js"></script>
+
+    
+    
+
+    
+    <script async src="https://www.googletagmanager.com/gtag/js?id=UA-177061519-1"></script>
+    <script>
+        window.dataLayer = window.dataLayer || [];
+        function gtag(){dataLayer.push(arguments);}
+        gtag('js', new Date());
+
+        gtag('config', 'UA-177061519-1');
+    </script>
+
+
+</head>
+
+
+
+<nav class="navbar navbar-default navbar-custom navbar-fixed-top">
+    <div class="container-fluid">
+        
+        <div class="navbar-header page-scroll">
+            <button type="button" class="navbar-toggle">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+            <a class="navbar-brand" href="/">Launch Today</a>
+        </div>
+
+        
+        
+        <div id="huxblog_navbar">
+            <div class="navbar-collapse">
+                <ul class="nav navbar-nav navbar-right">
+                    <li>
+                        <a href="/">Home</a>
+                    </li>
+                    
+                    
+                    <li>
+                        <a href="/categories/tech">tech</a>
+                    </li>
+                    
+                    
+
+                    
+                    <li><a href="/about/">ABOUT</a></li>
+                    
+                    <li><a href="/money/">MONEY</a></li>
+                    
+
+                    
+                    <li>
+                        <a href="/search">SEARCH <img src="/img/search.png"
+                                height="15" style="cursor: pointer;" alt="Search"></a>
+                    </li>
+                    
+                </ul>
+            </div>
+        </div>
+        
+    </div>
+    
+</nav>
+<script>
+    
+    
+    
+    var $body = document.body;
+    var $toggle = document.querySelector('.navbar-toggle');
+    var $navbar = document.querySelector('#huxblog_navbar');
+    var $collapse = document.querySelector('.navbar-collapse');
+
+    $toggle.addEventListener('click', handleMagic)
+    function handleMagic(e) {
+        if ($navbar.className.indexOf('in') > 0) {
+            
+            $navbar.className = " ";
+            
+            setTimeout(function () {
+                
+                if ($navbar.className.indexOf('in') < 0) {
+                    $collapse.style.height = "0px"
+                }
+            }, 400)
+        } else {
+            
+            $collapse.style.height = "auto"
+            $navbar.className += " in";
+        }
+    }
+</script>
+
+
+
+<style type="text/css">
+    header.intro-header {
+        background-image: url('https://oceanvodka.com/uploads/2019/04/HP-Hero-Header@2x.jpg')
+    }
+</style>
+<header class="intro-header">
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+                <div class="post-heading">
+                    <div class="tags">
+                        
+                        <a class="tag" href="/tags/kubernetes" title="Kubernetes">
+                            Kubernetes
+                        </a>
+                        
+                        <a class="tag" href="/tags/envoy" title="Envoy">
+                            Envoy
+                        </a>
+                        
+                    </div>
+                    <h1>LoadBalancerとしてEnvoyを導入する</h1>
+                    <h2 class="subheading">GKEとgRPCでの環境にて利用</h2>
+                    <span class="meta">
+                        Posted 
+                        on 
+                        Monday, November 15, 2021
+                        
+                        
+                        
+                    </span>
+                </div>
+            </div>
+        </div>
+    </div>
+</header>
+
+
+
+
+<article>
+    <div class="container">
+        <div class="row">
+
+            
+            <div class="
+                col-lg-11 col-lg-offset-1
+                col-md-10 col-md-offset-1
+                post-container">
+
+                
+                <header>
+                    <h2>TOC</h2>
+                </header>
+                <nav id="TableOfContents">
+  <ul>
+    <li><a href="#envoyとは">Envoyとは</a></li>
+    <li><a href="#grpcアプリとenvoy">gRPCアプリとEnvoy</a></li>
+    <li><a href="#実装する">実装する</a></li>
+    <li><a href="#終わりに">終わりに</a></li>
+  </ul>
+</nav>
+                
+                <h1 id="envoyとは">Envoyとは</h1>
+<p>EnvoyはL4/L7レイヤで動作するプロキシで、ロードバランスだったりネットワークとアプリケーションの分離なり、とても柔軟使えるOSS。
+ネットワーク関係の色々困りごとを解消してくれる優れものだったりする。</p>
+<p>開発元はLyftで、急速に普及したマイクロサービスの分散システム構築・運用を安定させるため2015年5月から始まったプロジェクト。</p>
+<p>実装言語としてはC++が使われている。</p>
+<p>今回の記事では、そんなEnvoyをKubernetes上で動作するgRPCに対して適用させる。</p>
+<h1 id="grpcアプリとenvoy">gRPCアプリとEnvoy</h1>
+<p>gRPCとはHTTP/2上で動作するプロトコルで、JSONの強いバージョンみたいなもの。</p>
+<p>HTTP/2は普段慣れ親しんでいるHTTP/1.1と何が違うかというと</p>
+<ul>
+<li>バイナリベース</li>
+<li>ヘッダー圧縮</li>
+<li>ストリーム</li>
+</ul>
+<p>などの差分がある。</p>
+<p>1つ目のバイナリベースというのは、HTTP/1.1はテキストベースのプロトコルで各リクエストを受け取った際はテキストからバイナリへパースしてあげる必要があったのだけど、それが無駄ということでHTTP/2からはバイナリがデフォルトになり通信が高効率になった。</p>
+<p>2つ目のヘッダー圧縮というのは、ヘッダー情報にはどのHTTPメソッドを使っているかとかアクセスしているホストはどれだとか色々情報が格納されているのだけど、これを同じホストに対して複数回リクエストを飛ばすようなケース(Webサイトに対してHTMLファイルをリクエストしたあとCSSファイルをリクエストしたりする場合など)だとヘッダ情報には同じような情報ばかりでもう一度大量のヘッダ情報を送るのは無駄となってくる。
+そのようなケースに対応するためにHTTP/2ではヘッダ情報には変更があった分だけ送るように変更される。</p>
+<p>3つ目のストリームは、もともとHTTP/1.1ではリクエストとレスポンスの組を1つずつしか同時に送受信できず、これがボトルネックとなっていたことからHTTP/2ではストリームという仮想的な双方向シーケンスを作り、それを多重化することで柔軟な通信が実現できるようになった。
+ちなみにこの双方向シーケンスというとWebSocketにも同様の機能が提供されているのだけど(WebSocketの方がHTTP/2より簡単な実装になっている)、ここらへんの話は非常に長くなるのでまた別の機会に。</p>
+<p>今回出てくるgRPCはHTTP/2上で動作するプロトコルで、これは非常に高速で優秀であるが実はロードバランサと少々相性が悪い。
+というのもHTTP/2の特徴としてストリームがあり、これはサーバーとクライアントの間のコネクション上にピタッと張られるもので、負荷が大きくなった際にサーバーを水平スケールさせるためには多少の工夫が必要となる。
+つまり意図的にTLS終端を担ってくれるアプリケーションを中間に用意して別途アプリケーションへネットワークをリレーしてもらわないとHTTP/2の世界ではロードバランスできない。</p>
+<p>そこで今回出てくるのがEnvoyで、Serviceから飛んできたリクエストを一旦Envoyが受け取り、ロードバランスを考えてどのPodに受け渡すかを上手いことやってくれる。</p>
+<p>
+  <img src="https://i-beam.org/2019/02/03/envoy-static-load-balancer/envoy-http-proxy.png" alt="load_balancer_image">
+
+</p>
+<h1 id="実装する">実装する</h1>
+<p>ということでマニフェストを眺めていく。</p>
+<p>まずEnvoyはDeploymentにてサイドカーとして立てるので、以下のように並べてあげる必要がある。</p>
+<div class="highlight"><pre tabindex="0" style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-yaml" data-lang="yaml"><span style="color:#008000;font-weight:bold">apiVersion</span>:<span style="color:#bbb"> </span>apps/v1<span style="color:#bbb">
+</span><span style="color:#bbb"></span><span style="color:#008000;font-weight:bold">kind</span>:<span style="color:#bbb"> </span>Deployment<span style="color:#bbb">
+</span><span style="color:#bbb"></span><span style="color:#008000;font-weight:bold">metadata</span>:<span style="color:#bbb">
+</span><span style="color:#bbb">  </span><span style="color:#008000;font-weight:bold">name</span>:<span style="color:#bbb"> </span>argo-server<span style="color:#bbb">
+</span><span style="color:#bbb"></span><span style="color:#008000;font-weight:bold">spec</span>:<span style="color:#bbb">
+</span><span style="color:#bbb">  </span><span style="color:#008000;font-weight:bold">selector</span>:<span style="color:#bbb">
+</span><span style="color:#bbb">    </span><span style="color:#008000;font-weight:bold">matchLabels</span>:<span style="color:#bbb">
+</span><span style="color:#bbb">      </span><span style="color:#008000;font-weight:bold">app</span>:<span style="color:#bbb"> </span>argo-server<span style="color:#bbb">
+</span><span style="color:#bbb">  </span><span style="color:#008000;font-weight:bold">template</span>:<span style="color:#bbb">
+</span><span style="color:#bbb">    </span><span style="color:#008000;font-weight:bold">metadata</span>:<span style="color:#bbb">
+</span><span style="color:#bbb">      </span><span style="color:#008000;font-weight:bold">labels</span>:<span style="color:#bbb">
+</span><span style="color:#bbb">        </span><span style="color:#008000;font-weight:bold">app</span>:<span style="color:#bbb"> </span>argo-server<span style="color:#bbb">
+</span><span style="color:#bbb">    </span><span style="color:#008000;font-weight:bold">spec</span>:<span style="color:#bbb">
+</span><span style="color:#bbb">      </span><span style="color:#008000;font-weight:bold">serviceAccountName</span>:<span style="color:#bbb"> </span>argo-sa<span style="color:#bbb">
+</span><span style="color:#bbb">      </span><span style="color:#008000;font-weight:bold">containers</span>:<span style="color:#bbb">
+</span><span style="color:#bbb">        </span>- <span style="color:#008000;font-weight:bold">name</span>:<span style="color:#bbb"> </span>my-app-server<span style="color:#bbb">
+</span><span style="color:#bbb">          </span><span style="color:#008000;font-weight:bold">image</span>:<span style="color:#bbb"> </span>gcr.io/my-app/some-image:latest<span style="color:#bbb">
+</span><span style="color:#bbb">          </span><span style="color:#008000;font-weight:bold">args</span>:<span style="color:#bbb">
+</span><span style="color:#bbb">            </span>- /bin/ls<span style="color:#bbb">
+</span><span style="color:#bbb">          </span><span style="color:#008000;font-weight:bold">ports</span>:<span style="color:#bbb">
+</span><span style="color:#bbb">            </span>- <span style="color:#008000;font-weight:bold">name</span>:<span style="color:#bbb"> </span>web<span style="color:#bbb">
+</span><span style="color:#bbb">              </span><span style="color:#008000;font-weight:bold">containerPort</span>:<span style="color:#bbb"> </span><span style="color:#666">8888</span><span style="color:#bbb">
+</span><span style="color:#bbb">          </span><span style="color:#008000;font-weight:bold">volumeMounts</span>:<span style="color:#bbb">
+</span><span style="color:#bbb">            </span>- <span style="color:#008000;font-weight:bold">mountPath</span>:<span style="color:#bbb"> </span>/tmp<span style="color:#bbb">
+</span><span style="color:#bbb">              </span><span style="color:#008000;font-weight:bold">name</span>:<span style="color:#bbb"> </span>tmp<span style="color:#bbb">
+</span><span style="color:#bbb">        </span>- <span style="color:#008000;font-weight:bold">name</span>:<span style="color:#bbb"> </span>envoy<span style="color:#bbb">
+</span><span style="color:#bbb">          </span><span style="color:#008000;font-weight:bold">image</span>:<span style="color:#bbb"> </span>envoyproxy/envoy:v1.20.0<span style="color:#bbb">
+</span><span style="color:#bbb">          </span><span style="color:#008000;font-weight:bold">command</span>:<span style="color:#bbb">
+</span><span style="color:#bbb">            </span>- <span style="color:#b44">&#34;/usr/local/bin/envoy&#34;</span><span style="color:#bbb">
+</span><span style="color:#bbb">          </span><span style="color:#008000;font-weight:bold">args</span>:<span style="color:#bbb">
+</span><span style="color:#bbb">            </span>- <span style="color:#b44">&#34;--config-path /etc/envoy/envoy.yaml&#34;</span><span style="color:#bbb">
+</span><span style="color:#bbb">          </span><span style="color:#008000;font-weight:bold">resources</span>:<span style="color:#bbb">
+</span><span style="color:#bbb">            </span><span style="color:#008000;font-weight:bold">limits</span>:<span style="color:#bbb">
+</span><span style="color:#bbb">              </span><span style="color:#008000;font-weight:bold">memory</span>:<span style="color:#bbb"> </span>512Mi<span style="color:#bbb">
+</span><span style="color:#bbb">          </span><span style="color:#008000;font-weight:bold">ports</span>:<span style="color:#bbb">
+</span><span style="color:#bbb">            </span>- <span style="color:#008000;font-weight:bold">containerPort</span>:<span style="color:#bbb"> </span><span style="color:#666">15001</span><span style="color:#bbb">
+</span><span style="color:#bbb">              </span><span style="color:#008000;font-weight:bold">name</span>:<span style="color:#bbb"> </span>app<span style="color:#bbb">
+</span><span style="color:#bbb">            </span>- <span style="color:#008000;font-weight:bold">containerPort</span>:<span style="color:#bbb"> </span><span style="color:#666">8001</span><span style="color:#bbb">
+</span><span style="color:#bbb">              </span><span style="color:#008000;font-weight:bold">name</span>:<span style="color:#bbb"> </span>envoy-admin<span style="color:#bbb">
+</span><span style="color:#bbb">          </span><span style="color:#008000;font-weight:bold">volumeMounts</span>:<span style="color:#bbb">
+</span><span style="color:#bbb">            </span>- <span style="color:#008000;font-weight:bold">name</span>:<span style="color:#bbb"> </span>envoy<span style="color:#bbb">
+</span><span style="color:#bbb">              </span><span style="color:#008000;font-weight:bold">mountPath</span>:<span style="color:#bbb"> </span>/etc/envoy<span style="color:#bbb">
+</span><span style="color:#bbb">      </span><span style="color:#008000;font-weight:bold">volumes</span>:<span style="color:#bbb">
+</span><span style="color:#bbb">        </span>- <span style="color:#008000;font-weight:bold">name</span>:<span style="color:#bbb"> </span>envoy<span style="color:#bbb">
+</span><span style="color:#bbb">          </span><span style="color:#008000;font-weight:bold">configMap</span>:<span style="color:#bbb">
+</span><span style="color:#bbb">            </span><span style="color:#008000;font-weight:bold">name</span>:<span style="color:#bbb"> </span>argo-envoy<span style="color:#bbb">
+</span></code></pre></div><p>ポイントとしてEnvoyはAdmin用のポートとアプリケーションとしてのポートを別途開けておく必要がある。</p>
+<p>そしてEnvoyをどのように動作させるかはConfigMapに記述をする。</p>
+<p>以下がEnvoyのConfigMapとなる。</p>
+<p>ちなみに以下の文法はEnvoyのv3 APIで、v1やv2とはやや異なることに注意。</p>
+<div class="highlight"><pre tabindex="0" style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-yaml" data-lang="yaml"><span style="color:#008000;font-weight:bold">apiVersion</span>:<span style="color:#bbb"> </span>v1<span style="color:#bbb">
+</span><span style="color:#bbb"></span><span style="color:#008000;font-weight:bold">kind</span>:<span style="color:#bbb"> </span>ConfigMap<span style="color:#bbb">
+</span><span style="color:#bbb"></span><span style="color:#008000;font-weight:bold">metadata</span>:<span style="color:#bbb">
+</span><span style="color:#bbb">  </span><span style="color:#008000;font-weight:bold">name</span>:<span style="color:#bbb"> </span>argo-envoy<span style="color:#bbb">
+</span><span style="color:#bbb"></span><span style="color:#008000;font-weight:bold">data</span>:<span style="color:#bbb">
+</span><span style="color:#bbb">  </span><span style="color:#080;font-style:italic"># Adding new entries here will make them appear as files in the deployment.</span><span style="color:#bbb">
+</span><span style="color:#bbb">  </span><span style="color:#080;font-style:italic"># Please update k8s.io/k8s.io/README.md when you update this file</span><span style="color:#bbb">
+</span><span style="color:#bbb">  </span><span style="color:#008000;font-weight:bold">envoy.yaml</span>:<span style="color:#bbb"> </span>|<span style="color:#b44;font-style:italic">
+</span><span style="color:#b44;font-style:italic">    static_resources:
+</span><span style="color:#b44;font-style:italic">      listeners:
+</span><span style="color:#b44;font-style:italic">      - address:
+</span><span style="color:#b44;font-style:italic">          socket_address:
+</span><span style="color:#b44;font-style:italic">            address: 0.0.0.0
+</span><span style="color:#b44;font-style:italic">            port_value: 15001
+</span><span style="color:#b44;font-style:italic">        filter_chains:
+</span><span style="color:#b44;font-style:italic">        - filters:
+</span><span style="color:#b44;font-style:italic">          - name: envoy.filters.network.http_connection_manager
+</span><span style="color:#b44;font-style:italic">            typed_config:
+</span><span style="color:#b44;font-style:italic">              &#34;@type&#34;: type.googleapis.com/envoy.extensions.filters.network.http_connection_manager.v3.HttpConnectionManager
+</span><span style="color:#b44;font-style:italic">              codec_type: AUTO
+</span><span style="color:#b44;font-style:italic">              stat_prefix: ingress_http
+</span><span style="color:#b44;font-style:italic">              route_config:
+</span><span style="color:#b44;font-style:italic">                name: local_route
+</span><span style="color:#b44;font-style:italic">                virtual_hosts:
+</span><span style="color:#b44;font-style:italic">                - name: backend
+</span><span style="color:#b44;font-style:italic">                  domains:
+</span><span style="color:#b44;font-style:italic">                  - &#34;*&#34;
+</span><span style="color:#b44;font-style:italic">                  routes:
+</span><span style="color:#b44;font-style:italic">                  - match:
+</span><span style="color:#b44;font-style:italic">                      prefix: &#34;/&#34;
+</span><span style="color:#b44;font-style:italic">                    route:
+</span><span style="color:#b44;font-style:italic">                      cluster: local_service
+</span><span style="color:#b44;font-style:italic">              http_filters:
+</span><span style="color:#b44;font-style:italic">              - name: envoy.filters.http.router
+</span><span style="color:#b44;font-style:italic">                typed_config: {}
+</span><span style="color:#b44;font-style:italic">      clusters:
+</span><span style="color:#b44;font-style:italic">      - name: local_service
+</span><span style="color:#b44;font-style:italic">        type: STRICT_DNS
+</span><span style="color:#b44;font-style:italic">        lb_policy: ROUND_ROBIN
+</span><span style="color:#b44;font-style:italic">        load_assignment:
+</span><span style="color:#b44;font-style:italic">          cluster_name: local_service
+</span><span style="color:#b44;font-style:italic">          endpoints:
+</span><span style="color:#b44;font-style:italic">          - lb_endpoints:
+</span><span style="color:#b44;font-style:italic">            - endpoint:
+</span><span style="color:#b44;font-style:italic">                address:
+</span><span style="color:#b44;font-style:italic">                  socket_address:
+</span><span style="color:#b44;font-style:italic">                    address: local_service
+</span><span style="color:#b44;font-style:italic">                    port_value: 2746
+</span><span style="color:#b44;font-style:italic">    admin:
+</span><span style="color:#b44;font-style:italic">      access_log_path: &#34;/dev/null&#34;
+</span><span style="color:#b44;font-style:italic">      address:
+</span><span style="color:#b44;font-style:italic">        socket_address:
+</span><span style="color:#b44;font-style:italic">          address: 0.0.0.0
+</span><span style="color:#b44;font-style:italic">          port_value: 8001
+</span><span style="color:#b44;font-style:italic">    layered_runtime:
+</span><span style="color:#b44;font-style:italic">      layers:
+</span><span style="color:#b44;font-style:italic">        - name: static_layer_0
+</span><span style="color:#b44;font-style:italic">          static_layer:
+</span><span style="color:#b44;font-style:italic">            envoy:
+</span><span style="color:#b44;font-style:italic">              resource_limits:
+</span><span style="color:#b44;font-style:italic">                listener:
+</span><span style="color:#b44;font-style:italic">                  example_listener_name:
+</span><span style="color:#b44;font-style:italic">                    connection_limit: 10000</span><span style="color:#bbb">    
+</span></code></pre></div><p>だいたいは引数名を見ればどういう設定をしてるかがわかるが、<code>listers</code>内のフィルタ周りのところでどのドメインから来たリクエストをどのクラスタへルーティングする記述があり、ここで送るクラスタは<code>clusters</code>と同じ名前を設定する必要がある。</p>
+<h1 id="終わりに">終わりに</h1>
+<p>仕事でEnvoyを触る必要があり色々ググってみたところv3 APIの日本語記事が少なかったので書いてみた。</p>
+<p>ここらへんの実装を終えてから実は要件としてEnvoyは必要がなかったということが発覚したのだけど、今回色々調査しながらEnvoyを触ったのでメモ。</p>
+
+
+                
+
+                <hr>
+                <ul class="pager">
+                    
+                    <li class="previous">
+                        <a href="http://komi.dev/post/2021-10-12-subdomain-with-cloud-dns/" data-toggle="tooltip" data-placement="top" title="Cloud DNSでのサブサブドメインの設定">&larr;
+                            Previous Post</a>
+                    </li>
+                    
+                    
+                </ul>
+
+                
+<div id="disqus-comment"></div>
+
+
+
+            </div>
+            
+            <div class="
+                col-lg-11 col-lg-offset-1
+                col-md-10 col-md-offset-1
+                sidebar-container">
+
+                
+                
+                <section>
+                    <hr class="hidden-sm hidden-xs">
+                    <h5><a href="/tags/">FEATURED TAGS</a></h5>
+                    <div class="tags">
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        <a href="/tags/gcp" title="gcp">
+                            gcp
+                        </a>
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        <a href="/tags/macos" title="macos">
+                            macos
+                        </a>
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                    </div>
+                </section>
+                
+
+                
+                
+            </div>
+        </div>
+    </div>
+</article>
+
+
+
+
+<footer>
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+                <ul class="list-inline text-center">
+                   
+                   <li>
+                       <a href='' rel="alternate" type="application/rss+xml" title="Launch Today" >
+                           <span class="fa-stack fa-lg">
+                               <i class="fa fa-circle fa-stack-2x"></i>
+                               <i class="fa fa-rss fa-stack-1x fa-inverse"></i>
+                           </span>
+                       </a>
+                   </li>
+                   
+                    
+                    <li>
+                        <a href="mailto:yusuke.kominami@gmail.com">
+                            <span class="fa-stack fa-lg">
+                                <i class="fa fa-circle fa-stack-2x"></i>
+                                <i class="fa fa-envelope fa-stack-1x fa-inverse"></i>
+                            </span>
+                        </a>
+                    </li>
+		    
+                    
+                    
+                    <li>
+                        <a href="https://twitter.com/komi_edtr_1230">
+                            <span class="fa-stack fa-lg">
+                                <i class="fa fa-circle fa-stack-2x"></i>
+                                <i class="fa fa-twitter fa-stack-1x fa-inverse"></i>
+                            </span>
+                        </a>
+                    </li>
+                    
+                    
+                    
+
+                    
+                    <li>
+                        <a target="_blank" href="https://www.facebook.com/1230komi/">
+                            <span class="fa-stack fa-lg">
+                                <i class="fa fa-circle fa-stack-2x"></i>
+                                <i class="fa fa-facebook fa-stack-1x fa-inverse"></i>
+                            </span>
+                        </a>
+                    </li>
+		    
+
+		    
+                    
+                    
+                    <li>
+                        <a target="_blank" href="https://github.com/komi1230">
+                            <span class="fa-stack fa-lg">
+                                <i class="fa fa-circle fa-stack-2x"></i>
+                                <i class="fa fa-github fa-stack-1x fa-inverse"></i>
+                            </span>
+                        </a>
+                    </li>
+		    
+                    
+                    
+                    
+                    <li>
+                        <a target="_blank" href="https://www.linkedin.com/in/yusuke-kominami-0419b1157/">
+                            <span class="fa-stack fa-lg">
+                                <i class="fa fa-circle fa-stack-2x"></i>
+                                <i class="fa fa-linkedin fa-stack-1x fa-inverse"></i>
+                            </span>
+                        </a>
+                    </li>
+		    
+                    
+                    
+                    <li>
+                        <a target="_blank" href="https://stackoverflow.com/users/12464570">
+                            <span class="fa-stack fa-lg">
+                                <i class="fa fa-circle fa-stack-2x"></i>
+                                <i class="fa fa-stack-overflow fa-stack-1x fa-inverse"></i>
+                            </span>
+                        </a>
+                    </li>
+            
+                    
+                    
+                    
+            
+            
+            
+                </ul>
+		<p class="copyright text-muted">
+                    Copyright &copy; Launch Today 2021
+                </p>
+            </div>
+        </div>
+    </div>
+</footer>
+
+
+
+
+<script>
+    function async(u, c) {
+      var d = document, t = 'script',
+          o = d.createElement(t),
+          s = d.getElementsByTagName(t)[0];
+      o.src = u;
+      if (c) { o.addEventListener('load', function (e) { c(null, e); }, false); }
+      s.parentNode.insertBefore(o, s);
+    }
+</script>
+
+
+
+
+
+
+<script>
+    
+    if($('#tag_cloud').length !== 0){
+        async("/js/jquery.tagcloud.js",function(){
+            $.fn.tagcloud.defaults = {
+                
+                color: {start: '#bbbbee', end: '#0085a1'},
+            };
+            $('#tag_cloud a').tagcloud();
+        })
+    }
+</script>
+
+
+<script>
+    async("https://cdnjs.cloudflare.com/ajax/libs/fastclick/1.0.6/fastclick.js", function(){
+        var $nav = document.querySelector("nav");
+        if($nav) FastClick.attach($nav);
+    })
+</script>
+
+
+
+
+
+
+<script type="application/javascript">
+var doNotTrack = false;
+if (!doNotTrack) {
+	window.ga=window.ga||function(){(ga.q=ga.q||[]).push(arguments)};ga.l=+new Date;
+	ga('create', 'UA-177061519-1', 'auto');
+	
+	ga('send', 'pageview');
+}
+</script>
+<script async src='https://www.google-analytics.com/analytics.js'></script>
+
+
+
+</body>
+</html>

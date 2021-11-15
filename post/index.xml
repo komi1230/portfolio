@@ -6,7 +6,16 @@
     <description>Recent content in Posts on Launch Today</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
-    <lastBuildDate>Tue, 12 Oct 2021 00:00:00 +0000</lastBuildDate><atom:link href="http://komi.dev/post/index.xml" rel="self" type="application/rss+xml" />
+    <lastBuildDate>Mon, 15 Nov 2021 00:00:00 +0000</lastBuildDate><atom:link href="http://komi.dev/post/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>LoadBalancerとしてEnvoyを導入する</title>
+      <link>http://komi.dev/post/2021-11-15-introduce-envoy/</link>
+      <pubDate>Mon, 15 Nov 2021 00:00:00 +0000</pubDate>
+      
+      <guid>http://komi.dev/post/2021-11-15-introduce-envoy/</guid>
+      <description>Envoyとは EnvoyはL4/L7レイヤで動作するプロキシで、ロードバランスだったりネットワークとアプリケーションの分離なり、とても柔軟使</description>
+    </item>
+    
     <item>
       <title>Cloud DNSでのサブサブドメインの設定</title>
       <link>http://komi.dev/post/2021-10-12-subdomain-with-cloud-dns/</link>
