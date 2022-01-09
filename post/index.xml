@@ -6,7 +6,16 @@
     <description>Recent content in Posts on Launch Today</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
-    <lastBuildDate>Mon, 15 Nov 2021 00:00:00 +0000</lastBuildDate><atom:link href="http://komi.dev/post/index.xml" rel="self" type="application/rss+xml" />
+    <lastBuildDate>Sun, 09 Jan 2022 00:00:00 +0000</lastBuildDate><atom:link href="http://komi.dev/post/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>Argo Workflowsの設定や文法</title>
+      <link>http://komi.dev/post/2022-01-09-introduction-to-argo-workflows/</link>
+      <pubDate>Sun, 09 Jan 2022 00:00:00 +0000</pubDate>
+      
+      <guid>http://komi.dev/post/2022-01-09-introduction-to-argo-workflows/</guid>
+      <description>はじめに 最近はデータに基づいた意思決定が云々ということで多くの組織でデータ基盤を整備する流れがある。 データ基盤の主要となるコンポーネントは何</description>
+    </item>
+    
     <item>
       <title>LoadBalancerとしてEnvoyを導入する</title>
       <link>http://komi.dev/post/2021-11-15-introduce-envoy/</link>

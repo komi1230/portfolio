@@ -1,0 +1,895 @@
+<!DOCTYPE html>
+<html lang="en-us">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    
+    <meta property="og:site_name" content="Launch Today" />
+    <meta property="og:type" content="article" />
+    <meta property="og:url" content="https://komi.dev/" />
+    <meta property="og:locale" content="ja_JP" />
+
+    <meta name="twitter:site" content="@komi_edtr_1230" />
+
+    
+    <meta property="og:image" content="http://komi.dev/img/home.jpg" />
+    <meta property="twitter:image" content="http://komi.dev/img/home.jpg" />
+    
+
+    
+    <meta name="title" content="Argo Workflowsの設定や文法" />
+    <meta property="og:title" content="Argo Workflowsの設定や文法" />
+    <meta property="twitter:title" content="Argo Workflowsの設定や文法" />
+    
+
+    
+    <meta name="description" content="データエンジニアリングの技術が成熟してきた中でまだポピュラーではないArgo Workflowsについてのちょっとした解説" />
+    <meta property="og:description" content="データエンジニアリングの技術が成熟してきた中でまだポピュラーではないArgo Workflowsについてのちょっとした解説" />
+    <meta property="twitter:description" content="データエンジニアリングの技術が成熟してきた中でまだポピュラーではないArgo Workflowsについてのちょっとした解説" />
+    
+
+    
+    <meta property="twitter:card" content="summary" />
+    
+    
+
+    <meta name="keyword"  content="Yusuke Kominami, 小南佑介, 小南 佑介, Rust, Emacs, Lisp, Web, Machine Learning, 機械学習">
+    <link rel="shortcut icon" href="/img/favicon.ico">
+
+    <title>Argo Workflowsの設定や文法</title>
+
+    <link rel="canonical" href="/post/2022-01-09-introduction-to-argo-workflows/">
+
+    <link rel="stylesheet" href="/css/iDisqus.min.css"/>
+	
+    
+    <link rel="stylesheet" href="/css/bootstrap.min.css">
+
+    
+    <link rel="stylesheet" href="/css/hux-blog.min.css">
+
+    
+    <link rel="stylesheet" href="/css/zanshang.css">
+    
+    
+    <link href="//cdnjs.cloudflare.com/ajax/libs/font-awesome/4.6.3/css/font-awesome.min.css" rel="stylesheet" type="text/css">
+
+    
+    <link rel="stylesheet" href="http://komi.dev/css/custom-font.css">
+
+    
+    
+    <script src="/js/jquery.min.js"></script>
+    
+    
+    <script src="/js/bootstrap.min.js"></script>
+    
+    
+    <script src="/js/hux-blog.min.js"></script>
+
+    
+    
+
+    
+    <script async src="https://www.googletagmanager.com/gtag/js?id=UA-177061519-1"></script>
+    <script>
+        window.dataLayer = window.dataLayer || [];
+        function gtag(){dataLayer.push(arguments);}
+        gtag('js', new Date());
+
+        gtag('config', 'UA-177061519-1');
+    </script>
+
+
+</head>
+
+
+
+<nav class="navbar navbar-default navbar-custom navbar-fixed-top">
+    <div class="container-fluid">
+        
+        <div class="navbar-header page-scroll">
+            <button type="button" class="navbar-toggle">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+            <a class="navbar-brand" href="/">Launch Today</a>
+        </div>
+
+        
+        
+        <div id="huxblog_navbar">
+            <div class="navbar-collapse">
+                <ul class="nav navbar-nav navbar-right">
+                    <li>
+                        <a href="/">Home</a>
+                    </li>
+                    
+                    
+                    <li>
+                        <a href="/categories/tech">tech</a>
+                    </li>
+                    
+                    
+
+                    
+                    <li><a href="/about/">ABOUT</a></li>
+                    
+                    <li><a href="/money/">MONEY</a></li>
+                    
+
+                    
+                    <li>
+                        <a href="/search">SEARCH <img src="/img/search.png"
+                                height="15" style="cursor: pointer;" alt="Search"></a>
+                    </li>
+                    
+                </ul>
+            </div>
+        </div>
+        
+    </div>
+    
+</nav>
+<script>
+    
+    
+    
+    var $body = document.body;
+    var $toggle = document.querySelector('.navbar-toggle');
+    var $navbar = document.querySelector('#huxblog_navbar');
+    var $collapse = document.querySelector('.navbar-collapse');
+
+    $toggle.addEventListener('click', handleMagic)
+    function handleMagic(e) {
+        if ($navbar.className.indexOf('in') > 0) {
+            
+            $navbar.className = " ";
+            
+            setTimeout(function () {
+                
+                if ($navbar.className.indexOf('in') < 0) {
+                    $collapse.style.height = "0px"
+                }
+            }, 400)
+        } else {
+            
+            $collapse.style.height = "auto"
+            $navbar.className += " in";
+        }
+    }
+</script>
+
+
+
+<style type="text/css">
+    header.intro-header {
+        background-image: url('https://static.retrip.jp/article/18154/images/18154adc810e3-9903-4209-a64f-50ef2fc12ceb_l.jpg')
+    }
+</style>
+<header class="intro-header">
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+                <div class="post-heading">
+                    <div class="tags">
+                        
+                        <a class="tag" href="/tags/kubernetes" title="Kubernetes">
+                            Kubernetes
+                        </a>
+                        
+                        <a class="tag" href="/tags/argo-workflows" title="Argo Workflows">
+                            Argo Workflows
+                        </a>
+                        
+                    </div>
+                    <h1>Argo Workflowsの設定や文法</h1>
+                    <h2 class="subheading">KubernetesネイティブなワークフローエンジンであるArgo Workflowsについて諸々</h2>
+                    <span class="meta">
+                        Posted 
+                        on 
+                        Sunday, January 9, 2022
+                        
+                        
+                        
+                    </span>
+                </div>
+            </div>
+        </div>
+    </div>
+</header>
+
+
+
+
+<article>
+    <div class="container">
+        <div class="row">
+
+            
+            <div class="
+                col-lg-11 col-lg-offset-1
+                col-md-10 col-md-offset-1
+                post-container">
+
+                
+                <header>
+                    <h2>TOC</h2>
+                </header>
+                <nav id="TableOfContents">
+  <ul>
+    <li><a href="#はじめに">はじめに</a></li>
+    <li><a href="#argo-workflowsについて">Argo Workflowsについて</a>
+      <ul>
+        <li><a href="#環境構築">環境構築</a></li>
+        <li><a href="#argo-workflowsのコンポーネント">Argo Workflowsのコンポーネント</a></li>
+        <li><a href="#for文">for文</a></li>
+        <li><a href="#引数にenumを使う">引数にenumを使う</a></li>
+        <li><a href="#if文">if文</a></li>
+        <li><a href="#環境変数">環境変数</a></li>
+        <li><a href="#slack通知">Slack通知</a></li>
+      </ul>
+    </li>
+    <li><a href="#gkeでargo-workflowsを利用する際の注意">GKEでArgo Workflowsを利用する際の注意</a></li>
+    <li><a href="#終わりに">終わりに</a></li>
+  </ul>
+</nav>
+                
+                <h1 id="はじめに">はじめに</h1>
+<p>最近はデータに基づいた意思決定が云々ということで多くの組織でデータ基盤を整備する流れがある。</p>
+<p>データ基盤の主要となるコンポーネントは何かというと、</p>
+<table>
+<thead>
+<tr>
+<th style="text-align:center">コンポーネント</th>
+<th style="text-align:center">役割</th>
+<th style="text-align:center">例</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:center">BIツール</td>
+<td style="text-align:center">データの可視化、ダッシュボードの構築</td>
+<td style="text-align:center">ReDash、Looker、Metabase</td>
+</tr>
+<tr>
+<td style="text-align:center">データウェアハウス</td>
+<td style="text-align:center">整備済みのデータを蓄積する場所</td>
+<td style="text-align:center">BigQuery, Redshift</td>
+</tr>
+<tr>
+<td style="text-align:center">データパイプライン</td>
+<td style="text-align:center">アプリケーションDBからデータウェアハウスへデータを加工・転送するための基盤</td>
+<td style="text-align:center">Airflow, Luigi, Kubeflow, Argo Workflows、Digdag</td>
+</tr>
+</tbody>
+</table>
+<p>というような感じになっていて、目的や供与可能なコスト分を考えながらここらへんをうまいこと組み合わせてデータ基盤というのは構築される。</p>
+<p>最近では多くの企業でデータエンジニアというポジションが募集されており、データエンジニアは何をしているかというとここらへんの構築・整備を行う。</p>
+<p>正直なところデータエンジニアの仕事というのはエンジニアリング的に難しいことは何もなくて、基本的に社内政治に振り回されながら泥臭い作業を行うだけの妖怪になるという悲しい役割に終始するのだけれど、ひとまず業務としてはワークフローエンジンの整備を行う。</p>
+<p>ワークフローエンジンに何を使うかについては結構トレンドがあり、少し前(だいたい5年前とか？)はDigdagを使うのが主流だったのだけれど最近はユーザーも離れてしまいあまり開発も活発ではなくなってしまっており(DigdagはJavaで作られているのだが最近のLog4jの問題が発覚した際も関連Issueが全く立っていない)、今の流行りはAirflowあたりな気がしている。</p>
+<p>ただ、最近AirflowからArgo Workflowsへ乗り換えようと検討するケースがたくさんあり、今後はArgo Workflowsがブームになりそうであるため、今回の記事ではArgo Workflowsについての基礎的な文法や色々についてまとめておこうと思う。</p>
+<h1 id="argo-workflowsについて">Argo Workflowsについて</h1>
+<p>Argo Workflowsは要するにただのワークフローエンジンなのだけれど、なぜAirflowなどと比較して良いとされているかというと以下のようなポイントがある。</p>
+<ul>
+<li>Kubernetesネイティブな設計となっており、ジョブごとにPodに切り分けて実行してくれるためコンピューティングリソースを有効活用できる</li>
+<li>ワークフロー定義などはKubernetesのマニフェストとなっていて、ワークフローの定義と各タスクにおけるロジックの関心が分離できる</li>
+<li>Airflowと同様のことができ、よりジェネラルなワークフローエンジンとなっている</li>
+</ul>
+<p>AirflowやLuigiはPythonによってワークフローを記述していくが、Argo Workflowsはワークフロー自体はyamlで記述して各タスクについてはDockerイメージを実行するという機構になっているので、かなりジェネリックにタスクを投げることができる。</p>
+<p>データエンジニアリングは基本的に付加的に要件が増えて様々なケースに対応する必要があり、差分デプロイが用意な機構となっているArgo Workflowsはデータエンジニアリングと非常に相性がいいのである。</p>
+<p>こうした点から最近はArgo Workflowsが使われるケースが増えている。</p>
+<p>ということでArgo Workflowsについて簡単な解説をしようと思うのだけれど、日本ではArgo Workflowsを使っているケースがまだまだ少なく日本語の解説記事も少ないのでちょっとしたまとめを書いておこうと思う。</p>
+<h2 id="環境構築">環境構築</h2>
+<p>Argo Workflowsを使うにあたってまず準備する必要がある。</p>
+<p>本家のドキュメントを見てみるとQuick Startはあるようだけど、実際にプロダクション環境で使うにはどのようなマニフェストになるかについては詳しく書いてない(なんでやねん)</p>
+<p>ということで基本的にQuick Startのやつを分解してプロダクション向けにカスタマイズしまくるのだけど、詳しいセットアップについては以下の記事を書いたので参照していただきたい。</p>
+<p><a href="https://tech.hey.jp/entry/2021/11/16/182516">Argo Workflowsをセットアップする</a></p>
+<p>(会社のブログじゃなくてこっちのブログで書けばよかったな&hellip;)</p>
+<h2 id="argo-workflowsのコンポーネント">Argo Workflowsのコンポーネント</h2>
+<p>Argo Workflowsでは以下の概念がある。</p>
+<table>
+<thead>
+<tr>
+<th style="text-align:center">概念</th>
+<th style="text-align:center">解説</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:center">Workflow</td>
+<td style="text-align:center">実行されるワークフローのこと</td>
+</tr>
+<tr>
+<td style="text-align:center">WorkflowTemplate</td>
+<td style="text-align:center">再利用性のあるワークフローで、ライブラリのように使える。他のWorkflowTemplateを参照でき、これをSubmitすることでWorkflowが実行される。</td>
+</tr>
+<tr>
+<td style="text-align:center">CronWorkflow</td>
+<td style="text-align:center">Cronジョブで、WorkflowTemplateを指定する</td>
+</tr>
+</tbody>
+</table>
+<p>例えばWorkflowの定義は以下のようになる。</p>
+<div class="highlight"><pre tabindex="0" style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-yaml" data-lang="yaml"><span style="color:#008000;font-weight:bold">apiVersion</span>:<span style="color:#bbb"> </span>argoproj.io/v1alpha1<span style="color:#bbb">
+</span><span style="color:#bbb"></span><span style="color:#008000;font-weight:bold">kind</span>:<span style="color:#bbb"> </span>Workflow<span style="color:#bbb">
+</span><span style="color:#bbb"></span><span style="color:#008000;font-weight:bold">metadata</span>:<span style="color:#bbb">
+</span><span style="color:#bbb">  </span><span style="color:#008000;font-weight:bold">generateName</span>:<span style="color:#bbb"> </span>hello-<span style="color:#bbb">
+</span><span style="color:#bbb">  </span><span style="color:#008000;font-weight:bold">namespace</span>:<span style="color:#bbb"> </span>argo<span style="color:#bbb">
+</span><span style="color:#bbb"></span><span style="color:#008000;font-weight:bold">spec</span>:<span style="color:#bbb">
+</span><span style="color:#bbb">  </span><span style="color:#008000;font-weight:bold">entrypoint</span>:<span style="color:#bbb"> </span>example<span style="color:#bbb">
+</span><span style="color:#bbb">  </span><span style="color:#008000;font-weight:bold">serviceAccountName</span>:<span style="color:#bbb"> </span>argo-sa<span style="color:#bbb">
+</span><span style="color:#bbb">  </span><span style="color:#008000;font-weight:bold">templates</span>:<span style="color:#bbb">
+</span><span style="color:#bbb">    </span>- <span style="color:#008000;font-weight:bold">name</span>:<span style="color:#bbb"> </span>example<span style="color:#bbb">
+</span><span style="color:#bbb">      </span><span style="color:#008000;font-weight:bold">steps</span>:<span style="color:#bbb">
+</span><span style="color:#bbb">      </span>- - <span style="color:#008000;font-weight:bold">name</span>:<span style="color:#bbb"> </span>print-message<span style="color:#bbb">
+</span><span style="color:#bbb">          </span><span style="color:#008000;font-weight:bold">template</span>:<span style="color:#bbb"> </span>whalesay<span style="color:#bbb">
+</span><span style="color:#bbb">          </span><span style="color:#008000;font-weight:bold">arguments</span>:<span style="color:#bbb">
+</span><span style="color:#bbb">            </span><span style="color:#008000;font-weight:bold">parameters</span>:<span style="color:#bbb">
+</span><span style="color:#bbb">            </span>- <span style="color:#008000;font-weight:bold">name</span>:<span style="color:#bbb"> </span>message<span style="color:#bbb">
+</span><span style="color:#bbb">              </span><span style="color:#008000;font-weight:bold">value</span>:<span style="color:#bbb"> </span><span style="color:#b44">&#34;{{item}}&#34;</span><span style="color:#bbb">
+</span><span style="color:#bbb">          </span><span style="color:#008000;font-weight:bold">withItems</span>:<span style="color:#bbb">
+</span><span style="color:#bbb">          </span>- hello world<span style="color:#bbb">
+</span><span style="color:#bbb">          </span>- goodbye world<span style="color:#bbb">
+</span><span style="color:#bbb">
+</span><span style="color:#bbb">    </span>- <span style="color:#008000;font-weight:bold">name</span>:<span style="color:#bbb"> </span>whalesay<span style="color:#bbb">
+</span><span style="color:#bbb">      </span><span style="color:#008000;font-weight:bold">inputs</span>:<span style="color:#bbb">
+</span><span style="color:#bbb">        </span><span style="color:#008000;font-weight:bold">parameters</span>:<span style="color:#bbb">
+</span><span style="color:#bbb">        </span>- <span style="color:#008000;font-weight:bold">name</span>:<span style="color:#bbb"> </span>message<span style="color:#bbb">
+</span><span style="color:#bbb">      </span><span style="color:#008000;font-weight:bold">container</span>:<span style="color:#bbb">
+</span><span style="color:#bbb">        </span><span style="color:#008000;font-weight:bold">image</span>:<span style="color:#bbb"> </span>docker/whalesay:latest<span style="color:#bbb">
+</span><span style="color:#bbb">        </span><span style="color:#008000;font-weight:bold">command</span>:<span style="color:#bbb"> </span>[cowsay]<span style="color:#bbb">
+</span><span style="color:#bbb">        </span><span style="color:#008000;font-weight:bold">args</span>:<span style="color:#bbb"> </span>[<span style="color:#b44">&#34;{{inputs.parameters.message}}&#34;</span>]<span style="color:#bbb">
+</span></code></pre></div><p>上記のマニフェストでは<code>templates</code>フィールドでWorkflowTemplateのリストが格納されており、それぞれにどのようなタスクをこなさせるかが記述される。</p>
+<p>見ての通り<code>template: whalesay</code>として他のWorkflowTemplateを呼び出しており、感覚として関数定義とその呼び出しに近い。</p>
+<p>一部で<code>&quot;{{...}}&quot;</code>という記述があるが、これはGoテンプレートの特徴で(ArgoはGoで開発されている)、ここにメタ的に変数を格納することができる。</p>
+<p>注意点として<code>serviceAccountName</code>というフィールドがあり、ここでどのKubernetesサービスアカウントを使うかを指定する必要がある(これを指定していないとデフォルトのサービスアカウントが使用され権限エラーでPodを作成することができなかったりする)</p>
+<h2 id="for文">for文</h2>
+<p>loop系の処理をどのようにさせるかというと2通りのやり方があり、<code>withItems</code>と<code>withSequence</code>、<code>withParam</code>がある。</p>
+<p><code>withItems</code>については上記の例の通りで<code>Array&lt;String&gt;</code>の値として入れることによってその中身でループさせることができる。</p>
+<p>なお、ループで入る一時変数は<code>&quot;{{item}}&quot;</code>で受け取れる。</p>
+<p><code>withSequence</code>についてはPythonでいる<code>for i in range(10, 20)</code>のようなノリで、</p>
+<div class="highlight"><pre tabindex="0" style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-yaml" data-lang="yaml">- <span style="color:#008000;font-weight:bold">name</span>:<span style="color:#bbb"> </span>sequence-start-end<span style="color:#bbb">
+</span><span style="color:#bbb">  </span><span style="color:#008000;font-weight:bold">template</span>:<span style="color:#bbb"> </span>echo<span style="color:#bbb">
+</span><span style="color:#bbb">  </span><span style="color:#008000;font-weight:bold">withSequence</span>:<span style="color:#bbb">
+</span><span style="color:#bbb">    </span><span style="color:#008000;font-weight:bold">start</span>:<span style="color:#bbb"> </span><span style="color:#b44">&#34;100&#34;</span><span style="color:#bbb">
+</span><span style="color:#bbb">    </span><span style="color:#008000;font-weight:bold">end</span>:<span style="color:#bbb"> </span><span style="color:#b44">&#34;105&#34;</span><span style="color:#bbb">
+</span></code></pre></div><p>というように使える。</p>
+<p>また、<code>withSequence</code>の中身は</p>
+<div class="highlight"><pre tabindex="0" style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-yaml" data-lang="yaml">- <span style="color:#008000;font-weight:bold">name</span>:<span style="color:#bbb"> </span>sequence-start-end<span style="color:#bbb">
+</span><span style="color:#bbb">  </span><span style="color:#008000;font-weight:bold">template</span>:<span style="color:#bbb"> </span>echo<span style="color:#bbb">
+</span><span style="color:#bbb">  </span><span style="color:#008000;font-weight:bold">withSequence</span>:<span style="color:#bbb">
+</span><span style="color:#bbb">    </span><span style="color:#008000;font-weight:bold">count</span>:<span style="color:#bbb"> </span><span style="color:#b44">&#34;5&#34;</span><span style="color:#bbb">
+</span></code></pre></div><p>というように<code>count</code>を使っても良い。</p>
+<p>どのような範囲でループさせるかを動的に決定したい場合は<code>withParam</code>を使えば良く、</p>
+<div class="highlight"><pre tabindex="0" style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-yaml" data-lang="yaml"><span style="color:#008000;font-weight:bold">spec</span>:<span style="color:#bbb">
+</span><span style="color:#bbb">  </span><span style="color:#008000;font-weight:bold">entrypoint</span>:<span style="color:#bbb"> </span>loop-param-result-example<span style="color:#bbb">
+</span><span style="color:#bbb">  </span><span style="color:#008000;font-weight:bold">templates</span>:<span style="color:#bbb">
+</span><span style="color:#bbb">  </span>- <span style="color:#008000;font-weight:bold">name</span>:<span style="color:#bbb"> </span>loop-param-result-example<span style="color:#bbb">
+</span><span style="color:#bbb">    </span><span style="color:#008000;font-weight:bold">steps</span>:<span style="color:#bbb">
+</span><span style="color:#bbb">    </span>- - <span style="color:#008000;font-weight:bold">name</span>:<span style="color:#bbb"> </span>generate<span style="color:#bbb">
+</span><span style="color:#bbb">        </span><span style="color:#008000;font-weight:bold">template</span>:<span style="color:#bbb"> </span>gen-number-list<span style="color:#bbb">
+</span><span style="color:#bbb">    </span>- - <span style="color:#008000;font-weight:bold">name</span>:<span style="color:#bbb"> </span>sleep<span style="color:#bbb">
+</span><span style="color:#bbb">        </span><span style="color:#008000;font-weight:bold">template</span>:<span style="color:#bbb"> </span>sleep-n-sec<span style="color:#bbb">
+</span><span style="color:#bbb">        </span><span style="color:#008000;font-weight:bold">arguments</span>:<span style="color:#bbb">
+</span><span style="color:#bbb">          </span><span style="color:#008000;font-weight:bold">parameters</span>:<span style="color:#bbb">
+</span><span style="color:#bbb">          </span>- <span style="color:#008000;font-weight:bold">name</span>:<span style="color:#bbb"> </span>seconds<span style="color:#bbb">
+</span><span style="color:#bbb">            </span><span style="color:#008000;font-weight:bold">value</span>:<span style="color:#bbb"> </span><span style="color:#b44">&#34;{{item}}&#34;</span><span style="color:#bbb">
+</span><span style="color:#bbb">        </span><span style="color:#008000;font-weight:bold">withParam</span>:<span style="color:#bbb"> </span><span style="color:#b44">&#34;{{steps.generate.outputs.result}}&#34;</span><span style="color:#bbb">
+</span><span style="color:#bbb">
+</span><span style="color:#bbb">  </span>- <span style="color:#008000;font-weight:bold">name</span>:<span style="color:#bbb"> </span>gen-number-list<span style="color:#bbb">
+</span><span style="color:#bbb">    </span><span style="color:#008000;font-weight:bold">script</span>:<span style="color:#bbb">
+</span><span style="color:#bbb">      </span><span style="color:#008000;font-weight:bold">image</span>:<span style="color:#bbb"> </span>python:alpine3.6<span style="color:#bbb">
+</span><span style="color:#bbb">      </span><span style="color:#008000;font-weight:bold">command</span>:<span style="color:#bbb"> </span>[python]<span style="color:#bbb">
+</span><span style="color:#bbb">      </span><span style="color:#008000;font-weight:bold">source</span>:<span style="color:#bbb"> </span>|<span style="color:#b44;font-style:italic">
+</span><span style="color:#b44;font-style:italic">        import json
+</span><span style="color:#b44;font-style:italic">        import sys
+</span><span style="color:#b44;font-style:italic">        json.dump([i for i in range(20, 31)], sys.stdout)</span><span style="color:#bbb">        
+</span><span style="color:#bbb">  </span>- <span style="color:#008000;font-weight:bold">name</span>:<span style="color:#bbb"> </span>sleep-n-sec<span style="color:#bbb">
+</span><span style="color:#bbb">    </span><span style="color:#008000;font-weight:bold">inputs</span>:<span style="color:#bbb">
+</span><span style="color:#bbb">      </span><span style="color:#008000;font-weight:bold">parameters</span>:<span style="color:#bbb">
+</span><span style="color:#bbb">      </span>- <span style="color:#008000;font-weight:bold">name</span>:<span style="color:#bbb"> </span>seconds<span style="color:#bbb">
+</span><span style="color:#bbb">    </span><span style="color:#008000;font-weight:bold">container</span>:<span style="color:#bbb">
+</span><span style="color:#bbb">      </span><span style="color:#008000;font-weight:bold">image</span>:<span style="color:#bbb"> </span>alpine:latest<span style="color:#bbb">
+</span><span style="color:#bbb">      </span><span style="color:#008000;font-weight:bold">command</span>:<span style="color:#bbb"> </span>[sh, -c]<span style="color:#bbb">
+</span><span style="color:#bbb">      </span><span style="color:#008000;font-weight:bold">args</span>:<span style="color:#bbb"> </span>[<span style="color:#b44">&#34;echo sleeping for {{inputs.parameters.seconds}} seconds; sleep {{inputs.parameters.seconds}}; echo done&#34;</span>]<span style="color:#bbb">
+</span></code></pre></div><p>というように最初のstepでパラメータを生成させて、それを利用させることができる。</p>
+<p>注意点としてパラメータのリストはJSONの形をしている必要がある。</p>
+<p>この例では<code>script</code>フィールドによってパラメータのリストを生成しているが、以下のようにコンテナ内のファイルについてループを回したいケースでは<code>bash</code>でファイルのリストを生成して&hellip;というやり方もできる。</p>
+<div class="highlight"><pre tabindex="0" style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-yaml" data-lang="yaml"><span style="color:#008000;font-weight:bold">spec</span>:<span style="color:#bbb">
+</span><span style="color:#bbb">  </span><span style="color:#008000;font-weight:bold">serviceAccountName</span>:<span style="color:#bbb"> </span>argo-sa<span style="color:#bbb">
+</span><span style="color:#bbb">  </span><span style="color:#008000;font-weight:bold">entrypoint</span>:<span style="color:#bbb"> </span>sample-workflow<span style="color:#bbb">
+</span><span style="color:#bbb">  </span><span style="color:#008000;font-weight:bold">templates</span>:<span style="color:#bbb">
+</span><span style="color:#bbb">    </span>- <span style="color:#008000;font-weight:bold">name</span>:<span style="color:#bbb"> </span>sample-workflow<span style="color:#bbb">
+</span><span style="color:#bbb">      </span><span style="color:#008000;font-weight:bold">steps</span>:<span style="color:#bbb">
+</span><span style="color:#bbb">        </span><span style="color:#080;font-style:italic"># List tables</span><span style="color:#bbb">
+</span><span style="color:#bbb">        </span>- - <span style="color:#008000;font-weight:bold">name</span>:<span style="color:#bbb"> </span>tables<span style="color:#bbb">
+</span><span style="color:#bbb">            </span><span style="color:#008000;font-weight:bold">template</span>:<span style="color:#bbb"> </span>list-tables<span style="color:#bbb">
+</span><span style="color:#bbb">        </span>- - <span style="color:#008000;font-weight:bold">name</span>:<span style="color:#bbb"> </span>transform<span style="color:#bbb">
+</span><span style="color:#bbb">            </span><span style="color:#008000;font-weight:bold">template</span>:<span style="color:#bbb"> </span>transform-per-table<span style="color:#bbb">
+</span><span style="color:#bbb">            </span><span style="color:#008000;font-weight:bold">arguments</span>:<span style="color:#bbb">
+</span><span style="color:#bbb">              </span><span style="color:#008000;font-weight:bold">parameters</span>:<span style="color:#bbb">
+</span><span style="color:#bbb">                </span>- <span style="color:#008000;font-weight:bold">name</span>:<span style="color:#bbb"> </span>message<span style="color:#bbb">
+</span><span style="color:#bbb">                  </span><span style="color:#008000;font-weight:bold">value</span>:<span style="color:#bbb"> </span><span style="color:#b44">&#34;{{item}}&#34;</span><span style="color:#bbb">
+</span><span style="color:#bbb">            </span><span style="color:#008000;font-weight:bold">withParam</span>:<span style="color:#bbb"> </span><span style="color:#b44">&#34;{{steps.tables.outputs.result}}&#34;</span><span style="color:#bbb">
+</span><span style="color:#bbb">    </span>- <span style="color:#008000;font-weight:bold">name</span>:<span style="color:#bbb"> </span>list-messages<span style="color:#bbb">
+</span><span style="color:#bbb">      </span><span style="color:#008000;font-weight:bold">container</span>:<span style="color:#bbb">
+</span><span style="color:#bbb">        </span><span style="color:#008000;font-weight:bold">image</span>:<span style="color:#bbb"> </span>image-name1<span style="color:#bbb">
+</span><span style="color:#bbb">        </span><span style="color:#008000;font-weight:bold">command</span>:<span style="color:#bbb"> </span>[<span style="color:#b44">&#34;/bin/bash&#34;</span>,<span style="color:#bbb"> </span><span style="color:#b44">&#34;-c&#34;</span>]<span style="color:#bbb">
+</span><span style="color:#bbb">        </span><span style="color:#008000;font-weight:bold">args</span>:<span style="color:#bbb">
+</span><span style="color:#bbb">        </span>- |<span style="color:#b44;font-style:italic">
+</span><span style="color:#b44;font-style:italic">          find ./sql -type f -name &#34;*.sql&#34; \
+</span><span style="color:#b44;font-style:italic">            | xargs -IFILENAME basename FILENAME .sql \
+</span><span style="color:#b44;font-style:italic">            | jq -R \
+</span><span style="color:#b44;font-style:italic">            | jq --slurp .</span><span style="color:#bbb">          
+</span><span style="color:#bbb">    </span>- <span style="color:#008000;font-weight:bold">name</span>:<span style="color:#bbb"> </span>transform-per-table<span style="color:#bbb">
+</span><span style="color:#bbb">      </span><span style="color:#008000;font-weight:bold">inputs</span>:<span style="color:#bbb">
+</span><span style="color:#bbb">        </span><span style="color:#008000;font-weight:bold">parameters</span>:<span style="color:#bbb">
+</span><span style="color:#bbb">          </span>- <span style="color:#008000;font-weight:bold">name</span>:<span style="color:#bbb"> </span>table<span style="color:#bbb">
+</span><span style="color:#bbb">      </span><span style="color:#008000;font-weight:bold">container</span>:<span style="color:#bbb">
+</span><span style="color:#bbb">        </span><span style="color:#008000;font-weight:bold">image</span>:<span style="color:#bbb"> </span>image-name2<span style="color:#bbb">
+</span><span style="color:#bbb">        </span><span style="color:#008000;font-weight:bold">command</span>:<span style="color:#bbb"> </span>[<span style="color:#b44">&#34;./main.sh&#34;</span>]<span style="color:#bbb">
+</span><span style="color:#bbb">        </span><span style="color:#008000;font-weight:bold">args</span>:<span style="color:#bbb"> </span>[<span style="color:#b44">&#34;{{inputs.parameters.table}}&#34;</span>]<span style="color:#bbb">
+</span></code></pre></div><h2 id="引数にenumを使う">引数にenumを使う</h2>
+<p>引数にはenumを指定することができ、</p>
+<div class="highlight"><pre tabindex="0" style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-yaml" data-lang="yaml"><span style="color:#008000;font-weight:bold">spec</span>:<span style="color:#bbb">
+</span><span style="color:#bbb">  </span><span style="color:#008000;font-weight:bold">serviceAccountName</span>:<span style="color:#bbb"> </span>argo-sa<span style="color:#bbb">
+</span><span style="color:#bbb">  </span><span style="color:#008000;font-weight:bold">entrypoint</span>:<span style="color:#bbb"> </span>sample-workflow<span style="color:#bbb">
+</span><span style="color:#bbb">  </span><span style="color:#008000;font-weight:bold">templates</span>:<span style="color:#bbb">
+</span><span style="color:#bbb">    </span>- <span style="color:#008000;font-weight:bold">name</span>:<span style="color:#bbb"> </span>transform-per-table<span style="color:#bbb">
+</span><span style="color:#bbb">      </span><span style="color:#008000;font-weight:bold">inputs</span>:<span style="color:#bbb">
+</span><span style="color:#bbb">        </span><span style="color:#008000;font-weight:bold">parameters</span>:<span style="color:#bbb">
+</span><span style="color:#bbb">          </span>- <span style="color:#008000;font-weight:bold">name</span>:<span style="color:#bbb"> </span>db<span style="color:#bbb">
+</span><span style="color:#bbb">            </span><span style="color:#008000;font-weight:bold">enum</span>:<span style="color:#bbb">
+</span><span style="color:#bbb">              </span>- secure<span style="color:#bbb">
+</span><span style="color:#bbb">              </span>- normal<span style="color:#bbb">
+</span><span style="color:#bbb">            </span><span style="color:#008000;font-weight:bold">description</span>:<span style="color:#bbb"> </span><span style="color:#b44">&#34;Select Database type&#34;</span><span style="color:#bbb">
+</span><span style="color:#bbb">      </span><span style="color:#008000;font-weight:bold">container</span>:<span style="color:#bbb">
+</span><span style="color:#bbb">        </span><span style="color:#008000;font-weight:bold">image</span>:<span style="color:#bbb"> </span>image-name2<span style="color:#bbb">
+</span><span style="color:#bbb">        </span><span style="color:#008000;font-weight:bold">command</span>:<span style="color:#bbb"> </span>[<span style="color:#b44">&#34;./main.sh&#34;</span>]<span style="color:#bbb">
+</span><span style="color:#bbb">        </span><span style="color:#008000;font-weight:bold">args</span>:<span style="color:#bbb"> </span>[<span style="color:#b44">&#34;{{inputs.parameters.db}}&#34;</span>]<span style="color:#bbb">
+</span></code></pre></div><p>として引数のパターンを制限することでエラーケースを狭めることでテストを容易できる。</p>
+<h2 id="if文">if文</h2>
+<p>for文を実行できるので当然if文も使える。</p>
+<div class="highlight"><pre tabindex="0" style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-yaml" data-lang="yaml"><span style="color:#008000;font-weight:bold">spec</span>:<span style="color:#bbb">
+</span><span style="color:#bbb">  </span><span style="color:#008000;font-weight:bold">serviceAccountName</span>:<span style="color:#bbb"> </span>argo-sa<span style="color:#bbb">
+</span><span style="color:#bbb">  </span><span style="color:#008000;font-weight:bold">entrypoint</span>:<span style="color:#bbb"> </span>sample-workflow<span style="color:#bbb">
+</span><span style="color:#bbb">  </span><span style="color:#008000;font-weight:bold">templates</span>:<span style="color:#bbb">
+</span><span style="color:#bbb">    </span>- <span style="color:#008000;font-weight:bold">name</span>:<span style="color:#bbb"> </span>sample-workflow<span style="color:#bbb">
+</span><span style="color:#bbb">      </span><span style="color:#008000;font-weight:bold">steps</span>:<span style="color:#bbb">
+</span><span style="color:#bbb">        </span><span style="color:#080;font-style:italic"># List tables</span><span style="color:#bbb">
+</span><span style="color:#bbb">        </span>- - <span style="color:#008000;font-weight:bold">name</span>:<span style="color:#bbb"> </span>tables<span style="color:#bbb">
+</span><span style="color:#bbb">            </span><span style="color:#008000;font-weight:bold">template</span>:<span style="color:#bbb"> </span>list-tables<span style="color:#bbb">
+</span><span style="color:#bbb">        </span>- - <span style="color:#008000;font-weight:bold">name</span>:<span style="color:#bbb"> </span>transform<span style="color:#bbb">
+</span><span style="color:#bbb">            </span><span style="color:#008000;font-weight:bold">template</span>:<span style="color:#bbb"> </span>transform-per-table<span style="color:#bbb">
+</span><span style="color:#bbb">            </span><span style="color:#008000;font-weight:bold">arguments</span>:<span style="color:#bbb">
+</span><span style="color:#bbb">              </span><span style="color:#008000;font-weight:bold">parameters</span>:<span style="color:#bbb">
+</span><span style="color:#bbb">                </span>- <span style="color:#008000;font-weight:bold">name</span>:<span style="color:#bbb"> </span>message<span style="color:#bbb">
+</span><span style="color:#bbb">                  </span><span style="color:#008000;font-weight:bold">value</span>:<span style="color:#bbb"> </span><span style="color:#b44">&#34;{{item}}&#34;</span><span style="color:#bbb">
+</span><span style="color:#bbb">            </span><span style="color:#008000;font-weight:bold">when</span>:<span style="color:#bbb"> </span><span style="color:#b44">&#34;{{inputs.parameters.tables}} =~ &#39;^test_&#39;&#34;</span><span style="color:#bbb">
+</span></code></pre></div><p>比較の部分については<code>==</code>といった等号判定や上記の例のように<code>=~</code>で正規表現を用いたパターンマッチもできる。</p>
+<h2 id="環境変数">環境変数</h2>
+<p>Argo Workflowsは本質的にKubernetesなので当然コンテナに環境変数を注入することもできる。</p>
+<div class="highlight"><pre tabindex="0" style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-yaml" data-lang="yaml"><span style="color:#008000;font-weight:bold">spec</span>:<span style="color:#bbb">
+</span><span style="color:#bbb">  </span><span style="color:#008000;font-weight:bold">serviceAccountName</span>:<span style="color:#bbb"> </span>argo-sa<span style="color:#bbb">
+</span><span style="color:#bbb">  </span><span style="color:#008000;font-weight:bold">entrypoint</span>:<span style="color:#bbb"> </span>sample-workflow<span style="color:#bbb">
+</span><span style="color:#bbb">  </span><span style="color:#008000;font-weight:bold">templates</span>:<span style="color:#bbb">
+</span><span style="color:#bbb">    </span>- <span style="color:#008000;font-weight:bold">name</span>:<span style="color:#bbb"> </span>load-per-table<span style="color:#bbb">
+</span><span style="color:#bbb">      </span><span style="color:#008000;font-weight:bold">inputs</span>:<span style="color:#bbb">
+</span><span style="color:#bbb">        </span><span style="color:#008000;font-weight:bold">parameters</span>:<span style="color:#bbb">
+</span><span style="color:#bbb">          </span>- <span style="color:#008000;font-weight:bold">name</span>:<span style="color:#bbb"> </span>db<span style="color:#bbb">
+</span><span style="color:#bbb">            </span><span style="color:#008000;font-weight:bold">enum</span>:<span style="color:#bbb">
+</span><span style="color:#bbb">              </span>- secure<span style="color:#bbb">
+</span><span style="color:#bbb">              </span>- normal<span style="color:#bbb">
+</span><span style="color:#bbb">            </span><span style="color:#008000;font-weight:bold">description</span>:<span style="color:#bbb"> </span><span style="color:#b44">&#34;Select Database type&#34;</span><span style="color:#bbb">
+</span><span style="color:#bbb">      </span><span style="color:#008000;font-weight:bold">container</span>:<span style="color:#bbb">
+</span><span style="color:#bbb">        </span><span style="color:#008000;font-weight:bold">image</span>:<span style="color:#bbb"> </span>image-name<span style="color:#bbb">
+</span><span style="color:#bbb">        </span><span style="color:#008000;font-weight:bold">command</span>:<span style="color:#bbb"> </span>[<span style="color:#b44">&#34;./main.sh&#34;</span>]<span style="color:#bbb">
+</span><span style="color:#bbb">        </span><span style="color:#008000;font-weight:bold">args</span>:<span style="color:#bbb"> </span>[<span style="color:#b44">&#34;{{inputs.parameters.db}}&#34;</span>]<span style="color:#bbb">
+</span><span style="color:#bbb">        </span><span style="color:#008000;font-weight:bold">env</span>:<span style="color:#bbb">
+</span><span style="color:#bbb">          </span>- <span style="color:#008000;font-weight:bold">name</span>:<span style="color:#bbb"> </span>ENVIRONMENT<span style="color:#bbb">
+</span><span style="color:#bbb">            </span><span style="color:#008000;font-weight:bold">valueFrom</span>:<span style="color:#bbb">
+</span><span style="color:#bbb">              </span><span style="color:#008000;font-weight:bold">configMapKeyRef</span>:<span style="color:#bbb">
+</span><span style="color:#bbb">                </span><span style="color:#008000;font-weight:bold">name</span>:<span style="color:#bbb"> </span>env-var-config<span style="color:#bbb">
+</span><span style="color:#bbb">                </span><span style="color:#008000;font-weight:bold">key</span>:<span style="color:#bbb"> </span>environment<span style="color:#bbb">
+</span><span style="color:#bbb">          </span>- <span style="color:#008000;font-weight:bold">name</span>:<span style="color:#bbb"> </span>AWS_ACCESS_KEY_ID<span style="color:#bbb">
+</span><span style="color:#bbb">            </span><span style="color:#008000;font-weight:bold">valueFrom</span>:<span style="color:#bbb">
+</span><span style="color:#bbb">              </span><span style="color:#008000;font-weight:bold">secretKeyRef</span>:<span style="color:#bbb">
+</span><span style="color:#bbb">                </span><span style="color:#008000;font-weight:bold">name</span>:<span style="color:#bbb"> </span>credentials<span style="color:#bbb">
+</span><span style="color:#bbb">                </span><span style="color:#008000;font-weight:bold">key</span>:<span style="color:#bbb"> </span>aws-access-key-id<span style="color:#bbb">
+</span><span style="color:#bbb">          </span>- <span style="color:#008000;font-weight:bold">name</span>:<span style="color:#bbb"> </span>AWS_SECRET_ACCESS_KEY<span style="color:#bbb">
+</span><span style="color:#bbb">            </span><span style="color:#008000;font-weight:bold">valueFrom</span>:<span style="color:#bbb">
+</span><span style="color:#bbb">              </span><span style="color:#008000;font-weight:bold">secretKeyRef</span>:<span style="color:#bbb">
+</span><span style="color:#bbb">                </span><span style="color:#008000;font-weight:bold">name</span>:<span style="color:#bbb"> </span>credentials<span style="color:#bbb">
+</span><span style="color:#bbb">                </span><span style="color:#008000;font-weight:bold">key</span>:<span style="color:#bbb"> </span>aws-secret-access-key<span style="color:#bbb">
+</span><span style="color:#bbb">          </span>- <span style="color:#008000;font-weight:bold">name</span>:<span style="color:#bbb"> </span>AWS_DEFAULT_REGION<span style="color:#bbb">
+</span><span style="color:#bbb">            </span><span style="color:#008000;font-weight:bold">value</span>:<span style="color:#bbb"> </span>ap-northeast-1<span style="color:#bbb">
+</span></code></pre></div><p>中身としては<code>value</code>で直接書き込むこともできるし、<code>valueFrom.configMapKeyRef</code>でConfigMapから読み取ったり<code>valueFrom.secretKeyRef</code>でSecretから読み取ることもできる。</p>
+<p>これで環境変数をコンテナ内に注入することができるが、もし<code>args:</code>フィールド等でマニフェストとして利用する際は</p>
+<div class="highlight"><pre tabindex="0" style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-yaml" data-lang="yaml"><span style="color:#008000;font-weight:bold">container</span>:<span style="color:#bbb">
+</span><span style="color:#bbb">  </span><span style="color:#008000;font-weight:bold">image</span>:<span style="color:#bbb"> </span>image-name<span style="color:#bbb">
+</span><span style="color:#bbb">  </span><span style="color:#008000;font-weight:bold">command</span>:<span style="color:#bbb"> </span>[<span style="color:#b44">&#34;./main.sh&#34;</span>]<span style="color:#bbb">
+</span><span style="color:#bbb">  </span><span style="color:#008000;font-weight:bold">args</span>:<span style="color:#bbb"> </span>[<span style="color:#b44">&#34;$(ENVIRONMENT)&#34;</span>]<span style="color:#bbb">
+</span><span style="color:#bbb">  </span><span style="color:#008000;font-weight:bold">env</span>:<span style="color:#bbb">
+</span><span style="color:#bbb">    </span>- <span style="color:#008000;font-weight:bold">name</span>:<span style="color:#bbb"> </span>ENVIRONMENT<span style="color:#bbb">
+</span><span style="color:#bbb">      </span><span style="color:#008000;font-weight:bold">valueFrom</span>:<span style="color:#bbb">
+</span><span style="color:#bbb">        </span><span style="color:#008000;font-weight:bold">configMapKeyRef</span>:<span style="color:#bbb">
+</span><span style="color:#bbb">          </span><span style="color:#008000;font-weight:bold">name</span>:<span style="color:#bbb"> </span>env-var-config<span style="color:#bbb">
+</span><span style="color:#bbb">          </span><span style="color:#008000;font-weight:bold">key</span>:<span style="color:#bbb"> </span>environment<span style="color:#bbb">
+</span></code></pre></div><p>のように<code>$(...)</code>として丸括弧で括る必要があるので注意。</p>
+<h2 id="slack通知">Slack通知</h2>
+<p>ワークフローが落ちたときはSlack通知して欲しかったりする。</p>
+<p>そういうときは<code>workflow-controller-configmap</code>に以下のデフォルトのワークフローの設定を追加すれば良い。</p>
+<div class="highlight"><pre tabindex="0" style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-yaml" data-lang="yaml"><span style="color:#008000;font-weight:bold">apiVersion</span>:<span style="color:#bbb"> </span>v1<span style="color:#bbb">
+</span><span style="color:#bbb"></span><span style="color:#008000;font-weight:bold">kind</span>:<span style="color:#bbb"> </span>ConfigMap<span style="color:#bbb">
+</span><span style="color:#bbb"></span><span style="color:#008000;font-weight:bold">metadata</span>:<span style="color:#bbb">
+</span><span style="color:#bbb">  </span><span style="color:#008000;font-weight:bold">name</span>:<span style="color:#bbb"> </span>workflow-controller-configmap<span style="color:#bbb">
+</span><span style="color:#bbb"></span><span style="color:#008000;font-weight:bold">data</span>:<span style="color:#bbb">
+</span><span style="color:#bbb">  </span><span style="color:#008000;font-weight:bold">workflowDefaults</span>:<span style="color:#bbb"> </span>|<span style="color:#b44;font-style:italic">
+</span><span style="color:#b44;font-style:italic">    spec:
+</span><span style="color:#b44;font-style:italic">      onExit: exit-handler
+</span><span style="color:#b44;font-style:italic">      serviceAccountName: argo-sa
+</span><span style="color:#b44;font-style:italic">      templates:
+</span><span style="color:#b44;font-style:italic">        - name: exit-handler
+</span><span style="color:#b44;font-style:italic">          container:
+</span><span style="color:#b44;font-style:italic">            image: asia.gcr.io/my-repo/failure-alert:latest
+</span><span style="color:#b44;font-style:italic">            command: [ &#34;bash&#34;, &#34;main.sh&#34; ]
+</span><span style="color:#b44;font-style:italic">            env:
+</span><span style="color:#b44;font-style:italic">              - name: ENVIRONMENT
+</span><span style="color:#b44;font-style:italic">                valueFrom:
+</span><span style="color:#b44;font-style:italic">                  configMapKeyRef:
+</span><span style="color:#b44;font-style:italic">                    name: env-var-config
+</span><span style="color:#b44;font-style:italic">                    key: environment
+</span><span style="color:#b44;font-style:italic">              - name: HOST
+</span><span style="color:#b44;font-style:italic">                valueFrom:
+</span><span style="color:#b44;font-style:italic">                  configMapKeyRef:
+</span><span style="color:#b44;font-style:italic">                    name: env-var-config
+</span><span style="color:#b44;font-style:italic">                    key: host
+</span><span style="color:#b44;font-style:italic">              - name: WEBHOOK_URL
+</span><span style="color:#b44;font-style:italic">                valueFrom:
+</span><span style="color:#b44;font-style:italic">                  secretKeyRef:
+</span><span style="color:#b44;font-style:italic">                    name: credentials
+</span><span style="color:#b44;font-style:italic">                    key: slack-webhook-url
+</span><span style="color:#b44;font-style:italic">              - name: WORKFLOW_STATUS
+</span><span style="color:#b44;font-style:italic">                value: &#34;{{workflow.status}}&#34;
+</span><span style="color:#b44;font-style:italic">              - name: WORKFLOW_NAME
+</span><span style="color:#b44;font-style:italic">                value: &#34;{{workflow.name}}&#34;</span><span style="color:#bbb">    
+</span></code></pre></div><p>この設定をすれば全ワークフローにこのテンプレートが追加され、<code>onExit</code>の条件からワークフローが終了した際はここで定義されたワークフローが実行される。</p>
+<p>実行されるスクリプトについては以下のようにSlack Webhook URLにcurlさせれば良い。</p>
+<div class="highlight"><pre tabindex="0" style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash"><span style="color:#080">#!/bin/bash
+</span><span style="color:#080"></span>
+<span style="color:#a2f">set</span> -eu
+
+<span style="color:#a2f;font-weight:bold">if</span> <span style="color:#666">[</span> <span style="color:#b44">&#34;</span><span style="color:#b8860b">$ENVIRONMENT</span><span style="color:#b44">&#34;</span> <span style="color:#666">=</span> <span style="color:#b44">&#34;dev&#34;</span> <span style="color:#666">]</span>; <span style="color:#a2f;font-weight:bold">then</span>
+  <span style="color:#b8860b">color</span><span style="color:#666">=</span><span style="color:#b44">&#34;good&#34;</span>
+<span style="color:#a2f;font-weight:bold">elif</span> <span style="color:#666">[</span> <span style="color:#b44">&#34;</span><span style="color:#b8860b">$ENVIRONMENT</span><span style="color:#b44">&#34;</span> <span style="color:#666">=</span> <span style="color:#b44">&#34;stg&#34;</span> <span style="color:#666">]</span>; <span style="color:#a2f;font-weight:bold">then</span>
+  <span style="color:#b8860b">color</span><span style="color:#666">=</span><span style="color:#b44">&#34;warning&#34;</span>
+<span style="color:#a2f;font-weight:bold">elif</span> <span style="color:#666">[</span> <span style="color:#b44">&#34;</span><span style="color:#b8860b">$ENVIRONMENT</span><span style="color:#b44">&#34;</span> <span style="color:#666">=</span> <span style="color:#b44">&#34;prd&#34;</span> <span style="color:#666">]</span>; <span style="color:#a2f;font-weight:bold">then</span>
+  <span style="color:#b8860b">color</span><span style="color:#666">=</span><span style="color:#b44">&#34;danger&#34;</span>
+<span style="color:#a2f;font-weight:bold">else</span>
+  <span style="color:#a2f">echo</span> <span style="color:#b44">&#34;Invalid value: ENVIRONMENT&#34;</span>
+  <span style="color:#a2f">exit</span> <span style="color:#666">1</span>
+<span style="color:#a2f;font-weight:bold">fi</span>
+
+<span style="color:#a2f;font-weight:bold">if</span> <span style="color:#666">[</span> <span style="color:#b44">&#34;</span><span style="color:#b8860b">$WORKFLOW_STATUS</span><span style="color:#b44">&#34;</span> <span style="color:#666">=</span> <span style="color:#b44">&#34;Succeeded&#34;</span> <span style="color:#666">]</span>; <span style="color:#a2f;font-weight:bold">then</span>
+  <span style="color:#a2f">echo</span> <span style="color:#b44">&#34;Succeeded.&#34;</span>
+  <span style="color:#a2f">exit</span> <span style="color:#666">0</span>
+<span style="color:#a2f;font-weight:bold">fi</span>
+
+curl <span style="color:#b62;font-weight:bold">\
+</span><span style="color:#b62;font-weight:bold"></span>  -X POST <span style="color:#b62;font-weight:bold">\
+</span><span style="color:#b62;font-weight:bold"></span>  -H <span style="color:#b44">&#34;Content-type: application/json&#34;</span> <span style="color:#b62;font-weight:bold">\
+</span><span style="color:#b62;font-weight:bold"></span>  --data <span style="color:#b62;font-weight:bold">\
+</span><span style="color:#b62;font-weight:bold"></span>  <span style="color:#b44">&#39;{
+</span><span style="color:#b44">    &#34;attachments&#34;: [
+</span><span style="color:#b44">      {
+</span><span style="color:#b44">        &#34;title&#34;:&#34;Workflow status: &#39;</span><span style="color:#b8860b">$WORKFLOW_STATUS</span><span style="color:#b44">&#39;&#34;,
+</span><span style="color:#b44">        &#34;color&#34;: &#34;&#39;</span><span style="color:#b8860b">$color</span><span style="color:#b44">&#39;&#34;,
+</span><span style="color:#b44">        &#34;fields&#34;: [
+</span><span style="color:#b44">          {
+</span><span style="color:#b44">            &#34;title&#34;: &#34;Environment&#34;,
+</span><span style="color:#b44">            &#34;value&#34;: &#34;&#39;</span><span style="color:#b8860b">$ENVIRONMENT</span><span style="color:#b44">&#39;&#34;,
+</span><span style="color:#b44">            &#34;short&#34;: false
+</span><span style="color:#b44">          },
+</span><span style="color:#b44">          {
+</span><span style="color:#b44">            &#34;title&#34;: &#34;Workflow Name&#34;,
+</span><span style="color:#b44">            &#34;value&#34;: &#34;&#39;</span><span style="color:#b8860b">$WORKFLOW_NAME</span><span style="color:#b44">&#39;&#34;,
+</span><span style="color:#b44">            &#34;short&#34;: true
+</span><span style="color:#b44">          },
+</span><span style="color:#b44">          {
+</span><span style="color:#b44">            &#34;title&#34;: &#34;URL&#34;,
+</span><span style="color:#b44">            &#34;value&#34;: &#34;https://&#39;</span><span style="color:#b8860b">$HOST</span><span style="color:#b44">&#39;/archived-workflows/argo/?phase=Failed&#34;,
+</span><span style="color:#b44">            &#34;short&#34;: false
+</span><span style="color:#b44">          }
+</span><span style="color:#b44">        ]
+</span><span style="color:#b44">      }
+</span><span style="color:#b44">    ]
+</span><span style="color:#b44">  }&#39;</span> <span style="color:#b62;font-weight:bold">\
+</span><span style="color:#b62;font-weight:bold"></span>  <span style="color:#b44">&#34;</span><span style="color:#b8860b">$WEBHOOK_URL</span><span style="color:#b44">&#34;</span>
+</code></pre></div><h1 id="gkeでargo-workflowsを利用する際の注意">GKEでArgo Workflowsを利用する際の注意</h1>
+<p>Argo WorkflowsをGKEで利用する際、Workload Identityでサービスアカウント認証をしているケースで注意しておくことがある。</p>
+<p>それは、GKEメタデータサーバーが新しく作成されたPodでリクエストの受信を開始できるようになるまでに数秒かかるため、そこでPodが作成されてからすぐだとGCP APIを使えない可能性がある。</p>
+<p>GKEでのWorkload Identityではサービスアカウントの認証は内部的に以下のようなエンドポイントに対してアクセストークンを払い出している。</p>
+<div class="highlight"><pre tabindex="0" style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">curl -s <span style="color:#b62;font-weight:bold">\
+</span><span style="color:#b62;font-weight:bold"></span>  -H <span style="color:#b44">&#39;Metadata-Flavor: Google&#39;</span> <span style="color:#b62;font-weight:bold">\
+</span><span style="color:#b62;font-weight:bold"></span>  <span style="color:#b44">&#39;http://metadata.google.internal/computeMetadata/v1/instance/service-accounts/default/token&#39;</span>
+</code></pre></div><p>Podが作成された直後はメタデータサーバーがそのPodを認識できないため、<code>gcloud</code>コマンドを叩いても認証エラーになるケースがあり、以下のように<code>initContainers</code>フィールドによってメタデータサーバーとの疎通を確認してからジョブを実行させると安定する。</p>
+<div class="highlight"><pre tabindex="0" style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-yaml" data-lang="yaml"><span style="color:#008000;font-weight:bold">apiVersion</span>:<span style="color:#bbb"> </span>argoproj.io/v1alpha1<span style="color:#bbb">
+</span><span style="color:#bbb"></span><span style="color:#008000;font-weight:bold">kind</span>:<span style="color:#bbb"> </span>WorkflowTemplate<span style="color:#bbb">
+</span><span style="color:#bbb"></span><span style="color:#008000;font-weight:bold">metadata</span>:<span style="color:#bbb">
+</span><span style="color:#bbb">  </span><span style="color:#008000;font-weight:bold">name</span>:<span style="color:#bbb"> </span>foo-workflow-template<span style="color:#bbb">
+</span><span style="color:#bbb">  </span><span style="color:#008000;font-weight:bold">namespace</span>:<span style="color:#bbb"> </span>argo<span style="color:#bbb">
+</span><span style="color:#bbb"></span><span style="color:#008000;font-weight:bold">spec</span>:<span style="color:#bbb">
+</span><span style="color:#bbb">  </span><span style="color:#008000;font-weight:bold">serviceAccountName</span>:<span style="color:#bbb"> </span>argo-sa<span style="color:#bbb">
+</span><span style="color:#bbb">  </span><span style="color:#008000;font-weight:bold">entrypoint</span>:<span style="color:#bbb"> </span>foo-workflow<span style="color:#bbb">
+</span><span style="color:#bbb">  </span><span style="color:#008000;font-weight:bold">templates</span>:<span style="color:#bbb">
+</span><span style="color:#bbb">    </span>- <span style="color:#008000;font-weight:bold">name</span>:<span style="color:#bbb"> </span>hoge-workflow-load-per-table<span style="color:#bbb">
+</span><span style="color:#bbb">      </span><span style="color:#008000;font-weight:bold">initContainers</span>:<span style="color:#bbb">
+</span><span style="color:#bbb">        </span>- <span style="color:#008000;font-weight:bold">image</span>:<span style="color:#bbb">  </span>gcr.io/google.com/cloudsdktool/cloud-sdk:326.0.0-alpine<span style="color:#bbb">
+</span><span style="color:#bbb">          </span><span style="color:#008000;font-weight:bold">name</span>:<span style="color:#bbb"> </span>workload-identity-initcontainer<span style="color:#bbb">
+</span><span style="color:#bbb">          </span><span style="color:#008000;font-weight:bold">command</span>:<span style="color:#bbb">
+</span><span style="color:#bbb">            </span>- <span style="color:#b44">&#39;/bin/bash&#39;</span><span style="color:#bbb">
+</span><span style="color:#bbb">            </span>- <span style="color:#b44">&#39;-c&#39;</span><span style="color:#bbb">
+</span><span style="color:#bbb">            </span>- |<span style="color:#b44;font-style:italic">
+</span><span style="color:#b44;font-style:italic">              </span><span style="color:#bbb">              </span><span style="color:#008000;font-weight:bold">curl -s -H &#39;Metadata-Flavor</span>:<span style="color:#bbb"> </span>Google&#39; &#39;http://metadata.google.internal/computeMetadata/v1/instance/service-accounts/default/token&#39; --retry 30 --retry-connrefused --retry-max-time 30 &gt; /dev/null || exit 1<span style="color:#bbb">
+</span><span style="color:#bbb">      </span><span style="color:#008000;font-weight:bold">containers</span>:<span style="color:#bbb">
+</span><span style="color:#bbb">        </span>- <span style="color:#008000;font-weight:bold">image</span>:<span style="color:#bbb"> </span>image-name<span style="color:#bbb">
+</span><span style="color:#bbb"></span><span style="color:#00f;font-weight:bold">...</span><span style="color:#bbb">
+</span></code></pre></div><h1 id="終わりに">終わりに</h1>
+<p>今回書いた内容を押さえておけば恐らくArgo Workflowsは問題なく使えると思われる。</p>
+<p>今後どのワークフローエンジンが流行るのかわからないが、Argo Workflowsは極めて使いやすいため恐らく覇権を取れる気がする(?)</p>
+
+
+                
+
+                <hr>
+                <ul class="pager">
+                    
+                    <li class="previous">
+                        <a href="http://komi.dev/post/2021-11-15-introduce-envoy/" data-toggle="tooltip" data-placement="top" title="LoadBalancerとしてEnvoyを導入する">&larr;
+                            Previous Post</a>
+                    </li>
+                    
+                    
+                </ul>
+
+                
+<div id="disqus-comment"></div>
+
+
+
+            </div>
+            
+            <div class="
+                col-lg-11 col-lg-offset-1
+                col-md-10 col-md-offset-1
+                sidebar-container">
+
+                
+                
+                <section>
+                    <hr class="hidden-sm hidden-xs">
+                    <h5><a href="/tags/">FEATURED TAGS</a></h5>
+                    <div class="tags">
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        <a href="/tags/gcp" title="gcp">
+                            gcp
+                        </a>
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        <a href="/tags/kubernetes" title="kubernetes">
+                            kubernetes
+                        </a>
+                        
+                        
+                        
+                        <a href="/tags/macos" title="macos">
+                            macos
+                        </a>
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                    </div>
+                </section>
+                
+
+                
+                
+            </div>
+        </div>
+    </div>
+</article>
+
+
+
+
+<footer>
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+                <ul class="list-inline text-center">
+                   
+                   <li>
+                       <a href='' rel="alternate" type="application/rss+xml" title="Launch Today" >
+                           <span class="fa-stack fa-lg">
+                               <i class="fa fa-circle fa-stack-2x"></i>
+                               <i class="fa fa-rss fa-stack-1x fa-inverse"></i>
+                           </span>
+                       </a>
+                   </li>
+                   
+                    
+                    <li>
+                        <a href="mailto:yusuke.kominami@gmail.com">
+                            <span class="fa-stack fa-lg">
+                                <i class="fa fa-circle fa-stack-2x"></i>
+                                <i class="fa fa-envelope fa-stack-1x fa-inverse"></i>
+                            </span>
+                        </a>
+                    </li>
+		    
+                    
+                    
+                    <li>
+                        <a href="https://twitter.com/komi_edtr_1230">
+                            <span class="fa-stack fa-lg">
+                                <i class="fa fa-circle fa-stack-2x"></i>
+                                <i class="fa fa-twitter fa-stack-1x fa-inverse"></i>
+                            </span>
+                        </a>
+                    </li>
+                    
+                    
+                    
+
+                    
+                    <li>
+                        <a target="_blank" href="https://www.facebook.com/1230komi/">
+                            <span class="fa-stack fa-lg">
+                                <i class="fa fa-circle fa-stack-2x"></i>
+                                <i class="fa fa-facebook fa-stack-1x fa-inverse"></i>
+                            </span>
+                        </a>
+                    </li>
+		    
+
+		    
+                    
+                    
+                    <li>
+                        <a target="_blank" href="https://github.com/komi1230">
+                            <span class="fa-stack fa-lg">
+                                <i class="fa fa-circle fa-stack-2x"></i>
+                                <i class="fa fa-github fa-stack-1x fa-inverse"></i>
+                            </span>
+                        </a>
+                    </li>
+		    
+                    
+                    
+                    
+                    <li>
+                        <a target="_blank" href="https://www.linkedin.com/in/yusuke-kominami-0419b1157/">
+                            <span class="fa-stack fa-lg">
+                                <i class="fa fa-circle fa-stack-2x"></i>
+                                <i class="fa fa-linkedin fa-stack-1x fa-inverse"></i>
+                            </span>
+                        </a>
+                    </li>
+		    
+                    
+                    
+                    <li>
+                        <a target="_blank" href="https://stackoverflow.com/users/12464570">
+                            <span class="fa-stack fa-lg">
+                                <i class="fa fa-circle fa-stack-2x"></i>
+                                <i class="fa fa-stack-overflow fa-stack-1x fa-inverse"></i>
+                            </span>
+                        </a>
+                    </li>
+            
+                    
+                    
+                    
+            
+            
+            
+                </ul>
+		<p class="copyright text-muted">
+                    Copyright &copy; Launch Today 2022
+                </p>
+            </div>
+        </div>
+    </div>
+</footer>
+
+
+
+
+<script>
+    function async(u, c) {
+      var d = document, t = 'script',
+          o = d.createElement(t),
+          s = d.getElementsByTagName(t)[0];
+      o.src = u;
+      if (c) { o.addEventListener('load', function (e) { c(null, e); }, false); }
+      s.parentNode.insertBefore(o, s);
+    }
+</script>
+
+
+
+
+
+
+<script>
+    
+    if($('#tag_cloud').length !== 0){
+        async("/js/jquery.tagcloud.js",function(){
+            $.fn.tagcloud.defaults = {
+                
+                color: {start: '#bbbbee', end: '#0085a1'},
+            };
+            $('#tag_cloud a').tagcloud();
+        })
+    }
+</script>
+
+
+<script>
+    async("https://cdnjs.cloudflare.com/ajax/libs/fastclick/1.0.6/fastclick.js", function(){
+        var $nav = document.querySelector("nav");
+        if($nav) FastClick.attach($nav);
+    })
+</script>
+
+
+
+
+
+
+<script type="application/javascript">
+var doNotTrack = false;
+if (!doNotTrack) {
+	window.ga=window.ga||function(){(ga.q=ga.q||[]).push(arguments)};ga.l=+new Date;
+	ga('create', 'UA-177061519-1', 'auto');
+	
+	ga('send', 'pageview');
+}
+</script>
+<script async src='https://www.google-analytics.com/analytics.js'></script>
+
+
+
+</body>
+</html>
