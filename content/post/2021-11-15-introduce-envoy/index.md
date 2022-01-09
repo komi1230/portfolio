@@ -59,19 +59,18 @@ HTTP/2は普段慣れ親しんでいるHTTP/1.1と何が違うかというと
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: argo-server
+  name: my-server
 spec:
   selector:
     matchLabels:
-      app: argo-server
+      app: my-server
   template:
     metadata:
       labels:
-        app: argo-server
+        app: my-server
     spec:
-      serviceAccountName: argo-sa
       containers:
-        - name: my-app-server
+        - name: my-server
           image: gcr.io/my-app/some-image:latest
           args:
             - /bin/ls
@@ -101,7 +100,7 @@ spec:
       volumes:
         - name: envoy
           configMap:
-            name: argo-envoy
+            name: my-envoy-configmap
 ```
 
 ポイントとしてEnvoyはAdmin用のポートとアプリケーションとしてのポートを別途開けておく必要がある。
@@ -116,7 +115,7 @@ spec:
 apiVersion: v1
 kind: ConfigMap
 metadata:
-  name: argo-envoy
+  name: my-envoy-configmap
 data:
   # Adding new entries here will make them appear as files in the deployment.
   # Please update k8s.io/k8s.io/README.md when you update this file
