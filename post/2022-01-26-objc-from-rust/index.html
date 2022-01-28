@@ -232,7 +232,7 @@
 <p>CocoaとはmacOSのAPI群の総称で、macOSに関する様々な機能がまとめてある。
 例えば画面にウィンドウを描画する<code>NSView</code>だったりOSのバージョンを出してくれる<code>NSOperatingSystemVersion</code>などがある。
 macOSは基本的にObjective-Cで実装されており、オブジェクト指向な設計となっているので自分たちでAPIを利用したアプリケーションを作る際は特定のクラスからサブクラスを作成して機能群を追加していくような具合となる。</p>
-<p>このライブラリ系はmacOSでは<code>/System/Library/Frameworks/</code>を見てみると様々なframeworkが入っている。ここでframeworkとは動的共有ライブラリや nibファイル、imageファイル、ローカライズファイル、ヘッダファイル、ドキュメント等のリソースファイルを１つのパッケージにまとめたディレクトリ。</p>
+<p>このライブラリ系はmacOSでは<code>/Library/Developer/CommandLineTools/SDKs/MacOSX11.1.sdk/System/Library/Frameworks/</code>を見てみると様々なframeworkが入っている。ここでframeworkとは動的共有ライブラリや nibファイル、imageファイル、ローカライズファイル、ヘッダファイル、ドキュメント等のリソースファイルを１つのパッケージにまとめたディレクトリ。</p>
 <h1 id="rustから触る">Rustから触る</h1>
 <p>Rustはlinkアトリビュートを持っており、これを以下のように用いることで使える。</p>
 <div class="highlight"><pre tabindex="0" style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-rust" data-lang="rust"><span style="color:#080">#[link(name = </span><span style="color:#b44">&#34;AppKit&#34;</span><span style="color:#080">, kind = </span><span style="color:#b44">&#34;framework&#34;</span><span style="color:#080">)]</span><span style="color:#bbb">
