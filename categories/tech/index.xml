@@ -6,7 +6,16 @@
     <description>Recent content in Tech on Launch Today</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
-    <lastBuildDate>Sun, 09 Jan 2022 00:00:00 +0000</lastBuildDate><atom:link href="http://komi.dev/categories/tech/index.xml" rel="self" type="application/rss+xml" />
+    <lastBuildDate>Wed, 26 Jan 2022 00:00:00 +0000</lastBuildDate><atom:link href="http://komi.dev/categories/tech/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>RustからCocoaを触る</title>
+      <link>http://komi.dev/post/2022-01-26-objc-from-rust/</link>
+      <pubDate>Wed, 26 Jan 2022 00:00:00 +0000</pubDate>
+      
+      <guid>http://komi.dev/post/2022-01-26-objc-from-rust/</guid>
+      <description>Cocoaとは CocoaとはmacOSのAPI群の総称で、macOSに関する様々な機能がまとめてある。 例えば画面にウィンドウを描画するNSV</description>
+    </item>
+    
     <item>
       <title>Argo Workflowsの設定や文法</title>
       <link>http://komi.dev/post/2022-01-09-introduction-to-argo-workflows/</link>

@@ -2,28 +2,37 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"
   xmlns:xhtml="http://www.w3.org/1999/xhtml">
   <url>
+    <loc>http://komi.dev/categories/</loc>
+    <lastmod>2022-01-26T00:00:00+00:00</lastmod>
+  </url><url>
+    <loc>http://komi.dev/</loc>
+    <lastmod>2022-01-26T00:00:00+00:00</lastmod>
+  </url><url>
+    <loc>http://komi.dev/tags/macos/</loc>
+    <lastmod>2022-01-26T00:00:00+00:00</lastmod>
+  </url><url>
+    <loc>http://komi.dev/post/</loc>
+    <lastmod>2022-01-26T00:00:00+00:00</lastmod>
+  </url><url>
+    <loc>http://komi.dev/tags/rust/</loc>
+    <lastmod>2022-01-26T00:00:00+00:00</lastmod>
+  </url><url>
+    <loc>http://komi.dev/post/2022-01-26-objc-from-rust/</loc>
+    <lastmod>2022-01-26T00:00:00+00:00</lastmod>
+  </url><url>
+    <loc>http://komi.dev/tags/</loc>
+    <lastmod>2022-01-26T00:00:00+00:00</lastmod>
+  </url><url>
+    <loc>http://komi.dev/categories/tech/</loc>
+    <lastmod>2022-01-26T00:00:00+00:00</lastmod>
+  </url><url>
     <loc>http://komi.dev/tags/argo-workflows/</loc>
     <lastmod>2022-01-09T00:00:00+00:00</lastmod>
   </url><url>
     <loc>http://komi.dev/post/2022-01-09-introduction-to-argo-workflows/</loc>
     <lastmod>2022-01-09T00:00:00+00:00</lastmod>
   </url><url>
-    <loc>http://komi.dev/categories/</loc>
-    <lastmod>2022-01-09T00:00:00+00:00</lastmod>
-  </url><url>
     <loc>http://komi.dev/tags/kubernetes/</loc>
-    <lastmod>2022-01-09T00:00:00+00:00</lastmod>
-  </url><url>
-    <loc>http://komi.dev/</loc>
-    <lastmod>2022-01-09T00:00:00+00:00</lastmod>
-  </url><url>
-    <loc>http://komi.dev/post/</loc>
-    <lastmod>2022-01-09T00:00:00+00:00</lastmod>
-  </url><url>
-    <loc>http://komi.dev/tags/</loc>
-    <lastmod>2022-01-09T00:00:00+00:00</lastmod>
-  </url><url>
-    <loc>http://komi.dev/categories/tech/</loc>
     <lastmod>2022-01-09T00:00:00+00:00</lastmod>
   </url><url>
     <loc>http://komi.dev/tags/envoy/</loc>
@@ -51,9 +60,6 @@
     <lastmod>2021-08-11T00:00:00+00:00</lastmod>
   </url><url>
     <loc>http://komi.dev/tags/font/</loc>
-    <lastmod>2021-08-11T00:00:00+00:00</lastmod>
-  </url><url>
-    <loc>http://komi.dev/tags/macos/</loc>
     <lastmod>2021-08-11T00:00:00+00:00</lastmod>
   </url><url>
     <loc>http://komi.dev/post/2021-07-20-enabling-ime-in-alacritty/</loc>
