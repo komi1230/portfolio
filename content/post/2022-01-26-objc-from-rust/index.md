@@ -16,7 +16,7 @@ CocoaとはmacOSのAPI群の総称で、macOSに関する様々な機能がま�
 例えば画面にウィンドウを描画する`NSView`だったりOSのバージョンを出してくれる`NSOperatingSystemVersion`などがある。
 macOSは基本的にObjective-Cで実装されており、オブジェクト指向な設計となっているので自分たちでAPIを利用したアプリケーションを作る際は特定のクラスからサブクラスを作成して機能群を追加していくような具合となる。
 
-このライブラリ系はmacOSでは`/System/Library/Frameworks/`を見てみると様々なframeworkが入っている。ここでframeworkとは動的共有ライブラリや nibファイル、imageファイル、ローカライズファイル、ヘッダファイル、ドキュメント等のリソースファイルを１つのパッケージにまとめたディレクトリ。
+このライブラリ系はmacOSでは`/Library/Developer/CommandLineTools/SDKs/MacOSX11.1.sdk/System/Library/Frameworks/`を見てみると様々なframeworkが入っている。ここでframeworkとは動的共有ライブラリや nibファイル、imageファイル、ローカライズファイル、ヘッダファイル、ドキュメント等のリソースファイルを１つのパッケージにまとめたディレクトリ。
 
 # Rustから触る
 
