@@ -6,7 +6,16 @@
     <description>Recent content in Posts on Launch Today</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
-    <lastBuildDate>Wed, 26 Jan 2022 00:00:00 +0000</lastBuildDate><atom:link href="http://komi.dev/post/index.xml" rel="self" type="application/rss+xml" />
+    <lastBuildDate>Mon, 28 Feb 2022 00:00:00 +0000</lastBuildDate><atom:link href="http://komi.dev/post/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>起業してCTOになる</title>
+      <link>http://komi.dev/post/2022-02-28-be-entrepreneur/</link>
+      <pubDate>Mon, 28 Feb 2022 00:00:00 +0000</pubDate>
+      
+      <guid>http://komi.dev/post/2022-02-28-be-entrepreneur/</guid>
+      <description>起業することにした かなり唐突だが、起業をすることにした。 どんなことをやるかというと、地域特化型のニュースアプリといったようなものを作る。 まだ</description>
+    </item>
+    
     <item>
       <title>RustからCocoaを触る</title>
       <link>http://komi.dev/post/2022-01-26-objc-from-rust/</link>
