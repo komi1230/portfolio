@@ -6,7 +6,16 @@
     <description>Recent content in Posts on Launch Today</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
-    <lastBuildDate>Mon, 28 Feb 2022 00:00:00 +0000</lastBuildDate><atom:link href="http://komi.dev/post/index.xml" rel="self" type="application/rss+xml" />
+    <lastBuildDate>Mon, 21 Mar 2022 00:00:00 +0000</lastBuildDate><atom:link href="http://komi.dev/post/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>Flutterは全く難しくない</title>
+      <link>http://komi.dev/post/2022-03-21-flutter-is-easy/</link>
+      <pubDate>Mon, 21 Mar 2022 00:00:00 +0000</pubDate>
+      
+      <guid>http://komi.dev/post/2022-03-21-flutter-is-easy/</guid>
+      <description>スマホアプリ開発は全く難しくない 前回のエントリーで起業した旨について書いたのだが、事業のコアとなるアプリケーションはWebサイトとしては展開</description>
+    </item>
+    
     <item>
       <title>起業してCTOになる</title>
       <link>http://komi.dev/post/2022-02-28-be-entrepreneur/</link>

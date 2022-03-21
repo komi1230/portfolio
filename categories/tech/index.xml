@@ -6,7 +6,16 @@
     <description>Recent content in Tech on Launch Today</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
-    <lastBuildDate>Wed, 26 Jan 2022 00:00:00 +0000</lastBuildDate><atom:link href="http://komi.dev/categories/tech/index.xml" rel="self" type="application/rss+xml" />
+    <lastBuildDate>Mon, 21 Mar 2022 00:00:00 +0000</lastBuildDate><atom:link href="http://komi.dev/categories/tech/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>Flutterは全く難しくない</title>
+      <link>http://komi.dev/post/2022-03-21-flutter-is-easy/</link>
+      <pubDate>Mon, 21 Mar 2022 00:00:00 +0000</pubDate>
+      
+      <guid>http://komi.dev/post/2022-03-21-flutter-is-easy/</guid>
+      <description>スマホアプリ開発は全く難しくない 前回のエントリーで起業した旨について書いたのだが、事業のコアとなるアプリケーションはWebサイトとしては展開</description>
+    </item>
+    
     <item>
       <title>RustからCocoaを触る</title>
       <link>http://komi.dev/post/2022-01-26-objc-from-rust/</link>

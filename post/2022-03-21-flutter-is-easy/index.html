@@ -19,15 +19,15 @@
     
 
     
-    <meta name="title" content="Launch Today" />
-    <meta property="og:title" content="Launch Today" />
-    <meta property="twitter:title" content="Launch Today" />
+    <meta name="title" content="Flutterは全く難しくない" />
+    <meta property="og:title" content="Flutterは全く難しくない" />
+    <meta property="twitter:title" content="Flutterは全く難しくない" />
     
 
     
-    <meta name="description" content="Yusuke Kominami&#39;s Blog. About software engineering, career, lifestyle." />
-    <meta property="og:description" content="Yusuke Kominami&#39;s Blog. About software engineering, career, lifestyle." />
-    <meta property="twitter:description" content="Yusuke Kominami&#39;s Blog. About software engineering, career, lifestyle." />
+    <meta name="description" content="スマホ向けネイティブアプリの開発は思っていたより簡単で、特にこれらの分野のスキルの特殊性は無いとわかった" />
+    <meta property="og:description" content="スマホ向けネイティブアプリの開発は思っていたより簡単で、特にこれらの分野のスキルの特殊性は無いとわかった" />
+    <meta property="twitter:description" content="スマホ向けネイティブアプリの開発は思っていたより簡単で、特にこれらの分野のスキルの特殊性は無いとわかった" />
     
 
     
@@ -38,9 +38,9 @@
     <meta name="keyword"  content="Yusuke Kominami, 小南佑介, 小南 佑介, Rust, Emacs, Lisp, Web, Machine Learning, 機械学習">
     <link rel="shortcut icon" href="/img/favicon.ico">
 
-    <title>Posts</title>
+    <title>Flutterは全く難しくない</title>
 
-    <link rel="canonical" href="/post/">
+    <link rel="canonical" href="/post/2022-03-21-flutter-is-easy/">
 
     <link rel="stylesheet" href="/css/iDisqus.min.css"/>
 	
@@ -169,14 +169,34 @@
 </script>
 
 
-<header class="intro-header" style="background-image: url('/img/home.jpg')">
+
+<style type="text/css">
+    header.intro-header {
+        background-image: url('https://www.akamai.com/site/im-demo/perceptual-standard.jpg?imbypass=true')
+    }
+</style>
+<header class="intro-header">
     <div class="container">
         <div class="row">
-            <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1 ">
-                <div class="site-heading">
-                    <h1>Launch Today </h1>
-                    
-		    <span class="subheading">Playground and Workspace for Awesome Ideas</span>
+            <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+                <div class="post-heading">
+                    <div class="tags">
+                        
+                        <a class="tag" href="/tags/flutter" title="flutter">
+                            flutter
+                        </a>
+                        
+                    </div>
+                    <h1>Flutterは全く難しくない</h1>
+                    <h2 class="subheading">開発エコシステムの発達度と界隈のイタい人の存在</h2>
+                    <span class="meta">
+                        Posted 
+                        on 
+                        Monday, March 21, 2022
+                        
+                        
+                        
+                    </span>
                 </div>
             </div>
         </div>
@@ -189,13 +209,72 @@
 <article>
     <div class="container">
         <div class="row">
+
             
             <div class="
-                col-lg-8 col-lg-offset-2
+                col-lg-11 col-lg-offset-1
                 col-md-10 col-md-offset-1
                 post-container">
 
-         	
+                
+                <header>
+                    <h2>TOC</h2>
+                </header>
+                <nav id="TableOfContents">
+  <ul>
+    <li><a href="#スマホアプリ開発は全く難しくない">スマホアプリ開発は全く難しくない</a></li>
+    <li><a href="#界隈の人間が信じられなくなった">界隈の人間が信じられなくなった</a></li>
+    <li><a href="#スマホ向けアプリ開発は特殊スキルなのか">スマホ向けアプリ開発は特殊スキルなのか</a></li>
+  </ul>
+</nav>
+                
+                <h1 id="スマホアプリ開発は全く難しくない">スマホアプリ開発は全く難しくない</h1>
+<p>前回のエントリーで起業した旨について書いたのだが、事業のコアとなるアプリケーションはWebサイトとしては展開せずスマホアプリに絞ることとなった。
+今の会社はエンジニアは自分一人なので当然開発も自分しかやる人間がおらず(CEOはかなりテックがわかる人間だがデザインだけ手伝ってもらっている)、そんなこんなで現在はスマホ向けアプリ開発としてFlutterを書いている。</p>
+<p>自分の今までの開発スキルとしてはWebフロントエンド(React)、バックエンド(Python, Rust, etc&hellip;)、
+インフラ周り(Kubernetes、含む)、データ基盤といった具合でかなり広い分野をカバーしているのだが、実はスマホアプリというのは経験がなかった。
+なので今回スマホ向けに展開していくという話を聞いたときは正直「(自分の未経験分野なんだよな&hellip;)」と身構えていたところがあった。</p>
+<p>ただ完全に未経験ということは無くて、OSSでターミナルエミュレータの開発だったりグラフプロットライブラリだったりとOSなどのシステムプログラミングに近い分野を経験していたので、なんとなくの感覚はわかってはいるつもりだった。</p>
+<p>ただ、今回触ってみての感想だが、とにかく簡単。
+書いているときの感覚はReactと同じで、宣言的UIでパーツを作って組み合わせる。
+宣言的UIということでReactと同様に状態管理をどうする的な問題は出てくるのだけど、これの解決方法としてはコンポーネント間で状態管理バケツリレーをするかReduxのような外部で状態管理してくれるライブラリを利用するかといった具合となる。</p>
+<p>Reactよりも簡単だと思ったのはCSSと格闘しなくて良い点で、Flutterにはデフォルトでマテリアルデザインに準じたコンポーネントが用意されているので、これを場所と大きさを指定して配置するだけのパズルとなる。</p>
+<p>とにかくこれは本当にソフトウェアエンジニアリングなのかと思う。
+マインクラフトの方が難しい気がする。</p>
+<h1 id="界隈の人間が信じられなくなった">界隈の人間が信じられなくなった</h1>
+<p>数年前の話だが新卒就活をしていたとき、当時の自分は機械学習に詳しい若手というような売り込み方で就活をしていた。
+同時に<strong>新卒800万芸</strong>という「新卒でもスキルある若手なんだから年収800万よこせ」という芸風もやっていた。
+思い返してみれば2020年頃はAIがバズワードとなっていた時代で(その中では終末期であったが)、少し理論的に機械学習がわかるというだけで結構需要がある時代だった。
+そういった背景から年収800万くらいは貰えてもおかしくない、たしかに妥当な数字であったと思う。
+余談だが自分は現在はほとんど機械学習をやっていない。</p>
+<p>その頃に同世代でAndroidエンジニアのヤツと繋がったのだが、そいつは「Android開発は特殊スキルだから初任給はそれなりに期待するわ」といった旨の発言をしていた記憶がある。
+当時は自分もスマホ向けアプリの知識がなかったので「まあきっと特殊なスキルなんだろうな」くらいの認識だった。
+実際、ツイッターではスマホ向けアプリ開発は一部の人間にしかできないんだぞー的な空気感を一部の人間が出していた気がする。</p>
+<p>そんなわけだが、先述した通り今回自分で開発してみて全くスキルの特殊性が感じなかった。
+一体なんだったんだろう。
+結局ブランディングだったのだろうか。
+もちろん当時はFlutterは無かったのだろうけど、それでもそれに相当するインターフェースをiOSもAndroidも持っていたはずなので適切に開発作業を行えば問題なくこなせそうではある。</p>
+<h1 id="スマホ向けアプリ開発は特殊スキルなのか">スマホ向けアプリ開発は特殊スキルなのか</h1>
+<p>スマホ向けアプリは開発エコシステムが過度に発達した結果、誰でも開発できるようになっている。
+しかもそれなりの水準のものが。</p>
+<p>どうやら世の中にはFlutterに特化したエンジニア向けオンラインサロンがあるらしい。
+なんだかそこまでスキル的に尖ってなくてもポジショニングだけ上手にやって情弱を食い物にする構図がスマホアプリ開発界隈にはあるような気がしている。</p>
+<p>(ピュアにFlutter&quot;自体&quot;のコミッターは除き)Flutter界隈には近づかない方が良い気がしている、というのが今回Flutterを使えるようになっての学びだと思う。</p>
+
+
+                
+
+                <hr>
+                <ul class="pager">
+                    
+                    <li class="previous">
+                        <a href="http://komi.dev/post/2022-02-28-be-entrepreneur/" data-toggle="tooltip" data-placement="top" title="起業してCTOになる">&larr;
+                            Previous Post</a>
+                    </li>
+                    
+                    
+                </ul>
+
                 
 <div id="disqus-comment"></div>
 
@@ -204,7 +283,7 @@
             </div>
             
             <div class="
-                col-lg-8 col-lg-offset-2
+                col-lg-11 col-lg-offset-1
                 col-md-10 col-md-offset-1
                 sidebar-container">
 
@@ -234,7 +313,7 @@
                         
                         
                         <a href="/tags/gcp" title="gcp">
-                        gcp
+                            gcp
                         </a>
                         
                         
@@ -244,13 +323,13 @@
                         
                         
                         <a href="/tags/kubernetes" title="kubernetes">
-                        kubernetes
+                            kubernetes
                         </a>
                         
                         
                         
                         <a href="/tags/macos" title="macos">
-                        macos
+                            macos
                         </a>
                         
                         
@@ -285,7 +364,7 @@
                 <ul class="list-inline text-center">
                    
                    <li>
-                       <a href='/post/index.xml' rel="alternate" type="application/rss+xml" title="Launch Today" >
+                       <a href='' rel="alternate" type="application/rss+xml" title="Launch Today" >
                            <span class="fa-stack fa-lg">
                                <i class="fa fa-circle fa-stack-2x"></i>
                                <i class="fa fa-rss fa-stack-1x fa-inverse"></i>
