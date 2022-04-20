@@ -1,0 +1,627 @@
+<!DOCTYPE html>
+<html lang="en-us">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    
+    <meta property="og:site_name" content="Launch Today" />
+    <meta property="og:type" content="article" />
+    <meta property="og:url" content="https://komi.dev/" />
+    <meta property="og:locale" content="ja_JP" />
+
+    <meta name="twitter:site" content="@komi_edtr_1230" />
+
+    
+    <meta property="og:image" content="http://komi.dev/img/home.jpg" />
+    <meta property="twitter:image" content="http://komi.dev/img/home.jpg" />
+    
+
+    
+    <meta name="title" content="GCPでCDNをTerraformで実装する" />
+    <meta property="og:title" content="GCPでCDNをTerraformで実装する" />
+    <meta property="twitter:title" content="GCPでCDNをTerraformで実装する" />
+    
+
+    
+    <meta name="description" content="GCPでTerraformを使ってCDNを構築する方法についてまとめる" />
+    <meta property="og:description" content="GCPでTerraformを使ってCDNを構築する方法についてまとめる" />
+    <meta property="twitter:description" content="GCPでTerraformを使ってCDNを構築する方法についてまとめる" />
+    
+
+    
+    <meta property="twitter:card" content="summary" />
+    
+    
+
+    <meta name="keyword"  content="Yusuke Kominami, 小南佑介, 小南 佑介, Rust, Emacs, Lisp, Web, Machine Learning, 機械学習">
+    <link rel="shortcut icon" href="/img/favicon.ico">
+
+    <title>GCPでCDNをTerraformで実装する</title>
+
+    <link rel="canonical" href="/post/2022-04-21-axum-and-sqlx/">
+
+    <link rel="stylesheet" href="/css/iDisqus.min.css"/>
+	
+    
+    <link rel="stylesheet" href="/css/bootstrap.min.css">
+
+    
+    <link rel="stylesheet" href="/css/hux-blog.min.css">
+
+    
+    <link rel="stylesheet" href="/css/zanshang.css">
+    
+    
+    <link href="//cdnjs.cloudflare.com/ajax/libs/font-awesome/4.6.3/css/font-awesome.min.css" rel="stylesheet" type="text/css">
+
+    
+    <link rel="stylesheet" href="http://komi.dev/css/custom-font.css">
+
+    
+    
+    <script src="/js/jquery.min.js"></script>
+    
+    
+    <script src="/js/bootstrap.min.js"></script>
+    
+    
+    <script src="/js/hux-blog.min.js"></script>
+
+    
+    
+
+    
+    <script async src="https://www.googletagmanager.com/gtag/js?id=UA-177061519-1"></script>
+    <script>
+        window.dataLayer = window.dataLayer || [];
+        function gtag(){dataLayer.push(arguments);}
+        gtag('js', new Date());
+
+        gtag('config', 'UA-177061519-1');
+    </script>
+
+
+</head>
+
+
+
+<nav class="navbar navbar-default navbar-custom navbar-fixed-top">
+    <div class="container-fluid">
+        
+        <div class="navbar-header page-scroll">
+            <button type="button" class="navbar-toggle">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+            <a class="navbar-brand" href="/">Launch Today</a>
+        </div>
+
+        
+        
+        <div id="huxblog_navbar">
+            <div class="navbar-collapse">
+                <ul class="nav navbar-nav navbar-right">
+                    <li>
+                        <a href="/">Home</a>
+                    </li>
+                    
+                    
+                    <li>
+                        <a href="/categories/career">career</a>
+                    </li>
+                    
+                    <li>
+                        <a href="/categories/tech">tech</a>
+                    </li>
+                    
+                    
+
+                    
+                    <li><a href="/about/">ABOUT</a></li>
+                    
+                    <li><a href="/money/">MONEY</a></li>
+                    
+
+                    
+                    <li>
+                        <a href="/search">SEARCH <img src="/img/search.png"
+                                height="15" style="cursor: pointer;" alt="Search"></a>
+                    </li>
+                    
+                </ul>
+            </div>
+        </div>
+        
+    </div>
+    
+</nav>
+<script>
+    
+    
+    
+    var $body = document.body;
+    var $toggle = document.querySelector('.navbar-toggle');
+    var $navbar = document.querySelector('#huxblog_navbar');
+    var $collapse = document.querySelector('.navbar-collapse');
+
+    $toggle.addEventListener('click', handleMagic)
+    function handleMagic(e) {
+        if ($navbar.className.indexOf('in') > 0) {
+            
+            $navbar.className = " ";
+            
+            setTimeout(function () {
+                
+                if ($navbar.className.indexOf('in') < 0) {
+                    $collapse.style.height = "0px"
+                }
+            }, 400)
+        } else {
+            
+            $collapse.style.height = "auto"
+            $navbar.className += " in";
+        }
+    }
+</script>
+
+
+
+<style type="text/css">
+    header.intro-header {
+        background-image: url('https://www.shutterstock.com/blog/wp-content/uploads/sites/5/2017/04/featuredwaterfalls.jpg')
+    }
+</style>
+<header class="intro-header">
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+                <div class="post-heading">
+                    <div class="tags">
+                        
+                        <a class="tag" href="/tags/terraform" title="terraform">
+                            terraform
+                        </a>
+                        
+                        <a class="tag" href="/tags/gcp" title="gcp">
+                            gcp
+                        </a>
+                        
+                    </div>
+                    <h1>GCPでCDNをTerraformで実装する</h1>
+                    <h2 class="subheading">Cloud Storageとロードバランサーとキャッシュと</h2>
+                    <span class="meta">
+                        Posted 
+                        on 
+                        Wednesday, April 20, 2022
+                        
+                        
+                        
+                    </span>
+                </div>
+            </div>
+        </div>
+    </div>
+</header>
+
+
+
+
+<article>
+    <div class="container">
+        <div class="row">
+
+            
+            <div class="
+                col-lg-11 col-lg-offset-1
+                col-md-10 col-md-offset-1
+                post-container">
+
+                
+                <header>
+                    <h2>TOC</h2>
+                </header>
+                <nav id="TableOfContents">
+  <ul>
+    <li><a href="#cdnの構築は意外とめんどい">CDNの構築は意外とめんどい</a></li>
+    <li><a href="#コードと説明">コードと説明</a></li>
+    <li><a href="#ドメインを新しく作らないパターン">ドメインを新しく作らないパターン</a></li>
+  </ul>
+</nav>
+                
+                <h1 id="cdnの構築は意外とめんどい">CDNの構築は意外とめんどい</h1>
+<p>CDNは画像等の静的ファイルを流すためのネットワークで、アーキテクチャとしては単純なのだが準備することが地味に多く結構めんどくさかったりする。
+やるべきこととしては以下の通りなのだが、意外と大変。</p>
+<ul>
+<li>HTTPSのプロキシを作成する</li>
+<li>フォワーディングルールを用意してプロキシと紐付ける</li>
+<li>URLマッパーを実装する</li>
+<li>バックエンドバケットを用意する(キャッシュ用)</li>
+<li>(任意) CDN用のサブドメインを用意する</li>
+</ul>
+<p>これらをコンソール画面でぽちぽち手でやってると確実にミスが発生するし、本番環境とは別でステージング、開発環境も同様にすると尚更厄介で、なので今回はTerraformで用意する。</p>
+<h1 id="コードと説明">コードと説明</h1>
+<p>まずCDN用のサブドメインを用意する。</p>
+<div class="highlight"><pre tabindex="0" style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-terraform" data-lang="terraform"><span style="color:#a2f;font-weight:bold">resource</span> <span style="color:#b44">&#34;google_dns_managed_zone&#34;</span> <span style="color:#b44">&#34;cdn&#34;</span> {
+  <span style="color:#b44">name</span>        = <span style="color:#b44">&#34;cdn-managed-zone&#34;</span>
+  <span style="color:#b44">dns_name</span>    = <span style="color:#b44">&#34;cdn.</span><span style="color:#b68;font-weight:bold">${</span><span style="color:#a2f">var</span>.domain<span style="color:#b68;font-weight:bold">}</span><span style="color:#b44">&#34;</span>
+  <span style="color:#b44">description</span> = <span style="color:#b44">&#34;Managed Zone for cdn.</span><span style="color:#b68;font-weight:bold">${</span><span style="color:#a2f">var</span>.domain<span style="color:#b68;font-weight:bold">}</span><span style="color:#b44">&#34;</span>
+
+  dnssec_config {
+    <span style="color:#b44">state</span>         = <span style="color:#b44">&#34;on&#34;</span>
+    <span style="color:#b44">non_existence</span> = <span style="color:#b44">&#34;nsec3&#34;</span>
+  }
+}
+<span style="color:#a2f;font-weight:bold">
+</span><span style="color:#a2f;font-weight:bold">resource</span> <span style="color:#b44">&#34;google_compute_global_address&#34;</span> <span style="color:#b44">&#34;cdn&#34;</span> {
+  <span style="color:#b44">name</span> = <span style="color:#b44">&#34;cdn-ip&#34;</span>
+}
+<span style="color:#a2f;font-weight:bold">
+</span><span style="color:#a2f;font-weight:bold">resource</span> <span style="color:#b44">&#34;google_dns_record_set&#34;</span> <span style="color:#b44">&#34;cdn_a&#34;</span> {
+  <span style="color:#b44">name</span>         = google_dns_managed_zone.cdn.dns_name
+  <span style="color:#b44">type</span>         = <span style="color:#b44">&#34;A&#34;</span>
+  <span style="color:#b44">ttl</span>          = <span style="color:#666">300</span>
+  <span style="color:#b44">managed_zone</span> = google_dns_managed_zone.cdn.name
+  <span style="color:#b44">rrdatas</span>      = [google_compute_global_address.cdn.address]
+}<span style="color:#080;font-style:italic">
+</span><span style="color:#080;font-style:italic">
+</span><span style="color:#080;font-style:italic">// 任意
+</span><span style="color:#080;font-style:italic"></span><span style="color:#a2f;font-weight:bold">resource</span> <span style="color:#b44">&#34;google_dns_record_set&#34;</span> <span style="color:#b44">&#34;cdn_ns&#34;</span> {
+  <span style="color:#b44">name</span>         = google_dns_managed_zone.cdn.dns_name
+  <span style="color:#b44">type</span>         = <span style="color:#b44">&#34;NS&#34;</span>
+  <span style="color:#b44">ttl</span>          = <span style="color:#666">300</span>
+  <span style="color:#b44">managed_zone</span> = google_dns_managed_zone.origin.name<span style="color:#080;font-style:italic"> // FIX ME
+</span><span style="color:#080;font-style:italic"></span>  <span style="color:#b44">rrdatas</span>      = google_dns_managed_zone.cdn.name_servers
+}
+</code></pre></div><p>これで <code>cdn.example.com</code> 的な感じのサブドメインが作れる。
+最後の部分は<code>example.com</code>を管理してるマネージドゾーンに<code>cdn.example.com</code>のサブドメインへNSレコードを貼る役割。</p>
+<p>次に、もちろんマネージド証明書もセットアップする。</p>
+<div class="highlight"><pre tabindex="0" style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-terraform" data-lang="terraform"><span style="color:#a2f;font-weight:bold">resource</span> <span style="color:#b44">&#34;google_compute_managed_ssl_certificate&#34;</span> <span style="color:#b44">&#34;cdn&#34;</span> {
+  <span style="color:#b44">name</span> = <span style="color:#b44">&#34;cdn-certificate&#34;</span>
+
+  managed {
+    <span style="color:#b44">domains</span> = [google_dns_managed_zone.cdn.dns_name]
+  }
+}
+</code></pre></div><p>これにてドメイン関連は終わり。</p>
+<p>次にフォワーディングルールとHTTPSプロキシ、URLマップを作る。</p>
+<div class="highlight"><pre tabindex="0" style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-terraform" data-lang="terraform"><span style="color:#a2f;font-weight:bold">resource</span> <span style="color:#b44">&#34;google_compute_target_https_proxy&#34;</span> <span style="color:#b44">&#34;cdn&#34;</span> {
+  <span style="color:#b44">name</span>             = <span style="color:#b44">&#34;cdn-https-proxy&#34;</span>
+  <span style="color:#b44">url_map</span>          = google_compute_url_map.cdn.self_link
+  <span style="color:#b44">ssl_certificates</span> = [google_compute_managed_ssl_certificate.cdn.self_link]
+  <span style="color:#b44">ssl_policy</span>       = google_compute_ssl_policy.ssl_policy.name
+}
+<span style="color:#a2f;font-weight:bold">
+</span><span style="color:#a2f;font-weight:bold">resource</span> <span style="color:#b44">&#34;google_compute_global_forwarding_rule&#34;</span> <span style="color:#b44">&#34;cdn&#34;</span> {
+  <span style="color:#b44">name</span>       = <span style="color:#b44">&#34;cdn-forwarding-rule&#34;</span>
+  <span style="color:#b44">target</span>     = google_compute_target_https_proxy.cdn.self_link
+  <span style="color:#b44">port_range</span> = <span style="color:#b44">&#34;443&#34;</span>
+  <span style="color:#b44">ip_address</span> = google_compute_global_address.cdn.address
+}
+<span style="color:#a2f;font-weight:bold">
+</span><span style="color:#a2f;font-weight:bold">resource</span> <span style="color:#b44">&#34;google_compute_url_map&#34;</span> <span style="color:#b44">&#34;cdn&#34;</span> {
+  <span style="color:#b44">name</span>            = <span style="color:#b44">&#34;cdn-url-map&#34;</span>
+  <span style="color:#b44">default_service</span> = google_compute_backend_bucket.cdn.id
+  <span style="color:#b44">project</span>         = <span style="color:#a2f">var</span>.project
+}
+<span style="color:#a2f;font-weight:bold">
+</span><span style="color:#a2f;font-weight:bold">resource</span> <span style="color:#b44">&#34;google_compute_ssl_policy&#34;</span> <span style="color:#b44">&#34;ssl_policy&#34;</span> {
+  <span style="color:#b44">name</span>            = <span style="color:#b44">&#34;streets-ssl-policy&#34;</span>
+  <span style="color:#b44">profile</span>         = <span style="color:#b44">&#34;MODERN&#34;</span>
+  <span style="color:#b44">min_tls_version</span> = <span style="color:#b44">&#34;TLS_1_2&#34;</span>
+}
+</code></pre></div><p>セキュリティのためにSSLポリシーを作っておいた。
+これでTLSのバージョンが1.1以下の通信はお断りできる。</p>
+<p>最後にバックエンドバケットを設定する。
+これは静的ファイルのキャッシュ等に使える。</p>
+<div class="highlight"><pre tabindex="0" style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-terraform" data-lang="terraform"><span style="color:#a2f;font-weight:bold">resource</span> <span style="color:#b44">&#34;google_compute_backend_bucket&#34;</span> <span style="color:#b44">&#34;cdn&#34;</span> {
+  <span style="color:#b44">name</span>        = <span style="color:#b44">&#34;cdn-backend-bucket&#34;</span>
+  <span style="color:#b44">description</span> = <span style="color:#b44">&#34;Backend bucket for serving static content through CDN&#34;</span>
+  <span style="color:#b44">bucket_name</span> = google_storage_bucket.cdn.name
+  <span style="color:#b44">enable_cdn</span>  = <span style="color:#a2f;font-weight:bold">true</span>
+}
+</code></pre></div><p><code>bucket_name</code>にはCDN用のCloud Storageのバケットの名前を当てる。</p>
+<div class="highlight"><pre tabindex="0" style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-terraform" data-lang="terraform"><span style="color:#a2f;font-weight:bold">resource</span> <span style="color:#b44">&#34;google_storage_bucket&#34;</span> <span style="color:#b44">&#34;cdn&#34;</span> {
+  <span style="color:#b44">name</span>          = <span style="color:#b44">&#34;foo-bar-piyo-cdn-</span><span style="color:#b68;font-weight:bold">${</span>terraform.workspace<span style="color:#b68;font-weight:bold">}</span><span style="color:#b44">&#34;</span>
+  <span style="color:#b44">location</span>      = <span style="color:#a2f">var</span>.location
+}
+<span style="color:#a2f;font-weight:bold">
+</span><span style="color:#a2f;font-weight:bold">resource</span> <span style="color:#b44">&#34;google_storage_bucket_iam_member&#34;</span> <span style="color:#b44">&#34;cdn&#34;</span> {
+  <span style="color:#b44">bucket</span> = google_storage_bucket.cdn.name
+  <span style="color:#b44">role</span>   = <span style="color:#b44">&#34;roles/storage.legacyObjectReader&#34;</span>
+  <span style="color:#b44">member</span> = <span style="color:#b44">&#34;allUsers&#34;</span>
+}
+</code></pre></div><p>全員がバケットの中身が見れるよう権限を<code>allUsers</code>に与えたおいた。</p>
+<p>ここで注意なのが、Cloud Storageのバケット名は全世界のGCPプロジェクトでユニークである必要があるので<code>cdn-bucket</code>みたいなありきたりな名前はエラーになる。</p>
+<h1 id="ドメインを新しく作らないパターン">ドメインを新しく作らないパターン</h1>
+<p>上記の例では<code>cdn.example.com</code>というサブドメインでCDN用のトラフィックが流れるようにしたが、別のパターンとして<code>api.example.com</code>にアクセスポイントは集中させて<code>/static/</code>というパスの場合は静的ファイルが流れるようにしたいというケースもあるだろう。</p>
+<p>その場合はURLマップを少しいじって以下の通りにすれば良い。</p>
+<div class="highlight"><pre tabindex="0" style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-terraform" data-lang="terraform"><span style="color:#a2f;font-weight:bold">resource</span> <span style="color:#b44">&#34;google_compute_url_map&#34;</span> <span style="color:#b44">&#34;api&#34;</span> {
+  <span style="color:#b44">name</span>            = <span style="color:#b44">&#34;my-url-map&#34;</span>
+  <span style="color:#b44">default_service</span> = google_compute_backend_service.api.id
+  <span style="color:#b44">project</span>         = <span style="color:#a2f">var</span>.project
+
+  host_rule {
+    <span style="color:#b44">hosts</span>        = [<span style="color:#b44">&#34;*&#34;</span>]
+    <span style="color:#b44">path_matcher</span> = <span style="color:#b44">&#34;allpaths&#34;</span>
+  }
+
+  path_matcher {
+    <span style="color:#b44">name</span>            = <span style="color:#b44">&#34;allpaths&#34;</span>
+    <span style="color:#b44">default_service</span> = google_compute_backend_service.api.id
+
+    path_rule {
+      <span style="color:#b44">paths</span>   = [<span style="color:#b44">&#34;/static&#34;</span>, <span style="color:#b44">&#34;/static/*&#34;</span>]
+      <span style="color:#b44">service</span> = google_compute_backend_bucket.cdn.id
+    }
+  }
+}
+</code></pre></div><p>アクセスは<code>api.example.com</code>のサブドメインで受け、基本的にはバックエンドサービス(Cloud RunやApp Engineなど)に流すが、パスが<code>/static/</code>の場合にのみCDNに流すという設定がこれでできる。</p>
+<p>注意なのがパスの構成はCDNにも伝播するのでバケットの第一階層に<code>static</code>という名前のディレクトリを作り、その中に<code>sample.jpg</code>などの画像を置く必要がある。
+そこでようやく<code>api.example.com/static/sample.jpg</code>というURLにアクセスしてデータを参照できる。</p>
+<p>受けたパス階層から別のパスにリライトする設定も可能なのだが、<code>/static</code>を<code>/</code>にリライトするものはデフォルトサービスとぶつかってしまうためできない。
+そのためバケットの第一階層が<code>static</code>というフォルダを置くしかないのが気持ち悪いと感じる場合は大人しくCDN用にサブドメインを切るのが懸命。</p>
+
+
+                
+
+                <hr>
+                <ul class="pager">
+                    
+                    <li class="previous">
+                        <a href="http://komi.dev/post/2022-03-21-flutter-is-easy/" data-toggle="tooltip" data-placement="top" title="Flutterは全く難しくない">&larr;
+                            Previous Post</a>
+                    </li>
+                    
+                    
+                </ul>
+
+                
+<div id="disqus-comment"></div>
+
+
+
+            </div>
+            
+            <div class="
+                col-lg-11 col-lg-offset-1
+                col-md-10 col-md-offset-1
+                sidebar-container">
+
+                
+                
+                <section>
+                    <hr class="hidden-sm hidden-xs">
+                    <h5><a href="/tags/">FEATURED TAGS</a></h5>
+                    <div class="tags">
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        <a href="/tags/gcp" title="gcp">
+                            gcp
+                        </a>
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        <a href="/tags/kubernetes" title="kubernetes">
+                            kubernetes
+                        </a>
+                        
+                        
+                        
+                        <a href="/tags/macos" title="macos">
+                            macos
+                        </a>
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        <a href="/tags/terraform" title="terraform">
+                            terraform
+                        </a>
+                        
+                        
+                        
+                        
+                    </div>
+                </section>
+                
+
+                
+                
+            </div>
+        </div>
+    </div>
+</article>
+
+
+
+
+<footer>
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+                <ul class="list-inline text-center">
+                   
+                   <li>
+                       <a href='' rel="alternate" type="application/rss+xml" title="Launch Today" >
+                           <span class="fa-stack fa-lg">
+                               <i class="fa fa-circle fa-stack-2x"></i>
+                               <i class="fa fa-rss fa-stack-1x fa-inverse"></i>
+                           </span>
+                       </a>
+                   </li>
+                   
+                    
+                    <li>
+                        <a href="mailto:yusuke.kominami@gmail.com">
+                            <span class="fa-stack fa-lg">
+                                <i class="fa fa-circle fa-stack-2x"></i>
+                                <i class="fa fa-envelope fa-stack-1x fa-inverse"></i>
+                            </span>
+                        </a>
+                    </li>
+		    
+                    
+                    
+                    <li>
+                        <a href="https://twitter.com/komi_edtr_1230">
+                            <span class="fa-stack fa-lg">
+                                <i class="fa fa-circle fa-stack-2x"></i>
+                                <i class="fa fa-twitter fa-stack-1x fa-inverse"></i>
+                            </span>
+                        </a>
+                    </li>
+                    
+                    
+                    
+
+                    
+                    <li>
+                        <a target="_blank" href="https://www.facebook.com/1230komi/">
+                            <span class="fa-stack fa-lg">
+                                <i class="fa fa-circle fa-stack-2x"></i>
+                                <i class="fa fa-facebook fa-stack-1x fa-inverse"></i>
+                            </span>
+                        </a>
+                    </li>
+		    
+
+		    
+                    
+                    
+                    <li>
+                        <a target="_blank" href="https://github.com/komi1230">
+                            <span class="fa-stack fa-lg">
+                                <i class="fa fa-circle fa-stack-2x"></i>
+                                <i class="fa fa-github fa-stack-1x fa-inverse"></i>
+                            </span>
+                        </a>
+                    </li>
+		    
+                    
+                    
+                    
+                    <li>
+                        <a target="_blank" href="https://www.linkedin.com/in/yusuke-kominami-0419b1157/">
+                            <span class="fa-stack fa-lg">
+                                <i class="fa fa-circle fa-stack-2x"></i>
+                                <i class="fa fa-linkedin fa-stack-1x fa-inverse"></i>
+                            </span>
+                        </a>
+                    </li>
+		    
+                    
+                    
+                    <li>
+                        <a target="_blank" href="https://stackoverflow.com/users/12464570">
+                            <span class="fa-stack fa-lg">
+                                <i class="fa fa-circle fa-stack-2x"></i>
+                                <i class="fa fa-stack-overflow fa-stack-1x fa-inverse"></i>
+                            </span>
+                        </a>
+                    </li>
+            
+                    
+                    
+                    
+            
+            
+            
+                </ul>
+		<p class="copyright text-muted">
+                    Copyright &copy; Launch Today 2022
+                </p>
+            </div>
+        </div>
+    </div>
+</footer>
+
+
+
+
+<script>
+    function async(u, c) {
+      var d = document, t = 'script',
+          o = d.createElement(t),
+          s = d.getElementsByTagName(t)[0];
+      o.src = u;
+      if (c) { o.addEventListener('load', function (e) { c(null, e); }, false); }
+      s.parentNode.insertBefore(o, s);
+    }
+</script>
+
+
+
+
+
+
+<script>
+    
+    if($('#tag_cloud').length !== 0){
+        async("/js/jquery.tagcloud.js",function(){
+            $.fn.tagcloud.defaults = {
+                
+                color: {start: '#bbbbee', end: '#0085a1'},
+            };
+            $('#tag_cloud a').tagcloud();
+        })
+    }
+</script>
+
+
+<script>
+    async("https://cdnjs.cloudflare.com/ajax/libs/fastclick/1.0.6/fastclick.js", function(){
+        var $nav = document.querySelector("nav");
+        if($nav) FastClick.attach($nav);
+    })
+</script>
+
+
+
+
+
+
+<script type="application/javascript">
+var doNotTrack = false;
+if (!doNotTrack) {
+	window.ga=window.ga||function(){(ga.q=ga.q||[]).push(arguments)};ga.l=+new Date;
+	ga('create', 'UA-177061519-1', 'auto');
+	
+	ga('send', 'pageview');
+}
+</script>
+<script async src='https://www.google-analytics.com/analytics.js'></script>
+
+
+
+</body>
+</html>
