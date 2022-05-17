@@ -6,7 +6,16 @@
     <description>Recent content in Tech on Launch Today</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
-    <lastBuildDate>Wed, 04 May 2022 00:00:00 +0000</lastBuildDate><atom:link href="http://komi.dev/categories/tech/index.xml" rel="self" type="application/rss+xml" />
+    <lastBuildDate>Tue, 17 May 2022 00:00:00 +0000</lastBuildDate><atom:link href="http://komi.dev/categories/tech/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>SQLxのUuid型はSerializeできない</title>
+      <link>http://komi.dev/post/2022-05-17-uuid-in-sqlx/</link>
+      <pubDate>Tue, 17 May 2022 00:00:00 +0000</pubDate>
+      
+      <guid>http://komi.dev/post/2022-05-17-uuid-in-sqlx/</guid>
+      <description>sqlx::types::Uuid vs uuid::Uuid RustでDBに接続するための有用なクレートとしてSQLxがある。 かつてはDieselが有名だったが、async対応ができてないなどの</description>
+    </item>
+    
     <item>
       <title>RustアプリをCloud RunとCloud SQLで動かす</title>
       <link>http://komi.dev/post/2022-05-04-rust-from-cloud-run/</link>
