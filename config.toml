@@ -49,10 +49,6 @@ stackoverflow = "https://stackoverflow.com/users/12464570"
 title = "ABOUT"
 href = "/about/"
 
-[[params.addtional_menus]]
-title = "MONEY"
-href = "/money/"
-
 [markup]
 [markup.tableOfContents]
 endLevel = 2
