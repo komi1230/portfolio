@@ -6,7 +6,16 @@
     <description>Recent content in Posts on Launch Today</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
-    <lastBuildDate>Tue, 17 May 2022 00:00:00 +0000</lastBuildDate><atom:link href="http://komi.dev/post/index.xml" rel="self" type="application/rss+xml" />
+    <lastBuildDate>Thu, 04 Aug 2022 00:00:00 +0000</lastBuildDate><atom:link href="http://komi.dev/post/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>起業して開発していたプロダクトをリリースした</title>
+      <link>http://komi.dev/post/2022-08-04-launch-product/</link>
+      <pubDate>Thu, 04 Aug 2022 00:00:00 +0000</pubDate>
+      
+      <guid>http://komi.dev/post/2022-08-04-launch-product/</guid>
+      <description>プロダクトをリリースした 2022年になったとき「これからは毎月1本はブログを更新しよう！」と決めていたのだが、あまりにも忙しすぎて前回更新か</description>
+    </item>
+    
     <item>
       <title>SQLxのUuid型はSerializeできない</title>
       <link>http://komi.dev/post/2022-05-17-uuid-in-sqlx/</link>
