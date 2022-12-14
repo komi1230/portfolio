@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>ksquad on Launch Today</title>
+    <link>http://komi.dev/tags/ksquad/</link>
+    <description>Recent content in ksquad on Launch Today</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>en-us</language>
+    <lastBuildDate>Wed, 14 Dec 2022 00:00:00 +0000</lastBuildDate><atom:link href="http://komi.dev/tags/ksquad/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>2022年のまとめ</title>
+      <link>http://komi.dev/post/2022-12-14-summary/</link>
+      <pubDate>Wed, 14 Dec 2022 00:00:00 +0000</pubDate>
+      
+      <guid>http://komi.dev/post/2022-12-14-summary/</guid>
+      <description>はじめに 今年は色々あったが、まず何よりも最初に浮かぶのは2022年は後半全くこのサイトを更新しなかったということ。 シンプルに仕事やプライベー</description>
+    </item>
+    
+  </channel>
+</rss>

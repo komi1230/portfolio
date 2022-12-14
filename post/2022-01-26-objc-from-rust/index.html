@@ -237,68 +237,68 @@ macOSは基本的にObjective-Cで実装されており、オブジェクト指�
 <p>このライブラリ系はmacOSでは<code>/Library/Developer/CommandLineTools/SDKs/MacOSX11.1.sdk/System/Library/Frameworks/</code>を見てみると様々なframeworkが入っている。ここでframeworkとは動的共有ライブラリや nibファイル、imageファイル、ローカライズファイル、ヘッダファイル、ドキュメント等のリソースファイルを１つのパッケージにまとめたディレクトリ。</p>
 <h1 id="rustから触る">Rustから触る</h1>
 <p>Rustはlinkアトリビュートを持っており、これを以下のように用いることで使える。</p>
-<div class="highlight"><pre tabindex="0" style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-rust" data-lang="rust"><span style="color:#080">#[link(name = </span><span style="color:#b44">&#34;AppKit&#34;</span><span style="color:#080">, kind = </span><span style="color:#b44">&#34;framework&#34;</span><span style="color:#080">)]</span><span style="color:#bbb">
-</span><span style="color:#bbb"></span><span style="color:#a2f;font-weight:bold">extern</span><span style="color:#bbb"> </span><span style="color:#b44">&#34;C&#34;</span><span style="color:#bbb"> </span>{}<span style="color:#bbb">
-</span></code></pre></div><p>このコードではAppKitというframeworkを利用する際の宣言で、これによりobjcクレートを用いて</p>
-<div class="highlight"><pre tabindex="0" style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-rust" data-lang="rust"><span style="color:#a2f;font-weight:bold">use</span><span style="color:#bbb"> </span>objc;<span style="color:#bbb">
-</span><span style="color:#bbb">
-</span><span style="color:#bbb"></span><span style="color:#a2f;font-weight:bold">fn</span> <span style="color:#00a000">main</span>()<span style="color:#bbb"> </span>{<span style="color:#bbb">
-</span><span style="color:#bbb">  </span><span style="color:#a2f;font-weight:bold">let</span><span style="color:#bbb"> </span>cls<span style="color:#bbb"> </span><span style="color:#666">=</span><span style="color:#bbb"> </span><span style="color:#a2f;font-weight:bold">unsafe</span><span style="color:#bbb"> </span>{<span style="color:#bbb"> </span>objc::class<span style="color:#666">!</span>(NSView)<span style="color:#bbb"> </span>};<span style="color:#bbb">
-</span><span style="color:#bbb"></span>}<span style="color:#bbb">
-</span></code></pre></div><p>として使える。</p>
+<div class="highlight"><pre tabindex="0" style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-rust" data-lang="rust"><span style="display:flex;"><span><span style="color:#080">#[link(name = </span><span style="color:#b44">&#34;AppKit&#34;</span><span style="color:#080">, kind = </span><span style="color:#b44">&#34;framework&#34;</span><span style="color:#080">)]</span><span style="color:#bbb">
+</span></span></span><span style="display:flex;"><span><span style="color:#bbb"></span><span style="color:#a2f;font-weight:bold">extern</span><span style="color:#bbb"> </span><span style="color:#b44">&#34;C&#34;</span><span style="color:#bbb"> </span>{}<span style="color:#bbb">
+</span></span></span></code></pre></div><p>このコードではAppKitというframeworkを利用する際の宣言で、これによりobjcクレートを用いて</p>
+<div class="highlight"><pre tabindex="0" style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-rust" data-lang="rust"><span style="display:flex;"><span><span style="color:#a2f;font-weight:bold">use</span><span style="color:#bbb"> </span>objc;<span style="color:#bbb">
+</span></span></span><span style="display:flex;"><span><span style="color:#bbb">
+</span></span></span><span style="display:flex;"><span><span style="color:#bbb"></span><span style="color:#a2f;font-weight:bold">fn</span> <span style="color:#00a000">main</span>()<span style="color:#bbb"> </span>{<span style="color:#bbb">
+</span></span></span><span style="display:flex;"><span><span style="color:#bbb">  </span><span style="color:#a2f;font-weight:bold">let</span><span style="color:#bbb"> </span>cls<span style="color:#bbb"> </span><span style="color:#666">=</span><span style="color:#bbb"> </span><span style="color:#a2f;font-weight:bold">unsafe</span><span style="color:#bbb"> </span>{<span style="color:#bbb"> </span>objc::class<span style="color:#666">!</span>(NSView)<span style="color:#bbb"> </span>};<span style="color:#bbb">
+</span></span></span><span style="display:flex;"><span><span style="color:#bbb"></span>}<span style="color:#bbb">
+</span></span></span></code></pre></div><p>として使える。</p>
 <p>ちなみにlinkアトリビュートは<code>extern</code>とセットじゃないと意味がないらしく、</p>
-<div class="highlight"><pre tabindex="0" style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-rust" data-lang="rust"><span style="color:#a2f;font-weight:bold">use</span><span style="color:#bbb"> </span>objc;<span style="color:#bbb">
-</span><span style="color:#bbb">
-</span><span style="color:#bbb"></span><span style="color:#080">#[link(name = </span><span style="color:#b44">&#34;AppKit&#34;</span><span style="color:#080">, kind = </span><span style="color:#b44">&#34;framework&#34;</span><span style="color:#080">)]</span><span style="color:#bbb">
-</span><span style="color:#bbb"></span><span style="color:#a2f;font-weight:bold">fn</span> <span style="color:#00a000">main</span>()<span style="color:#bbb"> </span>{<span style="color:#bbb">
-</span><span style="color:#bbb">  </span><span style="color:#a2f;font-weight:bold">let</span><span style="color:#bbb"> </span>cls<span style="color:#bbb"> </span><span style="color:#666">=</span><span style="color:#bbb"> </span><span style="color:#a2f;font-weight:bold">unsafe</span><span style="color:#bbb"> </span>{<span style="color:#bbb"> </span>objc::class<span style="color:#666">!</span>(NSView)<span style="color:#bbb"> </span>};<span style="color:#bbb">
-</span><span style="color:#bbb"></span>}<span style="color:#bbb">
-</span></code></pre></div><p>というコードではエラーを吐いてしまう。</p>
+<div class="highlight"><pre tabindex="0" style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-rust" data-lang="rust"><span style="display:flex;"><span><span style="color:#a2f;font-weight:bold">use</span><span style="color:#bbb"> </span>objc;<span style="color:#bbb">
+</span></span></span><span style="display:flex;"><span><span style="color:#bbb">
+</span></span></span><span style="display:flex;"><span><span style="color:#bbb"></span><span style="color:#080">#[link(name = </span><span style="color:#b44">&#34;AppKit&#34;</span><span style="color:#080">, kind = </span><span style="color:#b44">&#34;framework&#34;</span><span style="color:#080">)]</span><span style="color:#bbb">
+</span></span></span><span style="display:flex;"><span><span style="color:#bbb"></span><span style="color:#a2f;font-weight:bold">fn</span> <span style="color:#00a000">main</span>()<span style="color:#bbb"> </span>{<span style="color:#bbb">
+</span></span></span><span style="display:flex;"><span><span style="color:#bbb">  </span><span style="color:#a2f;font-weight:bold">let</span><span style="color:#bbb"> </span>cls<span style="color:#bbb"> </span><span style="color:#666">=</span><span style="color:#bbb"> </span><span style="color:#a2f;font-weight:bold">unsafe</span><span style="color:#bbb"> </span>{<span style="color:#bbb"> </span>objc::class<span style="color:#666">!</span>(NSView)<span style="color:#bbb"> </span>};<span style="color:#bbb">
+</span></span></span><span style="display:flex;"><span><span style="color:#bbb"></span>}<span style="color:#bbb">
+</span></span></span></code></pre></div><p>というコードではエラーを吐いてしまう。</p>
 <p><code>objc::class!</code>マクロは内部的に</p>
-<div class="highlight"><pre tabindex="0" style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-rust" data-lang="rust"><span style="color:#080">#[macro_export]</span><span style="color:#bbb">
-</span><span style="color:#bbb"></span>macro_rules<span style="color:#666">!</span><span style="color:#bbb"> </span>class<span style="color:#bbb"> </span>{<span style="color:#bbb">
-</span><span style="color:#bbb">    </span>(<span style="color:#080">$name</span>:<span style="color:#00f">ident</span>)<span style="color:#bbb"> </span><span style="color:#666">=&gt;</span><span style="color:#bbb"> </span>({<span style="color:#bbb">
-</span><span style="color:#bbb">        </span><span style="color:#080">#[allow(deprecated)]</span><span style="color:#bbb">
-</span><span style="color:#bbb">        </span><span style="color:#080">#[inline(always)]</span><span style="color:#bbb">
-</span><span style="color:#bbb">        </span><span style="color:#a2f;font-weight:bold">fn</span> <span style="color:#00a000">get_class</span>(name: <span style="color:#a2f">&amp;</span><span style="color:#0b0;font-weight:bold">str</span>)<span style="color:#bbb"> </span>-&gt; <span style="color:#a2f">Option</span><span style="color:#666">&lt;&amp;</span><span style="color:#a2f">&#39;static</span><span style="color:#bbb"> </span><span style="color:#080">$crate</span>::runtime::Class<span style="color:#666">&gt;</span><span style="color:#bbb"> </span>{<span style="color:#bbb">
-</span><span style="color:#bbb">            </span><span style="color:#a2f;font-weight:bold">unsafe</span><span style="color:#bbb"> </span>{<span style="color:#bbb">
-</span><span style="color:#bbb">                </span><span style="color:#080">#[cfg_attr(feature = </span><span style="color:#b44">&#34;cargo-clippy&#34;</span><span style="color:#080">, allow(replace_consts))]</span><span style="color:#bbb">
-</span><span style="color:#bbb">                </span><span style="color:#a2f;font-weight:bold">static</span><span style="color:#bbb"> </span>CLASS: ::std::sync::atomic::AtomicUsize<span style="color:#bbb"> </span><span style="color:#666">=</span><span style="color:#bbb"> </span>::std::sync::atomic::ATOMIC_USIZE_INIT;<span style="color:#bbb">
-</span><span style="color:#bbb">                </span><span style="color:#080;font-style:italic">// `Relaxed` should be fine since `objc_getClass` is thread-safe.
-</span><span style="color:#080;font-style:italic"></span><span style="color:#bbb">                </span><span style="color:#a2f;font-weight:bold">let</span><span style="color:#bbb"> </span>ptr<span style="color:#bbb"> </span><span style="color:#666">=</span><span style="color:#bbb"> </span>CLASS.load(::std::sync::atomic::Ordering::Relaxed)<span style="color:#bbb"> </span><span style="color:#a2f;font-weight:bold">as</span><span style="color:#bbb"> </span><span style="color:#666">*</span><span style="color:#a2f;font-weight:bold">const</span><span style="color:#bbb"> </span><span style="color:#080">$crate</span>::runtime::Class;<span style="color:#bbb">
-</span><span style="color:#bbb">                </span><span style="color:#a2f;font-weight:bold">if</span><span style="color:#bbb"> </span>ptr.is_null()<span style="color:#bbb"> </span>{<span style="color:#bbb">
-</span><span style="color:#bbb">                    </span><span style="color:#a2f;font-weight:bold">let</span><span style="color:#bbb"> </span>cls<span style="color:#bbb"> </span><span style="color:#666">=</span><span style="color:#bbb"> </span><span style="color:#080">$crate</span>::runtime::objc_getClass(name.as_ptr()<span style="color:#bbb"> </span><span style="color:#a2f;font-weight:bold">as</span><span style="color:#bbb"> </span><span style="color:#666">*</span><span style="color:#a2f;font-weight:bold">const</span><span style="color:#bbb"> </span>_);<span style="color:#bbb">
-</span><span style="color:#bbb">                    </span>CLASS.store(cls<span style="color:#bbb"> </span><span style="color:#a2f;font-weight:bold">as</span><span style="color:#bbb"> </span><span style="color:#0b0;font-weight:bold">usize</span>,<span style="color:#bbb"> </span>::std::sync::atomic::Ordering::Relaxed);<span style="color:#bbb">
-</span><span style="color:#bbb">                    </span><span style="color:#a2f;font-weight:bold">if</span><span style="color:#bbb"> </span>cls.is_null()<span style="color:#bbb"> </span>{<span style="color:#bbb"> </span><span style="color:#a2f">None</span><span style="color:#bbb"> </span>}<span style="color:#bbb"> </span><span style="color:#a2f;font-weight:bold">else</span><span style="color:#bbb"> </span>{<span style="color:#bbb"> </span><span style="color:#a2f">Some</span>(<span style="color:#666">&amp;*</span>cls)<span style="color:#bbb"> </span>}<span style="color:#bbb">
-</span><span style="color:#bbb">                </span>}<span style="color:#bbb"> </span><span style="color:#a2f;font-weight:bold">else</span><span style="color:#bbb"> </span>{<span style="color:#bbb">
-</span><span style="color:#bbb">                    </span><span style="color:#a2f">Some</span>(<span style="color:#666">&amp;*</span>ptr)<span style="color:#bbb">
-</span><span style="color:#bbb">                </span>}<span style="color:#bbb">
-</span><span style="color:#bbb">            </span>}<span style="color:#bbb">
-</span><span style="color:#bbb">        </span>}<span style="color:#bbb">
-</span><span style="color:#bbb">        </span><span style="color:#a2f;font-weight:bold">match</span><span style="color:#bbb"> </span>get_class(concat<span style="color:#666">!</span>(stringify<span style="color:#666">!</span>(<span style="color:#080">$name</span>),<span style="color:#bbb"> </span><span style="color:#b44">&#39;\0&#39;</span>))<span style="color:#bbb"> </span>{<span style="color:#bbb">
-</span><span style="color:#bbb">            </span><span style="color:#a2f">Some</span>(cls)<span style="color:#bbb"> </span><span style="color:#666">=&gt;</span><span style="color:#bbb"> </span>cls,<span style="color:#bbb">
-</span><span style="color:#bbb">            </span><span style="color:#a2f">None</span><span style="color:#bbb"> </span><span style="color:#666">=&gt;</span><span style="color:#bbb"> </span>panic<span style="color:#666">!</span>(<span style="color:#b44">&#34;Class with name {} could not be found&#34;</span>,<span style="color:#bbb"> </span>stringify<span style="color:#666">!</span>(<span style="color:#080">$name</span>)),<span style="color:#bbb">
-</span><span style="color:#bbb">        </span>}<span style="color:#bbb">
-</span><span style="color:#bbb">    </span>})<span style="color:#bbb">
-</span><span style="color:#bbb"></span>}<span style="color:#bbb">
-</span></code></pre></div><p>という具合で<code>objc::runtime::objc_getClass()</code>という関数を叩いてクラスを呼び出しており、この関数自体は</p>
-<div class="highlight"><pre tabindex="0" style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-rust" data-lang="rust"><span style="color:#b44;font-style:italic">/// A marker type to be embedded into other types just so that they cannot be
-</span><span style="color:#b44;font-style:italic">/// constructed externally.
-</span><span style="color:#b44;font-style:italic"></span><span style="color:#a2f;font-weight:bold">type</span> <span style="color:#00f">PrivateMarker</span><span style="color:#bbb"> </span><span style="color:#666">=</span><span style="color:#bbb"> </span>[<span style="color:#0b0;font-weight:bold">u8</span>;<span style="color:#bbb"> </span><span style="color:#666">0</span>];<span style="color:#bbb">
-</span><span style="color:#bbb">
-</span><span style="color:#bbb"></span><span style="color:#b44;font-style:italic">/// A type that represents an Objective-C class.
-</span><span style="color:#b44;font-style:italic"></span><span style="color:#080">#[repr(C)]</span><span style="color:#bbb">
-</span><span style="color:#bbb"></span><span style="color:#a2f;font-weight:bold">pub</span><span style="color:#bbb"> </span><span style="color:#a2f;font-weight:bold">struct</span> <span style="color:#00f">Class</span><span style="color:#bbb"> </span>{<span style="color:#bbb">
-</span><span style="color:#bbb">    </span>_priv: <span style="color:#00f">PrivateMarker</span>,<span style="color:#bbb">
-</span><span style="color:#bbb"></span>}<span style="color:#bbb">
-</span><span style="color:#bbb">
-</span><span style="color:#bbb"></span><span style="color:#080">#[link(name = </span><span style="color:#b44">&#34;objc&#34;</span><span style="color:#080">, kind = </span><span style="color:#b44">&#34;dylib&#34;</span><span style="color:#080">)]</span><span style="color:#bbb">
-</span><span style="color:#bbb"></span><span style="color:#a2f;font-weight:bold">extern</span><span style="color:#bbb"> </span><span style="color:#b44">&#34;C&#34;</span><span style="color:#bbb"> </span>{<span style="color:#bbb">
-</span><span style="color:#bbb">  </span>...<span style="color:#bbb">
-</span><span style="color:#bbb">  </span><span style="color:#a2f;font-weight:bold">pub</span><span style="color:#bbb"> </span><span style="color:#a2f;font-weight:bold">fn</span> <span style="color:#00a000">objc_getClass</span>(name: <span style="color:#666">*</span><span style="color:#a2f;font-weight:bold">const</span><span style="color:#bbb"> </span>c_char)<span style="color:#bbb"> </span>-&gt; <span style="color:#666">*</span><span style="color:#a2f;font-weight:bold">const</span><span style="color:#bbb"> </span>Class;<span style="color:#bbb">
-</span><span style="color:#bbb">  </span>...<span style="color:#bbb">
-</span><span style="color:#bbb"></span>}<span style="color:#bbb">
-</span></code></pre></div><p>というようにObjective-Cの関数となっている。</p>
+<div class="highlight"><pre tabindex="0" style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-rust" data-lang="rust"><span style="display:flex;"><span><span style="color:#080">#[macro_export]</span><span style="color:#bbb">
+</span></span></span><span style="display:flex;"><span><span style="color:#bbb"></span>macro_rules!<span style="color:#bbb"> </span>class<span style="color:#bbb"> </span>{<span style="color:#bbb">
+</span></span></span><span style="display:flex;"><span><span style="color:#bbb">    </span>(<span style="color:#080">$name</span>:<span style="color:#00f">ident</span>)<span style="color:#bbb"> </span><span style="color:#666">=&gt;</span><span style="color:#bbb"> </span>({<span style="color:#bbb">
+</span></span></span><span style="display:flex;"><span><span style="color:#bbb">        </span><span style="color:#080">#[allow(deprecated)]</span><span style="color:#bbb">
+</span></span></span><span style="display:flex;"><span><span style="color:#bbb">        </span><span style="color:#080">#[inline(always)]</span><span style="color:#bbb">
+</span></span></span><span style="display:flex;"><span><span style="color:#bbb">        </span><span style="color:#a2f;font-weight:bold">fn</span> <span style="color:#00a000">get_class</span>(name: <span style="color:#a2f">&amp;</span><span style="color:#0b0;font-weight:bold">str</span>)<span style="color:#bbb"> </span>-&gt; <span style="color:#a2f">Option</span><span style="color:#666">&lt;&amp;&#39;</span><span style="color:#a2f">static</span><span style="color:#bbb"> </span><span style="color:#080">$crate</span>::runtime::Class<span style="color:#666">&gt;</span><span style="color:#bbb"> </span>{<span style="color:#bbb">
+</span></span></span><span style="display:flex;"><span><span style="color:#bbb">            </span><span style="color:#a2f;font-weight:bold">unsafe</span><span style="color:#bbb"> </span>{<span style="color:#bbb">
+</span></span></span><span style="display:flex;"><span><span style="color:#bbb">                </span><span style="color:#080">#[cfg_attr(feature = </span><span style="color:#b44">&#34;cargo-clippy&#34;</span><span style="color:#080">, allow(replace_consts))]</span><span style="color:#bbb">
+</span></span></span><span style="display:flex;"><span><span style="color:#bbb">                </span><span style="color:#a2f;font-weight:bold">static</span><span style="color:#bbb"> </span>CLASS: ::std::sync::atomic::AtomicUsize<span style="color:#bbb"> </span><span style="color:#666">=</span><span style="color:#bbb"> </span>::std::sync::atomic::ATOMIC_USIZE_INIT;<span style="color:#bbb">
+</span></span></span><span style="display:flex;"><span><span style="color:#bbb">                </span><span style="color:#080;font-style:italic">// `Relaxed` should be fine since `objc_getClass` is thread-safe.
+</span></span></span><span style="display:flex;"><span><span style="color:#080;font-style:italic"></span><span style="color:#bbb">                </span><span style="color:#a2f;font-weight:bold">let</span><span style="color:#bbb"> </span>ptr<span style="color:#bbb"> </span><span style="color:#666">=</span><span style="color:#bbb"> </span>CLASS.load(::std::sync::atomic::Ordering::Relaxed)<span style="color:#bbb"> </span><span style="color:#a2f;font-weight:bold">as</span><span style="color:#bbb"> </span><span style="color:#666">*</span><span style="color:#a2f;font-weight:bold">const</span><span style="color:#bbb"> </span><span style="color:#080">$crate</span>::runtime::Class;<span style="color:#bbb">
+</span></span></span><span style="display:flex;"><span><span style="color:#bbb">                </span><span style="color:#a2f;font-weight:bold">if</span><span style="color:#bbb"> </span>ptr.is_null()<span style="color:#bbb"> </span>{<span style="color:#bbb">
+</span></span></span><span style="display:flex;"><span><span style="color:#bbb">                    </span><span style="color:#a2f;font-weight:bold">let</span><span style="color:#bbb"> </span>cls<span style="color:#bbb"> </span><span style="color:#666">=</span><span style="color:#bbb"> </span><span style="color:#080">$crate</span>::runtime::objc_getClass(name.as_ptr()<span style="color:#bbb"> </span><span style="color:#a2f;font-weight:bold">as</span><span style="color:#bbb"> </span><span style="color:#666">*</span><span style="color:#a2f;font-weight:bold">const</span><span style="color:#bbb"> </span>_);<span style="color:#bbb">
+</span></span></span><span style="display:flex;"><span><span style="color:#bbb">                    </span>CLASS.store(cls<span style="color:#bbb"> </span><span style="color:#a2f;font-weight:bold">as</span><span style="color:#bbb"> </span><span style="color:#0b0;font-weight:bold">usize</span>,<span style="color:#bbb"> </span>::std::sync::atomic::Ordering::Relaxed);<span style="color:#bbb">
+</span></span></span><span style="display:flex;"><span><span style="color:#bbb">                    </span><span style="color:#a2f;font-weight:bold">if</span><span style="color:#bbb"> </span>cls.is_null()<span style="color:#bbb"> </span>{<span style="color:#bbb"> </span><span style="color:#a2f">None</span><span style="color:#bbb"> </span>}<span style="color:#bbb"> </span><span style="color:#a2f;font-weight:bold">else</span><span style="color:#bbb"> </span>{<span style="color:#bbb"> </span><span style="color:#a2f">Some</span>(<span style="color:#666">&amp;*</span>cls)<span style="color:#bbb"> </span>}<span style="color:#bbb">
+</span></span></span><span style="display:flex;"><span><span style="color:#bbb">                </span>}<span style="color:#bbb"> </span><span style="color:#a2f;font-weight:bold">else</span><span style="color:#bbb"> </span>{<span style="color:#bbb">
+</span></span></span><span style="display:flex;"><span><span style="color:#bbb">                    </span><span style="color:#a2f">Some</span>(<span style="color:#666">&amp;*</span>ptr)<span style="color:#bbb">
+</span></span></span><span style="display:flex;"><span><span style="color:#bbb">                </span>}<span style="color:#bbb">
+</span></span></span><span style="display:flex;"><span><span style="color:#bbb">            </span>}<span style="color:#bbb">
+</span></span></span><span style="display:flex;"><span><span style="color:#bbb">        </span>}<span style="color:#bbb">
+</span></span></span><span style="display:flex;"><span><span style="color:#bbb">        </span><span style="color:#a2f;font-weight:bold">match</span><span style="color:#bbb"> </span>get_class(concat!(stringify!(<span style="color:#080">$name</span>),<span style="color:#bbb"> </span><span style="color:#b44">&#39;\0&#39;</span>))<span style="color:#bbb"> </span>{<span style="color:#bbb">
+</span></span></span><span style="display:flex;"><span><span style="color:#bbb">            </span><span style="color:#a2f">Some</span>(cls)<span style="color:#bbb"> </span><span style="color:#666">=&gt;</span><span style="color:#bbb"> </span>cls,<span style="color:#bbb">
+</span></span></span><span style="display:flex;"><span><span style="color:#bbb">            </span><span style="color:#a2f">None</span><span style="color:#bbb"> </span><span style="color:#666">=&gt;</span><span style="color:#bbb"> </span>panic!(<span style="color:#b44">&#34;Class with name {} could not be found&#34;</span>,<span style="color:#bbb"> </span>stringify!(<span style="color:#080">$name</span>)),<span style="color:#bbb">
+</span></span></span><span style="display:flex;"><span><span style="color:#bbb">        </span>}<span style="color:#bbb">
+</span></span></span><span style="display:flex;"><span><span style="color:#bbb">    </span>})<span style="color:#bbb">
+</span></span></span><span style="display:flex;"><span><span style="color:#bbb"></span>}<span style="color:#bbb">
+</span></span></span></code></pre></div><p>という具合で<code>objc::runtime::objc_getClass()</code>という関数を叩いてクラスを呼び出しており、この関数自体は</p>
+<div class="highlight"><pre tabindex="0" style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-rust" data-lang="rust"><span style="display:flex;"><span><span style="color:#b44;font-style:italic">/// A marker type to be embedded into other types just so that they cannot be
+</span></span></span><span style="display:flex;"><span><span style="color:#b44;font-style:italic">/// constructed externally.
+</span></span></span><span style="display:flex;"><span><span style="color:#b44;font-style:italic"></span><span style="color:#a2f;font-weight:bold">type</span> <span style="color:#00f">PrivateMarker</span><span style="color:#bbb"> </span><span style="color:#666">=</span><span style="color:#bbb"> </span>[<span style="color:#0b0;font-weight:bold">u8</span>;<span style="color:#bbb"> </span><span style="color:#666">0</span>];<span style="color:#bbb">
+</span></span></span><span style="display:flex;"><span><span style="color:#bbb">
+</span></span></span><span style="display:flex;"><span><span style="color:#bbb"></span><span style="color:#b44;font-style:italic">/// A type that represents an Objective-C class.
+</span></span></span><span style="display:flex;"><span><span style="color:#b44;font-style:italic"></span><span style="color:#080">#[repr(C)]</span><span style="color:#bbb">
+</span></span></span><span style="display:flex;"><span><span style="color:#bbb"></span><span style="color:#a2f;font-weight:bold">pub</span><span style="color:#bbb"> </span><span style="color:#a2f;font-weight:bold">struct</span> <span style="color:#00f">Class</span><span style="color:#bbb"> </span>{<span style="color:#bbb">
+</span></span></span><span style="display:flex;"><span><span style="color:#bbb">    </span>_priv: <span style="color:#00f">PrivateMarker</span>,<span style="color:#bbb">
+</span></span></span><span style="display:flex;"><span><span style="color:#bbb"></span>}<span style="color:#bbb">
+</span></span></span><span style="display:flex;"><span><span style="color:#bbb">
+</span></span></span><span style="display:flex;"><span><span style="color:#bbb"></span><span style="color:#080">#[link(name = </span><span style="color:#b44">&#34;objc&#34;</span><span style="color:#080">, kind = </span><span style="color:#b44">&#34;dylib&#34;</span><span style="color:#080">)]</span><span style="color:#bbb">
+</span></span></span><span style="display:flex;"><span><span style="color:#bbb"></span><span style="color:#a2f;font-weight:bold">extern</span><span style="color:#bbb"> </span><span style="color:#b44">&#34;C&#34;</span><span style="color:#bbb"> </span>{<span style="color:#bbb">
+</span></span></span><span style="display:flex;"><span><span style="color:#bbb">  </span><span style="color:#666">..</span>.<span style="color:#bbb">
+</span></span></span><span style="display:flex;"><span><span style="color:#bbb">  </span><span style="color:#a2f;font-weight:bold">pub</span><span style="color:#bbb"> </span><span style="color:#a2f;font-weight:bold">fn</span> <span style="color:#00a000">objc_getClass</span>(name: <span style="color:#666">*</span><span style="color:#a2f;font-weight:bold">const</span><span style="color:#bbb"> </span>c_char)<span style="color:#bbb"> </span>-&gt; <span style="color:#666">*</span><span style="color:#a2f;font-weight:bold">const</span><span style="color:#bbb"> </span>Class;<span style="color:#bbb">
+</span></span></span><span style="display:flex;"><span><span style="color:#bbb">  </span><span style="color:#666">..</span>.<span style="color:#bbb">
+</span></span></span><span style="display:flex;"><span><span style="color:#bbb"></span>}<span style="color:#bbb">
+</span></span></span></code></pre></div><p>というようにObjective-Cの関数となっている。</p>
 <p>これらを用いてmacOSの機能を利用することができ、RustからMetalを触ることなどができる。</p>
 <h1 id="終わりに">終わりに</h1>
 <p>ここ数日AlacrittyのIME対応のPRを出してやり取りしているのだけど、この実装の中でmacOSのクレート周りが非常に使いづらいことに気がつき、試験的に自分でmacOSのAPIラッパーを書けるか試していた。
@@ -370,9 +370,13 @@ macOSは基本的にObjective-Cで実装されており、オブジェクト指�
                         
                         
                         
+                        
+                        
                         <a href="/tags/kubernetes" title="kubernetes">
                             kubernetes
                         </a>
+                        
+                        
                         
                         
                         
@@ -391,6 +395,10 @@ macOSは基本的にObjective-Cで実装されており、オブジェクト指�
                         
                         
                         
+                        
+                        <a href="/tags/streets" title="streets">
+                            streets
+                        </a>
                         
                         
                         

@@ -243,121 +243,121 @@
 <p>これらをコンソール画面でぽちぽち手でやってると確実にミスが発生するし、本番環境とは別でステージング、開発環境も同様にすると尚更厄介で、なので今回はTerraformで用意する。</p>
 <h1 id="コードと説明">コードと説明</h1>
 <p>まずCDN用のサブドメインを用意する。</p>
-<div class="highlight"><pre tabindex="0" style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-terraform" data-lang="terraform"><span style="color:#a2f;font-weight:bold">resource</span> <span style="color:#b44">&#34;google_dns_managed_zone&#34;</span> <span style="color:#b44">&#34;cdn&#34;</span> {
-  <span style="color:#b44">name</span>        = <span style="color:#b44">&#34;cdn-managed-zone&#34;</span>
-  <span style="color:#b44">dns_name</span>    = <span style="color:#b44">&#34;cdn.</span><span style="color:#b68;font-weight:bold">${</span><span style="color:#a2f">var</span>.domain<span style="color:#b68;font-weight:bold">}</span><span style="color:#b44">&#34;</span>
-  <span style="color:#b44">description</span> = <span style="color:#b44">&#34;Managed Zone for cdn.</span><span style="color:#b68;font-weight:bold">${</span><span style="color:#a2f">var</span>.domain<span style="color:#b68;font-weight:bold">}</span><span style="color:#b44">&#34;</span>
-
-  dnssec_config {
-    <span style="color:#b44">state</span>         = <span style="color:#b44">&#34;on&#34;</span>
-    <span style="color:#b44">non_existence</span> = <span style="color:#b44">&#34;nsec3&#34;</span>
-  }
-}
-<span style="color:#a2f;font-weight:bold">
-</span><span style="color:#a2f;font-weight:bold">resource</span> <span style="color:#b44">&#34;google_compute_global_address&#34;</span> <span style="color:#b44">&#34;cdn&#34;</span> {
-  <span style="color:#b44">name</span> = <span style="color:#b44">&#34;cdn-ip&#34;</span>
-}
-<span style="color:#a2f;font-weight:bold">
-</span><span style="color:#a2f;font-weight:bold">resource</span> <span style="color:#b44">&#34;google_dns_record_set&#34;</span> <span style="color:#b44">&#34;cdn_a&#34;</span> {
-  <span style="color:#b44">name</span>         = google_dns_managed_zone.cdn.dns_name
-  <span style="color:#b44">type</span>         = <span style="color:#b44">&#34;A&#34;</span>
-  <span style="color:#b44">ttl</span>          = <span style="color:#666">300</span>
-  <span style="color:#b44">managed_zone</span> = google_dns_managed_zone.cdn.name
-  <span style="color:#b44">rrdatas</span>      = [google_compute_global_address.cdn.address]
-}<span style="color:#080;font-style:italic">
-</span><span style="color:#080;font-style:italic">
-</span><span style="color:#080;font-style:italic">// 任意
-</span><span style="color:#080;font-style:italic"></span><span style="color:#a2f;font-weight:bold">resource</span> <span style="color:#b44">&#34;google_dns_record_set&#34;</span> <span style="color:#b44">&#34;cdn_ns&#34;</span> {
-  <span style="color:#b44">name</span>         = google_dns_managed_zone.cdn.dns_name
-  <span style="color:#b44">type</span>         = <span style="color:#b44">&#34;NS&#34;</span>
-  <span style="color:#b44">ttl</span>          = <span style="color:#666">300</span>
-  <span style="color:#b44">managed_zone</span> = google_dns_managed_zone.origin.name<span style="color:#080;font-style:italic"> // FIX ME
-</span><span style="color:#080;font-style:italic"></span>  <span style="color:#b44">rrdatas</span>      = google_dns_managed_zone.cdn.name_servers
-}
-</code></pre></div><p>これで <code>cdn.example.com</code> 的な感じのサブドメインが作れる。
+<div class="highlight"><pre tabindex="0" style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-terraform" data-lang="terraform"><span style="display:flex;"><span><span style="color:#a2f;font-weight:bold">resource</span> <span style="color:#b44">&#34;google_dns_managed_zone&#34;</span> <span style="color:#b44">&#34;cdn&#34;</span> {
+</span></span><span style="display:flex;"><span>  <span style="color:#b44">name</span>        = <span style="color:#b44">&#34;cdn-managed-zone&#34;</span>
+</span></span><span style="display:flex;"><span>  <span style="color:#b44">dns_name</span>    = <span style="color:#b44">&#34;cdn.</span><span style="color:#b68;font-weight:bold">${</span><span style="color:#a2f">var</span>.domain<span style="color:#b68;font-weight:bold">}</span><span style="color:#b44">&#34;</span>
+</span></span><span style="display:flex;"><span>  <span style="color:#b44">description</span> = <span style="color:#b44">&#34;Managed Zone for cdn.</span><span style="color:#b68;font-weight:bold">${</span><span style="color:#a2f">var</span>.domain<span style="color:#b68;font-weight:bold">}</span><span style="color:#b44">&#34;</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>  dnssec_config {
+</span></span><span style="display:flex;"><span>    <span style="color:#b44">state</span>         = <span style="color:#b44">&#34;on&#34;</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#b44">non_existence</span> = <span style="color:#b44">&#34;nsec3&#34;</span>
+</span></span><span style="display:flex;"><span>  }
+</span></span><span style="display:flex;"><span>}
+</span></span><span style="display:flex;"><span><span style="color:#a2f;font-weight:bold">
+</span></span></span><span style="display:flex;"><span><span style="color:#a2f;font-weight:bold">resource</span> <span style="color:#b44">&#34;google_compute_global_address&#34;</span> <span style="color:#b44">&#34;cdn&#34;</span> {
+</span></span><span style="display:flex;"><span>  <span style="color:#b44">name</span> = <span style="color:#b44">&#34;cdn-ip&#34;</span>
+</span></span><span style="display:flex;"><span>}
+</span></span><span style="display:flex;"><span><span style="color:#a2f;font-weight:bold">
+</span></span></span><span style="display:flex;"><span><span style="color:#a2f;font-weight:bold">resource</span> <span style="color:#b44">&#34;google_dns_record_set&#34;</span> <span style="color:#b44">&#34;cdn_a&#34;</span> {
+</span></span><span style="display:flex;"><span>  <span style="color:#b44">name</span>         = google_dns_managed_zone.cdn.dns_name
+</span></span><span style="display:flex;"><span>  <span style="color:#b44">type</span>         = <span style="color:#b44">&#34;A&#34;</span>
+</span></span><span style="display:flex;"><span>  <span style="color:#b44">ttl</span>          = <span style="color:#666">300</span>
+</span></span><span style="display:flex;"><span>  <span style="color:#b44">managed_zone</span> = google_dns_managed_zone.cdn.name
+</span></span><span style="display:flex;"><span>  <span style="color:#b44">rrdatas</span>      = [google_compute_global_address.cdn.address]
+</span></span><span style="display:flex;"><span>}<span style="color:#080;font-style:italic">
+</span></span></span><span style="display:flex;"><span><span style="color:#080;font-style:italic">
+</span></span></span><span style="display:flex;"><span><span style="color:#080;font-style:italic">// 任意
+</span></span></span><span style="display:flex;"><span><span style="color:#080;font-style:italic"></span><span style="color:#a2f;font-weight:bold">resource</span> <span style="color:#b44">&#34;google_dns_record_set&#34;</span> <span style="color:#b44">&#34;cdn_ns&#34;</span> {
+</span></span><span style="display:flex;"><span>  <span style="color:#b44">name</span>         = google_dns_managed_zone.cdn.dns_name
+</span></span><span style="display:flex;"><span>  <span style="color:#b44">type</span>         = <span style="color:#b44">&#34;NS&#34;</span>
+</span></span><span style="display:flex;"><span>  <span style="color:#b44">ttl</span>          = <span style="color:#666">300</span>
+</span></span><span style="display:flex;"><span>  <span style="color:#b44">managed_zone</span> = google_dns_managed_zone.origin.name<span style="color:#080;font-style:italic"> // FIX ME
+</span></span></span><span style="display:flex;"><span><span style="color:#080;font-style:italic"></span>  <span style="color:#b44">rrdatas</span>      = google_dns_managed_zone.cdn.name_servers
+</span></span><span style="display:flex;"><span>}
+</span></span></code></pre></div><p>これで <code>cdn.example.com</code> 的な感じのサブドメインが作れる。
 最後の部分は<code>example.com</code>を管理してるマネージドゾーンに<code>cdn.example.com</code>のサブドメインへNSレコードを貼る役割。</p>
 <p>次に、もちろんマネージド証明書もセットアップする。</p>
-<div class="highlight"><pre tabindex="0" style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-terraform" data-lang="terraform"><span style="color:#a2f;font-weight:bold">resource</span> <span style="color:#b44">&#34;google_compute_managed_ssl_certificate&#34;</span> <span style="color:#b44">&#34;cdn&#34;</span> {
-  <span style="color:#b44">name</span> = <span style="color:#b44">&#34;cdn-certificate&#34;</span>
-
-  managed {
-    <span style="color:#b44">domains</span> = [google_dns_managed_zone.cdn.dns_name]
-  }
-}
-</code></pre></div><p>これにてドメイン関連は終わり。</p>
+<div class="highlight"><pre tabindex="0" style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-terraform" data-lang="terraform"><span style="display:flex;"><span><span style="color:#a2f;font-weight:bold">resource</span> <span style="color:#b44">&#34;google_compute_managed_ssl_certificate&#34;</span> <span style="color:#b44">&#34;cdn&#34;</span> {
+</span></span><span style="display:flex;"><span>  <span style="color:#b44">name</span> = <span style="color:#b44">&#34;cdn-certificate&#34;</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>  managed {
+</span></span><span style="display:flex;"><span>    <span style="color:#b44">domains</span> = [google_dns_managed_zone.cdn.dns_name]
+</span></span><span style="display:flex;"><span>  }
+</span></span><span style="display:flex;"><span>}
+</span></span></code></pre></div><p>これにてドメイン関連は終わり。</p>
 <p>次にフォワーディングルールとHTTPSプロキシ、URLマップを作る。</p>
-<div class="highlight"><pre tabindex="0" style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-terraform" data-lang="terraform"><span style="color:#a2f;font-weight:bold">resource</span> <span style="color:#b44">&#34;google_compute_target_https_proxy&#34;</span> <span style="color:#b44">&#34;cdn&#34;</span> {
-  <span style="color:#b44">name</span>             = <span style="color:#b44">&#34;cdn-https-proxy&#34;</span>
-  <span style="color:#b44">url_map</span>          = google_compute_url_map.cdn.self_link
-  <span style="color:#b44">ssl_certificates</span> = [google_compute_managed_ssl_certificate.cdn.self_link]
-  <span style="color:#b44">ssl_policy</span>       = google_compute_ssl_policy.ssl_policy.name
-}
-<span style="color:#a2f;font-weight:bold">
-</span><span style="color:#a2f;font-weight:bold">resource</span> <span style="color:#b44">&#34;google_compute_global_forwarding_rule&#34;</span> <span style="color:#b44">&#34;cdn&#34;</span> {
-  <span style="color:#b44">name</span>       = <span style="color:#b44">&#34;cdn-forwarding-rule&#34;</span>
-  <span style="color:#b44">target</span>     = google_compute_target_https_proxy.cdn.self_link
-  <span style="color:#b44">port_range</span> = <span style="color:#b44">&#34;443&#34;</span>
-  <span style="color:#b44">ip_address</span> = google_compute_global_address.cdn.address
-}
-<span style="color:#a2f;font-weight:bold">
-</span><span style="color:#a2f;font-weight:bold">resource</span> <span style="color:#b44">&#34;google_compute_url_map&#34;</span> <span style="color:#b44">&#34;cdn&#34;</span> {
-  <span style="color:#b44">name</span>            = <span style="color:#b44">&#34;cdn-url-map&#34;</span>
-  <span style="color:#b44">default_service</span> = google_compute_backend_bucket.cdn.id
-  <span style="color:#b44">project</span>         = <span style="color:#a2f">var</span>.project
-}
-<span style="color:#a2f;font-weight:bold">
-</span><span style="color:#a2f;font-weight:bold">resource</span> <span style="color:#b44">&#34;google_compute_ssl_policy&#34;</span> <span style="color:#b44">&#34;ssl_policy&#34;</span> {
-  <span style="color:#b44">name</span>            = <span style="color:#b44">&#34;streets-ssl-policy&#34;</span>
-  <span style="color:#b44">profile</span>         = <span style="color:#b44">&#34;MODERN&#34;</span>
-  <span style="color:#b44">min_tls_version</span> = <span style="color:#b44">&#34;TLS_1_2&#34;</span>
-}
-</code></pre></div><p>セキュリティのためにSSLポリシーを作っておいた。
+<div class="highlight"><pre tabindex="0" style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-terraform" data-lang="terraform"><span style="display:flex;"><span><span style="color:#a2f;font-weight:bold">resource</span> <span style="color:#b44">&#34;google_compute_target_https_proxy&#34;</span> <span style="color:#b44">&#34;cdn&#34;</span> {
+</span></span><span style="display:flex;"><span>  <span style="color:#b44">name</span>             = <span style="color:#b44">&#34;cdn-https-proxy&#34;</span>
+</span></span><span style="display:flex;"><span>  <span style="color:#b44">url_map</span>          = google_compute_url_map.cdn.self_link
+</span></span><span style="display:flex;"><span>  <span style="color:#b44">ssl_certificates</span> = [google_compute_managed_ssl_certificate.cdn.self_link]
+</span></span><span style="display:flex;"><span>  <span style="color:#b44">ssl_policy</span>       = google_compute_ssl_policy.ssl_policy.name
+</span></span><span style="display:flex;"><span>}
+</span></span><span style="display:flex;"><span><span style="color:#a2f;font-weight:bold">
+</span></span></span><span style="display:flex;"><span><span style="color:#a2f;font-weight:bold">resource</span> <span style="color:#b44">&#34;google_compute_global_forwarding_rule&#34;</span> <span style="color:#b44">&#34;cdn&#34;</span> {
+</span></span><span style="display:flex;"><span>  <span style="color:#b44">name</span>       = <span style="color:#b44">&#34;cdn-forwarding-rule&#34;</span>
+</span></span><span style="display:flex;"><span>  <span style="color:#b44">target</span>     = google_compute_target_https_proxy.cdn.self_link
+</span></span><span style="display:flex;"><span>  <span style="color:#b44">port_range</span> = <span style="color:#b44">&#34;443&#34;</span>
+</span></span><span style="display:flex;"><span>  <span style="color:#b44">ip_address</span> = google_compute_global_address.cdn.address
+</span></span><span style="display:flex;"><span>}
+</span></span><span style="display:flex;"><span><span style="color:#a2f;font-weight:bold">
+</span></span></span><span style="display:flex;"><span><span style="color:#a2f;font-weight:bold">resource</span> <span style="color:#b44">&#34;google_compute_url_map&#34;</span> <span style="color:#b44">&#34;cdn&#34;</span> {
+</span></span><span style="display:flex;"><span>  <span style="color:#b44">name</span>            = <span style="color:#b44">&#34;cdn-url-map&#34;</span>
+</span></span><span style="display:flex;"><span>  <span style="color:#b44">default_service</span> = google_compute_backend_bucket.cdn.id
+</span></span><span style="display:flex;"><span>  <span style="color:#b44">project</span>         = <span style="color:#a2f">var</span>.project
+</span></span><span style="display:flex;"><span>}
+</span></span><span style="display:flex;"><span><span style="color:#a2f;font-weight:bold">
+</span></span></span><span style="display:flex;"><span><span style="color:#a2f;font-weight:bold">resource</span> <span style="color:#b44">&#34;google_compute_ssl_policy&#34;</span> <span style="color:#b44">&#34;ssl_policy&#34;</span> {
+</span></span><span style="display:flex;"><span>  <span style="color:#b44">name</span>            = <span style="color:#b44">&#34;streets-ssl-policy&#34;</span>
+</span></span><span style="display:flex;"><span>  <span style="color:#b44">profile</span>         = <span style="color:#b44">&#34;MODERN&#34;</span>
+</span></span><span style="display:flex;"><span>  <span style="color:#b44">min_tls_version</span> = <span style="color:#b44">&#34;TLS_1_2&#34;</span>
+</span></span><span style="display:flex;"><span>}
+</span></span></code></pre></div><p>セキュリティのためにSSLポリシーを作っておいた。
 これでTLSのバージョンが1.1以下の通信はお断りできる。</p>
 <p>最後にバックエンドバケットを設定する。
 これは静的ファイルのキャッシュ等に使える。</p>
-<div class="highlight"><pre tabindex="0" style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-terraform" data-lang="terraform"><span style="color:#a2f;font-weight:bold">resource</span> <span style="color:#b44">&#34;google_compute_backend_bucket&#34;</span> <span style="color:#b44">&#34;cdn&#34;</span> {
-  <span style="color:#b44">name</span>        = <span style="color:#b44">&#34;cdn-backend-bucket&#34;</span>
-  <span style="color:#b44">description</span> = <span style="color:#b44">&#34;Backend bucket for serving static content through CDN&#34;</span>
-  <span style="color:#b44">bucket_name</span> = google_storage_bucket.cdn.name
-  <span style="color:#b44">enable_cdn</span>  = <span style="color:#a2f;font-weight:bold">true</span>
-}
-</code></pre></div><p><code>bucket_name</code>にはCDN用のCloud Storageのバケットの名前を当てる。</p>
-<div class="highlight"><pre tabindex="0" style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-terraform" data-lang="terraform"><span style="color:#a2f;font-weight:bold">resource</span> <span style="color:#b44">&#34;google_storage_bucket&#34;</span> <span style="color:#b44">&#34;cdn&#34;</span> {
-  <span style="color:#b44">name</span>          = <span style="color:#b44">&#34;foo-bar-piyo-cdn-</span><span style="color:#b68;font-weight:bold">${</span>terraform.workspace<span style="color:#b68;font-weight:bold">}</span><span style="color:#b44">&#34;</span>
-  <span style="color:#b44">location</span>      = <span style="color:#a2f">var</span>.location
-}
-<span style="color:#a2f;font-weight:bold">
-</span><span style="color:#a2f;font-weight:bold">resource</span> <span style="color:#b44">&#34;google_storage_bucket_iam_member&#34;</span> <span style="color:#b44">&#34;cdn&#34;</span> {
-  <span style="color:#b44">bucket</span> = google_storage_bucket.cdn.name
-  <span style="color:#b44">role</span>   = <span style="color:#b44">&#34;roles/storage.legacyObjectReader&#34;</span>
-  <span style="color:#b44">member</span> = <span style="color:#b44">&#34;allUsers&#34;</span>
-}
-</code></pre></div><p>全員がバケットの中身が見れるよう権限を<code>allUsers</code>に与えたおいた。</p>
+<div class="highlight"><pre tabindex="0" style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-terraform" data-lang="terraform"><span style="display:flex;"><span><span style="color:#a2f;font-weight:bold">resource</span> <span style="color:#b44">&#34;google_compute_backend_bucket&#34;</span> <span style="color:#b44">&#34;cdn&#34;</span> {
+</span></span><span style="display:flex;"><span>  <span style="color:#b44">name</span>        = <span style="color:#b44">&#34;cdn-backend-bucket&#34;</span>
+</span></span><span style="display:flex;"><span>  <span style="color:#b44">description</span> = <span style="color:#b44">&#34;Backend bucket for serving static content through CDN&#34;</span>
+</span></span><span style="display:flex;"><span>  <span style="color:#b44">bucket_name</span> = google_storage_bucket.cdn.name
+</span></span><span style="display:flex;"><span>  <span style="color:#b44">enable_cdn</span>  = <span style="color:#a2f;font-weight:bold">true</span>
+</span></span><span style="display:flex;"><span>}
+</span></span></code></pre></div><p><code>bucket_name</code>にはCDN用のCloud Storageのバケットの名前を当てる。</p>
+<div class="highlight"><pre tabindex="0" style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-terraform" data-lang="terraform"><span style="display:flex;"><span><span style="color:#a2f;font-weight:bold">resource</span> <span style="color:#b44">&#34;google_storage_bucket&#34;</span> <span style="color:#b44">&#34;cdn&#34;</span> {
+</span></span><span style="display:flex;"><span>  <span style="color:#b44">name</span>          = <span style="color:#b44">&#34;foo-bar-piyo-cdn-</span><span style="color:#b68;font-weight:bold">${</span>terraform.workspace<span style="color:#b68;font-weight:bold">}</span><span style="color:#b44">&#34;</span>
+</span></span><span style="display:flex;"><span>  <span style="color:#b44">location</span>      = <span style="color:#a2f">var</span>.location
+</span></span><span style="display:flex;"><span>}
+</span></span><span style="display:flex;"><span><span style="color:#a2f;font-weight:bold">
+</span></span></span><span style="display:flex;"><span><span style="color:#a2f;font-weight:bold">resource</span> <span style="color:#b44">&#34;google_storage_bucket_iam_member&#34;</span> <span style="color:#b44">&#34;cdn&#34;</span> {
+</span></span><span style="display:flex;"><span>  <span style="color:#b44">bucket</span> = google_storage_bucket.cdn.name
+</span></span><span style="display:flex;"><span>  <span style="color:#b44">role</span>   = <span style="color:#b44">&#34;roles/storage.legacyObjectReader&#34;</span>
+</span></span><span style="display:flex;"><span>  <span style="color:#b44">member</span> = <span style="color:#b44">&#34;allUsers&#34;</span>
+</span></span><span style="display:flex;"><span>}
+</span></span></code></pre></div><p>全員がバケットの中身が見れるよう権限を<code>allUsers</code>に与えたおいた。</p>
 <p>ここで注意なのが、Cloud Storageのバケット名は全世界のGCPプロジェクトでユニークである必要があるので<code>cdn-bucket</code>みたいなありきたりな名前はエラーになる。</p>
 <h1 id="ドメインを新しく作らないパターン">ドメインを新しく作らないパターン</h1>
 <p>上記の例では<code>cdn.example.com</code>というサブドメインでCDN用のトラフィックが流れるようにしたが、別のパターンとして<code>api.example.com</code>にアクセスポイントは集中させて<code>/static/</code>というパスの場合は静的ファイルが流れるようにしたいというケースもあるだろう。</p>
 <p>その場合はURLマップを少しいじって以下の通りにすれば良い。</p>
-<div class="highlight"><pre tabindex="0" style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-terraform" data-lang="terraform"><span style="color:#a2f;font-weight:bold">resource</span> <span style="color:#b44">&#34;google_compute_url_map&#34;</span> <span style="color:#b44">&#34;api&#34;</span> {
-  <span style="color:#b44">name</span>            = <span style="color:#b44">&#34;my-url-map&#34;</span>
-  <span style="color:#b44">default_service</span> = google_compute_backend_service.api.id
-  <span style="color:#b44">project</span>         = <span style="color:#a2f">var</span>.project
-
-  host_rule {
-    <span style="color:#b44">hosts</span>        = [<span style="color:#b44">&#34;*&#34;</span>]
-    <span style="color:#b44">path_matcher</span> = <span style="color:#b44">&#34;allpaths&#34;</span>
-  }
-
-  path_matcher {
-    <span style="color:#b44">name</span>            = <span style="color:#b44">&#34;allpaths&#34;</span>
-    <span style="color:#b44">default_service</span> = google_compute_backend_service.api.id
-
-    path_rule {
-      <span style="color:#b44">paths</span>   = [<span style="color:#b44">&#34;/static&#34;</span>, <span style="color:#b44">&#34;/static/*&#34;</span>]
-      <span style="color:#b44">service</span> = google_compute_backend_bucket.cdn.id
-    }
-  }
-}
-</code></pre></div><p>アクセスは<code>api.example.com</code>のサブドメインで受け、基本的にはバックエンドサービス(Cloud RunやApp Engineなど)に流すが、パスが<code>/static/</code>の場合にのみCDNに流すという設定がこれでできる。</p>
+<div class="highlight"><pre tabindex="0" style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-terraform" data-lang="terraform"><span style="display:flex;"><span><span style="color:#a2f;font-weight:bold">resource</span> <span style="color:#b44">&#34;google_compute_url_map&#34;</span> <span style="color:#b44">&#34;api&#34;</span> {
+</span></span><span style="display:flex;"><span>  <span style="color:#b44">name</span>            = <span style="color:#b44">&#34;my-url-map&#34;</span>
+</span></span><span style="display:flex;"><span>  <span style="color:#b44">default_service</span> = google_compute_backend_service.api.id
+</span></span><span style="display:flex;"><span>  <span style="color:#b44">project</span>         = <span style="color:#a2f">var</span>.project
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>  host_rule {
+</span></span><span style="display:flex;"><span>    <span style="color:#b44">hosts</span>        = [<span style="color:#b44">&#34;*&#34;</span>]
+</span></span><span style="display:flex;"><span>    <span style="color:#b44">path_matcher</span> = <span style="color:#b44">&#34;allpaths&#34;</span>
+</span></span><span style="display:flex;"><span>  }
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>  path_matcher {
+</span></span><span style="display:flex;"><span>    <span style="color:#b44">name</span>            = <span style="color:#b44">&#34;allpaths&#34;</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#b44">default_service</span> = google_compute_backend_service.api.id
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    path_rule {
+</span></span><span style="display:flex;"><span>      <span style="color:#b44">paths</span>   = [<span style="color:#b44">&#34;/static&#34;</span>, <span style="color:#b44">&#34;/static/*&#34;</span>]
+</span></span><span style="display:flex;"><span>      <span style="color:#b44">service</span> = google_compute_backend_bucket.cdn.id
+</span></span><span style="display:flex;"><span>    }
+</span></span><span style="display:flex;"><span>  }
+</span></span><span style="display:flex;"><span>}
+</span></span></code></pre></div><p>アクセスは<code>api.example.com</code>のサブドメインで受け、基本的にはバックエンドサービス(Cloud RunやApp Engineなど)に流すが、パスが<code>/static/</code>の場合にのみCDNに流すという設定がこれでできる。</p>
 <p>注意なのがパスの構成はCDNにも伝播するのでバケットの第一階層に<code>static</code>という名前のディレクトリを作り、その中に<code>sample.jpg</code>などの画像を置く必要がある。
 そこでようやく<code>api.example.com/static/sample.jpg</code>というURLにアクセスしてデータを参照できる。</p>
 <p>受けたパス階層から別のパスにリライトする設定も可能なのだが、<code>/static</code>を<code>/</code>にリライトするものはデフォルトサービスとぶつかってしまうためできない。
@@ -429,9 +429,13 @@
                         
                         
                         
+                        
+                        
                         <a href="/tags/kubernetes" title="kubernetes">
                             kubernetes
                         </a>
+                        
+                        
                         
                         
                         
@@ -450,6 +454,10 @@
                         
                         
                         
+                        
+                        <a href="/tags/streets" title="streets">
+                            streets
+                        </a>
                         
                         
                         

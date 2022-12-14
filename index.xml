@@ -6,7 +6,16 @@
     <description>Recent content on Launch Today</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
-    <lastBuildDate>Thu, 04 Aug 2022 00:00:00 +0000</lastBuildDate><atom:link href="http://komi.dev/index.xml" rel="self" type="application/rss+xml" />
+    <lastBuildDate>Wed, 14 Dec 2022 00:00:00 +0000</lastBuildDate><atom:link href="http://komi.dev/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>2022年のまとめ</title>
+      <link>http://komi.dev/post/2022-12-14-summary/</link>
+      <pubDate>Wed, 14 Dec 2022 00:00:00 +0000</pubDate>
+      
+      <guid>http://komi.dev/post/2022-12-14-summary/</guid>
+      <description>はじめに 今年は色々あったが、まず何よりも最初に浮かぶのは2022年は後半全くこのサイトを更新しなかったということ。 シンプルに仕事やプライベー</description>
+    </item>
+    
     <item>
       <title>起業して開発していたプロダクトをリリースした</title>
       <link>http://komi.dev/post/2022-08-04-launch-product/</link>
@@ -148,7 +157,7 @@
       <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
       
       <guid>http://komi.dev/about/</guid>
-      <description>About  初めまして、小南佑介です。 現在はheyにてデータエンジニアとして働いています。
+      <description>About 初めまして、小南佑介です。 現在はheyにてデータエンジニアとして働いています。
 大学は京都大学理学部を卒業しており、高田研究室にて生物学(理論生物物理学)を専攻していました。
 好きなプログラミング言語はRustですが、Pythonなどもよく書きます。 スキルとしてはHTMLやCSS、JavaScriptといったマークアップから低レベルプログラミングまで可能で、Web開発においてはフロントはReact、バックエンドはRustやPythonが得意です。 機械学習系のスキルセットも揃っており、データサイエンス系の業務なども担当可能です。
 これ以外に、OSSへのコントリビュートも定期的に行っています。

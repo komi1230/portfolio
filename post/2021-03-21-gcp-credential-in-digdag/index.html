@@ -233,28 +233,28 @@
                 <h1 id="digdagとgcp">DigdagとGCP</h1>
 <p>Digdagはワークフローエンジンとして有名なソフトで、複数個のタスク間の依存関係からなるワークフローを定義し、そのワークフローの実行及び管理を行う。</p>
 <p>具体的に、複数テーブルのインポートを行いたいとなったとき、それらに対して逐次的にEmbulkを手で叩くのではなく、DigdagがうまいことEmbulkを叩いてくれる。</p>
-<pre><code>+some_job:
+<pre tabindex="0"><code>+some_job:
   sh&gt;: embulk run some_table.yaml.liquid
 </code></pre><p>そんなDigdagであるが、バッチ処理に非常によく使われるため、GCPやAWSに対応したコマンドがDigdag側に用意されている。
 これは本来ならば上記のように<code>sh&gt;</code>オペレータでシェルでコマンドを叩くが、BigQuery関係だと<code>bq&gt;</code>とか<code>bq_ddl&gt;</code>といったコマンドが用意されている。</p>
-<pre><code>+some_bq_job:
+<pre tabindex="0"><code>+some_bq_job:
   bq&gt;: queries/step.sql
   destination_table: other_project:other_dataset.other_table
 </code></pre><p>これは実質的に<code>sh&gt;: bq ...</code>コマンドの糖衣構文だけど、これは比較的便利なのでよく利用される。</p>
 <h1 id="gkeでのクレデンシャルのセット">GKEでのクレデンシャルのセット</h1>
 <p>Digdagの公式ドキュメントには<code>bq&gt;</code>オペレータを利用する際はDigdagのSecretsにサービスアカウントキーをセットするよう書いてある。</p>
 <p>Digdagが動いているコンテナ内で以下のコマンドを叩けば良い。</p>
-<div class="highlight"><pre tabindex="0" style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-sh" data-lang="sh">$ digdag secret --project <span style="color:#666">[</span>YOUR_PROJECT_NAME<span style="color:#666">]</span> --set gcp.credential<span style="color:#666">=</span>@/path/to/sa_key.json
-</code></pre></div><p>こうすると<code>bq&gt;</code>オペレータを叩く際にこのサービスアカウントとして実行される。</p>
+<div class="highlight"><pre tabindex="0" style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-sh" data-lang="sh"><span style="display:flex;"><span>$ digdag secret --project <span style="color:#666">[</span>YOUR_PROJECT_NAME<span style="color:#666">]</span> --set gcp.credential<span style="color:#666">=</span>@/path/to/sa_key.json
+</span></span></code></pre></div><p>こうすると<code>bq&gt;</code>オペレータを叩く際にこのサービスアカウントとして実行される。</p>
 <p>しかし、ここでポイントとして、このクレデンシャルはコンテナ全体でサービスアカウントが有効化されているわけではない。</p>
 <p>GKEでポッドの中に入ってクレデンシャルを叩くと、GKEを動作しているサービスアカウントが出てくる。</p>
-<div class="highlight"><pre tabindex="0" style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-sh" data-lang="sh">$ gcloud config list
-</code></pre></div><h1 id="サービスアカウントの有効化">サービスアカウントの有効化</h1>
+<div class="highlight"><pre tabindex="0" style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-sh" data-lang="sh"><span style="display:flex;"><span>$ gcloud config list
+</span></span></code></pre></div><h1 id="サービスアカウントの有効化">サービスアカウントの有効化</h1>
 <p><code>bq&gt;</code>オペレータや<code>bq_ddl&gt;</code>オペレータでは微妙にやりきれない作業などはたまにあり、その際は直接シェルで<code>bq</code>を叩きたいケースがある。</p>
 <p>例えばテーブルのスキーマに説明を付与したくて、そのスキーマ情報はJSONで保存されているときなど。</p>
 <p>こうした際はSQLに<code>CREATE TABLE</code>文でやる方法もあるが、それよりも<code>bq update</code>でテーブル情報をアップデートする方が簡単だったりする。</p>
 <p>この場合、意図的にDigdag内でサービスアカウントを有効化させるジョブを挟み込む必要があり、</p>
-<pre><code>+auth_sa:
+<pre tabindex="0"><code>+auth_sa:
   sh&gt;: gcloud auth activate-service-account --key-file=/path/to/sa_key.json
 
 +some_job:
@@ -327,9 +327,13 @@
                         
                         
                         
+                        
+                        
                         <a href="/tags/kubernetes" title="kubernetes">
                             kubernetes
                         </a>
+                        
+                        
                         
                         
                         
@@ -348,6 +352,10 @@
                         
                         
                         
+                        
+                        <a href="/tags/streets" title="streets">
+                            streets
+                        </a>
                         
                         
                         

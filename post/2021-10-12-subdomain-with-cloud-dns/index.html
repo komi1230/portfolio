@@ -279,101 +279,101 @@ Google DomainsとCloud Domainsの機能はほぼ完全に被っているが、�
 <h2 id="cloud-dnsでゾーンを構成する">Cloud DNSでゾーンを構成する</h2>
 <p>最初はProduction環境について。</p>
 <p>まず大元となるマネージドゾーンを構成する。</p>
-<div class="highlight"><pre tabindex="0" style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-terraform" data-lang="terraform"><span style="color:#a2f;font-weight:bold">resource</span> <span style="color:#b44">&#34;google_dns_managed_zone&#34;</span> <span style="color:#b44">&#34;production&#34;</span> {
-  <span style="color:#b44">name</span>        = <span style="color:#b44">&#34;production&#34;</span>
-  <span style="color:#b44">dns_name</span>    = <span style="color:#b44">&#34;example.com.&#34;</span>
-  <span style="color:#b44">description</span> = <span style="color:#b44">&#34;some description&#34;</span>
-}
-<span style="color:#a2f;font-weight:bold">
-</span><span style="color:#a2f;font-weight:bold">output</span> <span style="color:#b44">&#34;managed_zone&#34;</span> {
-  <span style="color:#b44">description</span> = <span style="">&lt;</span><span style="color:#666">&lt;</span>DESC
-  some description
-  <span style="color:#666">&gt;&gt;</span>
-  <span style="color:#b44">value</span> = google_dns_managed_zone.production.name_servers
-}
-</code></pre></div><p>フィールドの<code>dns_name</code>では最後にピリオド<code>.</code>が必要だが、これは<strong>これがドメインの末尾です</strong>というのを示すために最後にピリオドをつける必要があり、注意。</p>
+<div class="highlight"><pre tabindex="0" style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-terraform" data-lang="terraform"><span style="display:flex;"><span><span style="color:#a2f;font-weight:bold">resource</span> <span style="color:#b44">&#34;google_dns_managed_zone&#34;</span> <span style="color:#b44">&#34;production&#34;</span> {
+</span></span><span style="display:flex;"><span>  <span style="color:#b44">name</span>        = <span style="color:#b44">&#34;production&#34;</span>
+</span></span><span style="display:flex;"><span>  <span style="color:#b44">dns_name</span>    = <span style="color:#b44">&#34;example.com.&#34;</span>
+</span></span><span style="display:flex;"><span>  <span style="color:#b44">description</span> = <span style="color:#b44">&#34;some description&#34;</span>
+</span></span><span style="display:flex;"><span>}
+</span></span><span style="display:flex;"><span><span style="color:#a2f;font-weight:bold">
+</span></span></span><span style="display:flex;"><span><span style="color:#a2f;font-weight:bold">output</span> <span style="color:#b44">&#34;managed_zone&#34;</span> {
+</span></span><span style="display:flex;"><span>  <span style="color:#b44">description</span> = <span style="">&lt;</span><span style="color:#666">&lt;</span>DESC
+</span></span><span style="display:flex;"><span>  some description
+</span></span><span style="display:flex;"><span>  <span style="color:#666">&gt;&gt;</span>
+</span></span><span style="display:flex;"><span>  <span style="color:#b44">value</span> = google_dns_managed_zone.production.name_servers
+</span></span><span style="display:flex;"><span>}
+</span></span></code></pre></div><p>フィールドの<code>dns_name</code>では最後にピリオド<code>.</code>が必要だが、これは<strong>これがドメインの末尾です</strong>というのを示すために最後にピリオドをつける必要があり、注意。</p>
 <p>ゾーンが構成されたら、立てたいサービスの分のグローバルIPを確保し、そのIPを用いてAレコードを構成する。</p>
-<div class="highlight"><pre tabindex="0" style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-terraform" data-lang="terraform"><span style="color:#080;font-style:italic">// example.comに立てるサービス
-</span><span style="color:#080;font-style:italic"></span><span style="color:#a2f;font-weight:bold">resource</span> <span style="color:#b44">&#34;google_compute_global_address&#34;</span> <span style="color:#b44">&#34;service1_production&#34;</span> {
-  <span style="color:#b44">name</span> = <span style="color:#b44">&#34;service1-production&#34;</span>
-}
-<span style="color:#a2f;font-weight:bold">
-</span><span style="color:#a2f;font-weight:bold">resource</span> <span style="color:#b44">&#34;google_dns_record_set&#34;</span> <span style="color:#b44">&#34;service1&#34;</span> {
-  <span style="color:#b44">name</span> = google_dns_managed_zone.production.dns_name
-  <span style="color:#b44">type</span> = <span style="color:#b44">&#34;A&#34;</span>
-  <span style="color:#b44">ttl</span>  = <span style="color:#666">300</span>
-
-  <span style="color:#b44">managed_zone</span> = google_dns_managed_zone.production.name
-
-  <span style="color:#b44">rrdatas</span> = [google_compute_global_address.service1_production.address]
-}<span style="color:#080;font-style:italic">
-</span><span style="color:#080;font-style:italic">
-</span><span style="color:#080;font-style:italic">// service2.example.comに立てるサービス
-</span><span style="color:#080;font-style:italic"></span><span style="color:#a2f;font-weight:bold">resource</span> <span style="color:#b44">&#34;google_compute_global_address&#34;</span> <span style="color:#b44">&#34;service2_production&#34;</span> {
-  <span style="color:#b44">name</span> = <span style="color:#b44">&#34;service2-production&#34;</span>
-}
-<span style="color:#a2f;font-weight:bold">
-</span><span style="color:#a2f;font-weight:bold">resource</span> <span style="color:#b44">&#34;google_dns_record_set&#34;</span> <span style="color:#b44">&#34;service1&#34;</span> {
-  <span style="color:#b44">name</span> = <span style="color:#b44">&#34;service2.</span><span style="color:#b68;font-weight:bold">${</span>google_dns_managed_zone.production.dns_name<span style="color:#b68;font-weight:bold">}</span><span style="color:#b44">&#34;</span>
-  <span style="color:#b44">type</span> = <span style="color:#b44">&#34;A&#34;</span>
-  <span style="color:#b44">ttl</span>  = <span style="color:#666">300</span>
-
-  <span style="color:#b44">managed_zone</span> = google_dns_managed_zone.production.name
-
-  <span style="color:#b44">rrdatas</span> = [google_compute_global_address.service2_production.address]
-}
-</code></pre></div><p>さて、Production環境についてはこれで<code>example.com</code>にservice1が、<code>service2.example.com</code>にservice2が立つようになった。</p>
+<div class="highlight"><pre tabindex="0" style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-terraform" data-lang="terraform"><span style="display:flex;"><span><span style="color:#080;font-style:italic">// example.comに立てるサービス
+</span></span></span><span style="display:flex;"><span><span style="color:#080;font-style:italic"></span><span style="color:#a2f;font-weight:bold">resource</span> <span style="color:#b44">&#34;google_compute_global_address&#34;</span> <span style="color:#b44">&#34;service1_production&#34;</span> {
+</span></span><span style="display:flex;"><span>  <span style="color:#b44">name</span> = <span style="color:#b44">&#34;service1-production&#34;</span>
+</span></span><span style="display:flex;"><span>}
+</span></span><span style="display:flex;"><span><span style="color:#a2f;font-weight:bold">
+</span></span></span><span style="display:flex;"><span><span style="color:#a2f;font-weight:bold">resource</span> <span style="color:#b44">&#34;google_dns_record_set&#34;</span> <span style="color:#b44">&#34;service1&#34;</span> {
+</span></span><span style="display:flex;"><span>  <span style="color:#b44">name</span> = google_dns_managed_zone.production.dns_name
+</span></span><span style="display:flex;"><span>  <span style="color:#b44">type</span> = <span style="color:#b44">&#34;A&#34;</span>
+</span></span><span style="display:flex;"><span>  <span style="color:#b44">ttl</span>  = <span style="color:#666">300</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>  <span style="color:#b44">managed_zone</span> = google_dns_managed_zone.production.name
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>  <span style="color:#b44">rrdatas</span> = [google_compute_global_address.service1_production.address]
+</span></span><span style="display:flex;"><span>}<span style="color:#080;font-style:italic">
+</span></span></span><span style="display:flex;"><span><span style="color:#080;font-style:italic">
+</span></span></span><span style="display:flex;"><span><span style="color:#080;font-style:italic">// service2.example.comに立てるサービス
+</span></span></span><span style="display:flex;"><span><span style="color:#080;font-style:italic"></span><span style="color:#a2f;font-weight:bold">resource</span> <span style="color:#b44">&#34;google_compute_global_address&#34;</span> <span style="color:#b44">&#34;service2_production&#34;</span> {
+</span></span><span style="display:flex;"><span>  <span style="color:#b44">name</span> = <span style="color:#b44">&#34;service2-production&#34;</span>
+</span></span><span style="display:flex;"><span>}
+</span></span><span style="display:flex;"><span><span style="color:#a2f;font-weight:bold">
+</span></span></span><span style="display:flex;"><span><span style="color:#a2f;font-weight:bold">resource</span> <span style="color:#b44">&#34;google_dns_record_set&#34;</span> <span style="color:#b44">&#34;service1&#34;</span> {
+</span></span><span style="display:flex;"><span>  <span style="color:#b44">name</span> = <span style="color:#b44">&#34;service2.</span><span style="color:#b68;font-weight:bold">${</span>google_dns_managed_zone.production.dns_name<span style="color:#b68;font-weight:bold">}</span><span style="color:#b44">&#34;</span>
+</span></span><span style="display:flex;"><span>  <span style="color:#b44">type</span> = <span style="color:#b44">&#34;A&#34;</span>
+</span></span><span style="display:flex;"><span>  <span style="color:#b44">ttl</span>  = <span style="color:#666">300</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>  <span style="color:#b44">managed_zone</span> = google_dns_managed_zone.production.name
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>  <span style="color:#b44">rrdatas</span> = [google_compute_global_address.service2_production.address]
+</span></span><span style="display:flex;"><span>}
+</span></span></code></pre></div><p>さて、Production環境についてはこれで<code>example.com</code>にservice1が、<code>service2.example.com</code>にservice2が立つようになった。</p>
 <p>次にStaging環境でこれを構成する。</p>
 <p>基本的には上記の通りIPを確保してAレコードを当てれば良いのだが、キーポイントとして<code>service2.staging.example.com</code>というようなサブドメインを駆使して環境差分(production/staging)を吸収するケースでは<code>staging.example.com</code>といった各環境ごとにゾーンを構成する方が構成として綺麗である。</p>
 <p>各環境ごとにゾーンを構成するためにはメインのゾーンから各環境を示すサブドメインに対してNSレコードを貼っておく必要がある。</p>
-<div class="highlight"><pre tabindex="0" style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-terraform" data-lang="terraform"><span style="color:#080;font-style:italic">// NS record for staging
-</span><span style="color:#080;font-style:italic"></span><span style="color:#a2f;font-weight:bold">resource</span> <span style="color:#b44">&#34;google_dns_record_set&#34;</span> <span style="color:#b44">&#34;staging&#34;</span> {
-  <span style="color:#b44">name</span> = <span style="color:#b44">&#34;staging.</span><span style="color:#b68;font-weight:bold">${</span>google_dns_managed_zone.production.dns_name<span style="color:#b68;font-weight:bold">}</span><span style="color:#b44">&#34;</span>
-  <span style="color:#b44">type</span> = <span style="color:#b44">&#34;NS&#34;</span>
-  <span style="color:#b44">ttl</span>  = <span style="color:#666">300</span>
-
-  <span style="color:#b44">managed_zone</span> = google_dns_managed_zone.production.name
-
-  <span style="color:#b44">rrdatas</span> = google_dns_managed_zone.production.name_servers
-}
-</code></pre></div><p>この上で、ゾーンを構成し、各サービスについてのIPとレコードを構成する。</p>
-<div class="highlight"><pre tabindex="0" style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-terraform" data-lang="terraform"><span style="color:#080;font-style:italic">// Staging Zone
-</span><span style="color:#080;font-style:italic"></span><span style="color:#a2f;font-weight:bold">resource</span> <span style="color:#b44">&#34;google_dns_managed_zone&#34;</span> <span style="color:#b44">&#34;staging&#34;</span> {
-  <span style="color:#b44">name</span>        = <span style="color:#b44">&#34;staging&#34;</span>
-  <span style="color:#b44">dns_name</span>    = <span style="color:#b44">&#34;example.com.&#34;</span>
-  <span style="color:#b44">description</span> = <span style="color:#b44">&#34;some description&#34;</span>
-}<span style="color:#080;font-style:italic">
-</span><span style="color:#080;font-style:italic">
-</span><span style="color:#080;font-style:italic">// staging.example.comに立てるサービス
-</span><span style="color:#080;font-style:italic"></span><span style="color:#a2f;font-weight:bold">resource</span> <span style="color:#b44">&#34;google_compute_global_address&#34;</span> <span style="color:#b44">&#34;service1_staging&#34;</span> {
-  <span style="color:#b44">name</span> = <span style="color:#b44">&#34;service1-staging&#34;</span>
-}
-<span style="color:#a2f;font-weight:bold">
-</span><span style="color:#a2f;font-weight:bold">resource</span> <span style="color:#b44">&#34;google_dns_record_set&#34;</span> <span style="color:#b44">&#34;service1&#34;</span> {
-  <span style="color:#b44">name</span> = google_dns_managed_zone.staging.dns_name
-  <span style="color:#b44">type</span> = <span style="color:#b44">&#34;A&#34;</span>
-  <span style="color:#b44">ttl</span>  = <span style="color:#666">300</span>
-
-  <span style="color:#b44">managed_zone</span> = google_dns_managed_zone.staging.name
-
-  <span style="color:#b44">rrdatas</span> = [google_compute_global_address.service1.address]
-}<span style="color:#080;font-style:italic">
-</span><span style="color:#080;font-style:italic">
-</span><span style="color:#080;font-style:italic">// service2.staging.example.comに立てるサービス
-</span><span style="color:#080;font-style:italic"></span><span style="color:#a2f;font-weight:bold">resource</span> <span style="color:#b44">&#34;google_compute_global_address&#34;</span> <span style="color:#b44">&#34;service2_staging&#34;</span> {
-  <span style="color:#b44">name</span> = <span style="color:#b44">&#34;service2-staging&#34;</span>
-}
-<span style="color:#a2f;font-weight:bold">
-</span><span style="color:#a2f;font-weight:bold">resource</span> <span style="color:#b44">&#34;google_dns_record_set&#34;</span> <span style="color:#b44">&#34;service1&#34;</span> {
-  <span style="color:#b44">name</span> = <span style="color:#b44">&#34;service2.</span><span style="color:#b68;font-weight:bold">${</span>google_dns_managed_zone.staging.dns_name<span style="color:#b68;font-weight:bold">}</span><span style="color:#b44">&#34;</span>
-  <span style="color:#b44">type</span> = <span style="color:#b44">&#34;A&#34;</span>
-  <span style="color:#b44">ttl</span>  = <span style="color:#666">300</span>
-
-  <span style="color:#b44">managed_zone</span> = google_dns_managed_zone.staging.name
-
-  <span style="color:#b44">rrdatas</span> = [google_compute_global_address.service2.address]
-}
-</code></pre></div><h2 id="google-domainsにてネームサーバーを設定する">Google Domainsにてネームサーバーを設定する</h2>
+<div class="highlight"><pre tabindex="0" style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-terraform" data-lang="terraform"><span style="display:flex;"><span><span style="color:#080;font-style:italic">// NS record for staging
+</span></span></span><span style="display:flex;"><span><span style="color:#080;font-style:italic"></span><span style="color:#a2f;font-weight:bold">resource</span> <span style="color:#b44">&#34;google_dns_record_set&#34;</span> <span style="color:#b44">&#34;staging&#34;</span> {
+</span></span><span style="display:flex;"><span>  <span style="color:#b44">name</span> = <span style="color:#b44">&#34;staging.</span><span style="color:#b68;font-weight:bold">${</span>google_dns_managed_zone.production.dns_name<span style="color:#b68;font-weight:bold">}</span><span style="color:#b44">&#34;</span>
+</span></span><span style="display:flex;"><span>  <span style="color:#b44">type</span> = <span style="color:#b44">&#34;NS&#34;</span>
+</span></span><span style="display:flex;"><span>  <span style="color:#b44">ttl</span>  = <span style="color:#666">300</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>  <span style="color:#b44">managed_zone</span> = google_dns_managed_zone.production.name
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>  <span style="color:#b44">rrdatas</span> = google_dns_managed_zone.production.name_servers
+</span></span><span style="display:flex;"><span>}
+</span></span></code></pre></div><p>この上で、ゾーンを構成し、各サービスについてのIPとレコードを構成する。</p>
+<div class="highlight"><pre tabindex="0" style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-terraform" data-lang="terraform"><span style="display:flex;"><span><span style="color:#080;font-style:italic">// Staging Zone
+</span></span></span><span style="display:flex;"><span><span style="color:#080;font-style:italic"></span><span style="color:#a2f;font-weight:bold">resource</span> <span style="color:#b44">&#34;google_dns_managed_zone&#34;</span> <span style="color:#b44">&#34;staging&#34;</span> {
+</span></span><span style="display:flex;"><span>  <span style="color:#b44">name</span>        = <span style="color:#b44">&#34;staging&#34;</span>
+</span></span><span style="display:flex;"><span>  <span style="color:#b44">dns_name</span>    = <span style="color:#b44">&#34;example.com.&#34;</span>
+</span></span><span style="display:flex;"><span>  <span style="color:#b44">description</span> = <span style="color:#b44">&#34;some description&#34;</span>
+</span></span><span style="display:flex;"><span>}<span style="color:#080;font-style:italic">
+</span></span></span><span style="display:flex;"><span><span style="color:#080;font-style:italic">
+</span></span></span><span style="display:flex;"><span><span style="color:#080;font-style:italic">// staging.example.comに立てるサービス
+</span></span></span><span style="display:flex;"><span><span style="color:#080;font-style:italic"></span><span style="color:#a2f;font-weight:bold">resource</span> <span style="color:#b44">&#34;google_compute_global_address&#34;</span> <span style="color:#b44">&#34;service1_staging&#34;</span> {
+</span></span><span style="display:flex;"><span>  <span style="color:#b44">name</span> = <span style="color:#b44">&#34;service1-staging&#34;</span>
+</span></span><span style="display:flex;"><span>}
+</span></span><span style="display:flex;"><span><span style="color:#a2f;font-weight:bold">
+</span></span></span><span style="display:flex;"><span><span style="color:#a2f;font-weight:bold">resource</span> <span style="color:#b44">&#34;google_dns_record_set&#34;</span> <span style="color:#b44">&#34;service1&#34;</span> {
+</span></span><span style="display:flex;"><span>  <span style="color:#b44">name</span> = google_dns_managed_zone.staging.dns_name
+</span></span><span style="display:flex;"><span>  <span style="color:#b44">type</span> = <span style="color:#b44">&#34;A&#34;</span>
+</span></span><span style="display:flex;"><span>  <span style="color:#b44">ttl</span>  = <span style="color:#666">300</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>  <span style="color:#b44">managed_zone</span> = google_dns_managed_zone.staging.name
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>  <span style="color:#b44">rrdatas</span> = [google_compute_global_address.service1.address]
+</span></span><span style="display:flex;"><span>}<span style="color:#080;font-style:italic">
+</span></span></span><span style="display:flex;"><span><span style="color:#080;font-style:italic">
+</span></span></span><span style="display:flex;"><span><span style="color:#080;font-style:italic">// service2.staging.example.comに立てるサービス
+</span></span></span><span style="display:flex;"><span><span style="color:#080;font-style:italic"></span><span style="color:#a2f;font-weight:bold">resource</span> <span style="color:#b44">&#34;google_compute_global_address&#34;</span> <span style="color:#b44">&#34;service2_staging&#34;</span> {
+</span></span><span style="display:flex;"><span>  <span style="color:#b44">name</span> = <span style="color:#b44">&#34;service2-staging&#34;</span>
+</span></span><span style="display:flex;"><span>}
+</span></span><span style="display:flex;"><span><span style="color:#a2f;font-weight:bold">
+</span></span></span><span style="display:flex;"><span><span style="color:#a2f;font-weight:bold">resource</span> <span style="color:#b44">&#34;google_dns_record_set&#34;</span> <span style="color:#b44">&#34;service1&#34;</span> {
+</span></span><span style="display:flex;"><span>  <span style="color:#b44">name</span> = <span style="color:#b44">&#34;service2.</span><span style="color:#b68;font-weight:bold">${</span>google_dns_managed_zone.staging.dns_name<span style="color:#b68;font-weight:bold">}</span><span style="color:#b44">&#34;</span>
+</span></span><span style="display:flex;"><span>  <span style="color:#b44">type</span> = <span style="color:#b44">&#34;A&#34;</span>
+</span></span><span style="display:flex;"><span>  <span style="color:#b44">ttl</span>  = <span style="color:#666">300</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>  <span style="color:#b44">managed_zone</span> = google_dns_managed_zone.staging.name
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>  <span style="color:#b44">rrdatas</span> = [google_compute_global_address.service2.address]
+</span></span><span style="display:flex;"><span>}
+</span></span></code></pre></div><h2 id="google-domainsにてネームサーバーを設定する">Google Domainsにてネームサーバーを設定する</h2>
 <p>ここまでできたらGoogle Domainsのカスタムネームサーバーにてゾーン構成時のネームサーバーを設定する。
 ネームサーバーは<code>google_dns_managed_zone</code>リソースを実行した際にネームサーバーが自動的に設定される。</p>
 <h1 id="まとめ">まとめ</h1>
@@ -446,9 +446,13 @@ Google DomainsとCloud Domainsの機能はほぼ完全に被っているが、�
                         
                         
                         
+                        
+                        
                         <a href="/tags/kubernetes" title="kubernetes">
                             kubernetes
                         </a>
+                        
+                        
                         
                         
                         
@@ -467,6 +471,10 @@ Google DomainsとCloud Domainsの機能はほぼ完全に被っているが、�
                         
                         
                         
+                        
+                        <a href="/tags/streets" title="streets">
+                            streets
+                        </a>
                         
                         
                         

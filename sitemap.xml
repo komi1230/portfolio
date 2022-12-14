@@ -2,20 +2,32 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"
   xmlns:xhtml="http://www.w3.org/1999/xhtml">
   <url>
+    <loc>http://komi.dev/post/2022-12-14-summary/</loc>
+    <lastmod>2022-12-14T00:00:00+00:00</lastmod>
+  </url><url>
+    <loc>http://komi.dev/categories/career/</loc>
+    <lastmod>2022-12-14T00:00:00+00:00</lastmod>
+  </url><url>
     <loc>http://komi.dev/categories/</loc>
-    <lastmod>2022-08-04T00:00:00+00:00</lastmod>
+    <lastmod>2022-12-14T00:00:00+00:00</lastmod>
+  </url><url>
+    <loc>http://komi.dev/tags/ksquad/</loc>
+    <lastmod>2022-12-14T00:00:00+00:00</lastmod>
   </url><url>
     <loc>http://komi.dev/</loc>
-    <lastmod>2022-08-04T00:00:00+00:00</lastmod>
+    <lastmod>2022-12-14T00:00:00+00:00</lastmod>
+  </url><url>
+    <loc>http://komi.dev/tags/life/</loc>
+    <lastmod>2022-12-14T00:00:00+00:00</lastmod>
   </url><url>
     <loc>http://komi.dev/post/</loc>
-    <lastmod>2022-08-04T00:00:00+00:00</lastmod>
+    <lastmod>2022-12-14T00:00:00+00:00</lastmod>
   </url><url>
     <loc>http://komi.dev/tags/streets/</loc>
-    <lastmod>2022-08-04T00:00:00+00:00</lastmod>
+    <lastmod>2022-12-14T00:00:00+00:00</lastmod>
   </url><url>
     <loc>http://komi.dev/tags/</loc>
-    <lastmod>2022-08-04T00:00:00+00:00</lastmod>
+    <lastmod>2022-12-14T00:00:00+00:00</lastmod>
   </url><url>
     <loc>http://komi.dev/categories/tech/</loc>
     <lastmod>2022-08-04T00:00:00+00:00</lastmod>
@@ -46,9 +58,6 @@
   </url><url>
     <loc>http://komi.dev/post/2022-03-21-flutter-is-easy/</loc>
     <lastmod>2022-03-21T00:00:00+00:00</lastmod>
-  </url><url>
-    <loc>http://komi.dev/categories/career/</loc>
-    <lastmod>2022-02-28T00:00:00+00:00</lastmod>
   </url><url>
     <loc>http://komi.dev/tags/startup/</loc>
     <lastmod>2022-02-28T00:00:00+00:00</lastmod>

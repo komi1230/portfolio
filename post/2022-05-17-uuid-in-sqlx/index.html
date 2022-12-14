@@ -230,96 +230,96 @@
 <p>そんなSQLxだが、SQLxクレートがDBに対応した型を一部提供してくれている。その中に<code>Uuid</code>型があるのだが、これが結構クセモノだったりする。</p>
 <p>というのも、Webアプリケーションを作成するときはDBから得られた<code>Uuid</code>型のデータをJSONとして変換してクライアント側に返却するというのはよくあることだが、SQLxが提供する<code>Uuid</code>型は<code>Serialize</code>が実装されていないので構造体をそのままJSONに変換することができない。</p>
 <p>以下のコードを考えてみる。</p>
-<div class="highlight"><pre tabindex="0" style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-rust" data-lang="rust"><span style="color:#a2f;font-weight:bold">use</span><span style="color:#bbb"> </span>anyhow::{Context,<span style="color:#bbb"> </span><span style="color:#a2f">Result</span>};<span style="color:#bbb">
-</span><span style="color:#bbb"></span><span style="color:#a2f;font-weight:bold">use</span><span style="color:#bbb"> </span>serde::{Deserialize,<span style="color:#bbb"> </span>Serialize};<span style="color:#bbb">
-</span><span style="color:#bbb"></span><span style="color:#a2f;font-weight:bold">use</span><span style="color:#bbb"> </span>sqlx::{postgres::PgRow,<span style="color:#bbb"> </span>Pool,<span style="color:#bbb"> </span>Postgres,<span style="color:#bbb"> </span>Row};<span style="color:#bbb">
-</span><span style="color:#bbb"></span><span style="color:#080;font-style:italic">//use uuid::Uuid;
-</span><span style="color:#080;font-style:italic"></span><span style="color:#bbb">
-</span><span style="color:#bbb"></span><span style="color:#080">#[derive(Debug, Deserialize, Serialize, sqlx::FromRow)]</span><span style="color:#bbb">
-</span><span style="color:#bbb"></span><span style="color:#a2f;font-weight:bold">pub</span><span style="color:#bbb"> </span><span style="color:#a2f;font-weight:bold">struct</span> <span style="color:#00f">UserAccessToken</span><span style="color:#bbb"> </span>{<span style="color:#bbb">
-</span><span style="color:#bbb">    </span><span style="color:#a2f;font-weight:bold">pub</span><span style="color:#bbb"> </span>user_id: <span style="color:#0b0;font-weight:bold">i64</span>,<span style="color:#bbb">
-</span><span style="color:#bbb">    </span><span style="color:#a2f;font-weight:bold">pub</span><span style="color:#bbb"> </span>access_token: <span style="color:#00f">sqlx</span>::types::Uuid,<span style="color:#bbb">
-</span><span style="color:#bbb"></span>}<span style="color:#bbb">
-</span><span style="color:#bbb">
-</span><span style="color:#bbb"></span><span style="color:#a2f;font-weight:bold">pub</span><span style="color:#bbb"> </span><span style="color:#a2f;font-weight:bold">fn</span> <span style="color:#00a000">register_user</span>(id: <span style="color:#0b0;font-weight:bold">i64</span>)<span style="color:#bbb"> </span>-&gt; <span style="color:#a2f">Result</span><span style="color:#666">&lt;</span>UserAccessToken<span style="color:#666">&gt;</span><span style="color:#bbb"> </span>{<span style="color:#bbb">
-</span><span style="color:#bbb">  </span>sqlx::query(<span style="color:#bbb">
-</span><span style="color:#bbb">  </span><span style="color:#b44">r#&#34;
-</span><span style="color:#b44">    INSERT INTO users (id) VALUES ($1)
-</span><span style="color:#b44">    RETURNING id, access_token
-</span><span style="color:#b44">  &#34;#,
-</span><span style="color:#b44">  )
-</span><span style="color:#b44">  .bind(some_id)
-</span><span style="color:#b44">  .map(|row: PgRow| UserAccessToken {
-</span><span style="color:#b44">      user_id: row.get(0),
-</span><span style="color:#b44">      //access_token: Uuid::from_u128(row.get::&lt;sqlx::types::Uuid, _&gt;(1).as_u128()),
-</span><span style="color:#b44">      access_token: row.get(1),
-</span><span style="color:#b44">  })
-</span><span style="color:#b44">  .fetch_one(pool)
-</span><span style="color:#b44">  .await
-</span><span style="color:#b44">  .context(&#34;Creating user&#34;</span>)<span style="color:#bbb">
-</span><span style="color:#bbb"></span>}<span style="color:#bbb">
-</span></code></pre></div><p>SQLxでクエリを発行する際は<code>query_as</code>が有用だが、今回は明示的に型変換を行うため<code>query</code>を使っている。</p>
+<div class="highlight"><pre tabindex="0" style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-rust" data-lang="rust"><span style="display:flex;"><span><span style="color:#a2f;font-weight:bold">use</span><span style="color:#bbb"> </span>anyhow::{Context,<span style="color:#bbb"> </span><span style="color:#a2f">Result</span>};<span style="color:#bbb">
+</span></span></span><span style="display:flex;"><span><span style="color:#bbb"></span><span style="color:#a2f;font-weight:bold">use</span><span style="color:#bbb"> </span>serde::{Deserialize,<span style="color:#bbb"> </span>Serialize};<span style="color:#bbb">
+</span></span></span><span style="display:flex;"><span><span style="color:#bbb"></span><span style="color:#a2f;font-weight:bold">use</span><span style="color:#bbb"> </span>sqlx::{postgres::PgRow,<span style="color:#bbb"> </span>Pool,<span style="color:#bbb"> </span>Postgres,<span style="color:#bbb"> </span>Row};<span style="color:#bbb">
+</span></span></span><span style="display:flex;"><span><span style="color:#bbb"></span><span style="color:#080;font-style:italic">//use uuid::Uuid;
+</span></span></span><span style="display:flex;"><span><span style="color:#080;font-style:italic"></span><span style="color:#bbb">
+</span></span></span><span style="display:flex;"><span><span style="color:#bbb"></span><span style="color:#080">#[derive(Debug, Deserialize, Serialize, sqlx::FromRow)]</span><span style="color:#bbb">
+</span></span></span><span style="display:flex;"><span><span style="color:#bbb"></span><span style="color:#a2f;font-weight:bold">pub</span><span style="color:#bbb"> </span><span style="color:#a2f;font-weight:bold">struct</span> <span style="color:#00f">UserAccessToken</span><span style="color:#bbb"> </span>{<span style="color:#bbb">
+</span></span></span><span style="display:flex;"><span><span style="color:#bbb">    </span><span style="color:#a2f;font-weight:bold">pub</span><span style="color:#bbb"> </span>user_id: <span style="color:#0b0;font-weight:bold">i64</span>,<span style="color:#bbb">
+</span></span></span><span style="display:flex;"><span><span style="color:#bbb">    </span><span style="color:#a2f;font-weight:bold">pub</span><span style="color:#bbb"> </span>access_token: <span style="color:#00f">sqlx</span>::types::Uuid,<span style="color:#bbb">
+</span></span></span><span style="display:flex;"><span><span style="color:#bbb"></span>}<span style="color:#bbb">
+</span></span></span><span style="display:flex;"><span><span style="color:#bbb">
+</span></span></span><span style="display:flex;"><span><span style="color:#bbb"></span><span style="color:#a2f;font-weight:bold">pub</span><span style="color:#bbb"> </span><span style="color:#a2f;font-weight:bold">fn</span> <span style="color:#00a000">register_user</span>(id: <span style="color:#0b0;font-weight:bold">i64</span>)<span style="color:#bbb"> </span>-&gt; <span style="color:#a2f">Result</span><span style="color:#666">&lt;</span>UserAccessToken<span style="color:#666">&gt;</span><span style="color:#bbb"> </span>{<span style="color:#bbb">
+</span></span></span><span style="display:flex;"><span><span style="color:#bbb">  </span>sqlx::query(<span style="color:#bbb">
+</span></span></span><span style="display:flex;"><span><span style="color:#bbb">  </span><span style="color:#b44">r#&#34;
+</span></span></span><span style="display:flex;"><span><span style="color:#b44">    INSERT INTO users (id) VALUES ($1)
+</span></span></span><span style="display:flex;"><span><span style="color:#b44">    RETURNING id, access_token
+</span></span></span><span style="display:flex;"><span><span style="color:#b44">  &#34;#,
+</span></span></span><span style="display:flex;"><span><span style="color:#b44">  )
+</span></span></span><span style="display:flex;"><span><span style="color:#b44">  .bind(some_id)
+</span></span></span><span style="display:flex;"><span><span style="color:#b44">  .map(|row: PgRow| UserAccessToken {
+</span></span></span><span style="display:flex;"><span><span style="color:#b44">      user_id: row.get(0),
+</span></span></span><span style="display:flex;"><span><span style="color:#b44">      //access_token: Uuid::from_u128(row.get::&lt;sqlx::types::Uuid, _&gt;(1).as_u128()),
+</span></span></span><span style="display:flex;"><span><span style="color:#b44">      access_token: row.get(1),
+</span></span></span><span style="display:flex;"><span><span style="color:#b44">  })
+</span></span></span><span style="display:flex;"><span><span style="color:#b44">  .fetch_one(pool)
+</span></span></span><span style="display:flex;"><span><span style="color:#b44">  .await
+</span></span></span><span style="display:flex;"><span><span style="color:#b44">  .context(&#34;Creating user&#34;</span>)<span style="color:#bbb">
+</span></span></span><span style="display:flex;"><span><span style="color:#bbb"></span>}<span style="color:#bbb">
+</span></span></span></code></pre></div><p>SQLxでクエリを発行する際は<code>query_as</code>が有用だが、今回は明示的に型変換を行うため<code>query</code>を使っている。</p>
 <p>このコードで肝となるのは<code>.map(|row| UserAccessToken { ... })</code>の部分で、構造体として<code>access_token</code>フィールドは<code>sqlx::types::Uuid</code>型を指定している。</p>
 <p>このコードはコンパイルは通らず、エラーメッセージは</p>
-<pre><code>the trait bound `sqlx::types::Uuid: Deserialize&lt;'_&gt;` is not satisfied
-the trait `Deserialize&lt;'_&gt;` is not implemented for `sqlx::types::Uuid`
+<pre tabindex="0"><code>the trait bound `sqlx::types::Uuid: Deserialize&lt;&#39;_&gt;` is not satisfied
+the trait `Deserialize&lt;&#39;_&gt;` is not implemented for `sqlx::types::Uuid`
 </code></pre><p>を吐く。
 これは<code>sqlx::types::Uuid</code>は<code>Serialize/Deserialize</code>を実装していないからである。</p>
 <p>では<code>access_token</code>フィールドの型を<code>uuid::Uuid</code>とし、<code>.map(...)</code>の中はそのままにしてみる。
 このとき<code>uuid</code>クレートのfeaturesにserdeを入れるのを忘れずに。</p>
-<div class="highlight"><pre tabindex="0" style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-rust" data-lang="rust"><span style="color:#080">#[derive(Debug, Deserialize, Serialize, sqlx::FromRow)]</span><span style="color:#bbb">
-</span><span style="color:#bbb"></span><span style="color:#a2f;font-weight:bold">pub</span><span style="color:#bbb"> </span><span style="color:#a2f;font-weight:bold">struct</span> <span style="color:#00f">UserAccessToken</span><span style="color:#bbb"> </span>{<span style="color:#bbb">
-</span><span style="color:#bbb">    </span><span style="color:#a2f;font-weight:bold">pub</span><span style="color:#bbb"> </span>user_id: <span style="color:#0b0;font-weight:bold">i64</span>,<span style="color:#bbb">
-</span><span style="color:#bbb">    </span><span style="color:#a2f;font-weight:bold">pub</span><span style="color:#bbb"> </span>access_token: <span style="color:#00f">uuid</span>::Uuid,<span style="color:#bbb">
-</span><span style="color:#bbb"></span>}<span style="color:#bbb">
-</span><span style="color:#bbb">
-</span><span style="color:#bbb"></span><span style="color:#a2f;font-weight:bold">pub</span><span style="color:#bbb"> </span><span style="color:#a2f;font-weight:bold">fn</span> <span style="color:#00a000">register_user</span>(id: <span style="color:#0b0;font-weight:bold">i64</span>)<span style="color:#bbb"> </span>-&gt; <span style="color:#a2f">Result</span><span style="color:#666">&lt;</span>UserAccessToken<span style="color:#666">&gt;</span><span style="color:#bbb"> </span>{<span style="color:#bbb">
-</span><span style="color:#bbb">  </span>sqlx::query(<span style="color:#bbb">
-</span><span style="color:#bbb">  </span><span style="color:#b44">r#&#34;
-</span><span style="color:#b44">    INSERT INTO users (id) VALUES ($1)
-</span><span style="color:#b44">    RETURNING id, access_token
-</span><span style="color:#b44">  &#34;#,
-</span><span style="color:#b44">  )
-</span><span style="color:#b44">  .bind(some_id)
-</span><span style="color:#b44">  .map(|row: PgRow| UserAccessToken {
-</span><span style="color:#b44">      user_id: row.get(0),
-</span><span style="color:#b44">      //access_token: Uuid::from_u128(row.get::&lt;sqlx::types::Uuid, _&gt;(1).as_u128()),
-</span><span style="color:#b44">      access_token: row.get(1),
-</span><span style="color:#b44">  })
-</span><span style="color:#b44">  .fetch_one(pool)
-</span><span style="color:#b44">  .await
-</span><span style="color:#b44">  .context(&#34;Creating user&#34;</span>)<span style="color:#bbb">
-</span><span style="color:#bbb"></span>}<span style="color:#bbb">
-</span></code></pre></div><p>これはどうなるかというと、これもコンパイルが通らない。
+<div class="highlight"><pre tabindex="0" style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-rust" data-lang="rust"><span style="display:flex;"><span><span style="color:#080">#[derive(Debug, Deserialize, Serialize, sqlx::FromRow)]</span><span style="color:#bbb">
+</span></span></span><span style="display:flex;"><span><span style="color:#bbb"></span><span style="color:#a2f;font-weight:bold">pub</span><span style="color:#bbb"> </span><span style="color:#a2f;font-weight:bold">struct</span> <span style="color:#00f">UserAccessToken</span><span style="color:#bbb"> </span>{<span style="color:#bbb">
+</span></span></span><span style="display:flex;"><span><span style="color:#bbb">    </span><span style="color:#a2f;font-weight:bold">pub</span><span style="color:#bbb"> </span>user_id: <span style="color:#0b0;font-weight:bold">i64</span>,<span style="color:#bbb">
+</span></span></span><span style="display:flex;"><span><span style="color:#bbb">    </span><span style="color:#a2f;font-weight:bold">pub</span><span style="color:#bbb"> </span>access_token: <span style="color:#00f">uuid</span>::Uuid,<span style="color:#bbb">
+</span></span></span><span style="display:flex;"><span><span style="color:#bbb"></span>}<span style="color:#bbb">
+</span></span></span><span style="display:flex;"><span><span style="color:#bbb">
+</span></span></span><span style="display:flex;"><span><span style="color:#bbb"></span><span style="color:#a2f;font-weight:bold">pub</span><span style="color:#bbb"> </span><span style="color:#a2f;font-weight:bold">fn</span> <span style="color:#00a000">register_user</span>(id: <span style="color:#0b0;font-weight:bold">i64</span>)<span style="color:#bbb"> </span>-&gt; <span style="color:#a2f">Result</span><span style="color:#666">&lt;</span>UserAccessToken<span style="color:#666">&gt;</span><span style="color:#bbb"> </span>{<span style="color:#bbb">
+</span></span></span><span style="display:flex;"><span><span style="color:#bbb">  </span>sqlx::query(<span style="color:#bbb">
+</span></span></span><span style="display:flex;"><span><span style="color:#bbb">  </span><span style="color:#b44">r#&#34;
+</span></span></span><span style="display:flex;"><span><span style="color:#b44">    INSERT INTO users (id) VALUES ($1)
+</span></span></span><span style="display:flex;"><span><span style="color:#b44">    RETURNING id, access_token
+</span></span></span><span style="display:flex;"><span><span style="color:#b44">  &#34;#,
+</span></span></span><span style="display:flex;"><span><span style="color:#b44">  )
+</span></span></span><span style="display:flex;"><span><span style="color:#b44">  .bind(some_id)
+</span></span></span><span style="display:flex;"><span><span style="color:#b44">  .map(|row: PgRow| UserAccessToken {
+</span></span></span><span style="display:flex;"><span><span style="color:#b44">      user_id: row.get(0),
+</span></span></span><span style="display:flex;"><span><span style="color:#b44">      //access_token: Uuid::from_u128(row.get::&lt;sqlx::types::Uuid, _&gt;(1).as_u128()),
+</span></span></span><span style="display:flex;"><span><span style="color:#b44">      access_token: row.get(1),
+</span></span></span><span style="display:flex;"><span><span style="color:#b44">  })
+</span></span></span><span style="display:flex;"><span><span style="color:#b44">  .fetch_one(pool)
+</span></span></span><span style="display:flex;"><span><span style="color:#b44">  .await
+</span></span></span><span style="display:flex;"><span><span style="color:#b44">  .context(&#34;Creating user&#34;</span>)<span style="color:#bbb">
+</span></span></span><span style="display:flex;"><span><span style="color:#bbb"></span>}<span style="color:#bbb">
+</span></span></span></code></pre></div><p>これはどうなるかというと、これもコンパイルが通らない。
 エラーメッセージは以下の通り。</p>
-<pre><code>the trait bound `uuid::Uuid: sqlx::Decode&lt;'_, Postgres&gt;` is not satisfied
-the trait `sqlx::Decode&lt;'_, Postgres&gt;` is not implemented for `uuid::Uuid`
+<pre tabindex="0"><code>the trait bound `uuid::Uuid: sqlx::Decode&lt;&#39;_, Postgres&gt;` is not satisfied
+the trait `sqlx::Decode&lt;&#39;_, Postgres&gt;` is not implemented for `uuid::Uuid`
 </code></pre><p><code>uuid</code>クレートの<code>Uuid</code>型はSQLxが提供する<code>Decode</code>を実装してないためである。</p>
 <p>JSONにデシリアライズすることはできてもDBからデータを構造体にシリアライズできない。</p>
 <p>ということで折衷案として以下のように、DBからデータの受け渡しは<code>sqlx::types::Uuid</code>で受け、それを一度<code>u128</code>に変換し、これを<code>uuid::Uuid</code>に持っていく必要がある。</p>
-<div class="highlight"><pre tabindex="0" style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-rust" data-lang="rust"><span style="color:#080">#[derive(Debug, Deserialize, Serialize, sqlx::FromRow)]</span><span style="color:#bbb">
-</span><span style="color:#bbb"></span><span style="color:#a2f;font-weight:bold">pub</span><span style="color:#bbb"> </span><span style="color:#a2f;font-weight:bold">struct</span> <span style="color:#00f">UserAccessToken</span><span style="color:#bbb"> </span>{<span style="color:#bbb">
-</span><span style="color:#bbb">    </span><span style="color:#a2f;font-weight:bold">pub</span><span style="color:#bbb"> </span>user_id: <span style="color:#0b0;font-weight:bold">i64</span>,<span style="color:#bbb">
-</span><span style="color:#bbb">    </span><span style="color:#a2f;font-weight:bold">pub</span><span style="color:#bbb"> </span>access_token: <span style="color:#00f">uuid</span>::Uuid,<span style="color:#bbb">
-</span><span style="color:#bbb"></span>}<span style="color:#bbb">
-</span><span style="color:#bbb">
-</span><span style="color:#bbb"></span><span style="color:#a2f;font-weight:bold">pub</span><span style="color:#bbb"> </span><span style="color:#a2f;font-weight:bold">fn</span> <span style="color:#00a000">register_user</span>(id: <span style="color:#0b0;font-weight:bold">i64</span>)<span style="color:#bbb"> </span>-&gt; <span style="color:#a2f">Result</span><span style="color:#666">&lt;</span>UserAccessToken<span style="color:#666">&gt;</span><span style="color:#bbb"> </span>{<span style="color:#bbb">
-</span><span style="color:#bbb">  </span>sqlx::query(<span style="color:#bbb">
-</span><span style="color:#bbb">  </span><span style="color:#b44">r#&#34;
-</span><span style="color:#b44">    INSERT INTO users (id) VALUES ($1)
-</span><span style="color:#b44">    RETURNING id, access_token
-</span><span style="color:#b44">  &#34;#,
-</span><span style="color:#b44">  )
-</span><span style="color:#b44">  .bind(some_id)
-</span><span style="color:#b44">  .map(|row: PgRow| UserAccessToken {
-</span><span style="color:#b44">      user_id: row.get(0),
-</span><span style="color:#b44">      access_token: uuid::Uuid::from_u128(row.get::&lt;sqlx::types::Uuid, _&gt;(1).as_u128()),
-</span><span style="color:#b44">  })
-</span><span style="color:#b44">  .fetch_one(pool)
-</span><span style="color:#b44">  .await
-</span><span style="color:#b44">  .context(&#34;Creating user&#34;</span>)<span style="color:#bbb">
-</span><span style="color:#bbb"></span>}<span style="color:#bbb">
-</span></code></pre></div><p>本来ならもっと上手いやり方がありそうな気もするのだが、今のところはこのような方法で乗り切っている。</p>
+<div class="highlight"><pre tabindex="0" style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-rust" data-lang="rust"><span style="display:flex;"><span><span style="color:#080">#[derive(Debug, Deserialize, Serialize, sqlx::FromRow)]</span><span style="color:#bbb">
+</span></span></span><span style="display:flex;"><span><span style="color:#bbb"></span><span style="color:#a2f;font-weight:bold">pub</span><span style="color:#bbb"> </span><span style="color:#a2f;font-weight:bold">struct</span> <span style="color:#00f">UserAccessToken</span><span style="color:#bbb"> </span>{<span style="color:#bbb">
+</span></span></span><span style="display:flex;"><span><span style="color:#bbb">    </span><span style="color:#a2f;font-weight:bold">pub</span><span style="color:#bbb"> </span>user_id: <span style="color:#0b0;font-weight:bold">i64</span>,<span style="color:#bbb">
+</span></span></span><span style="display:flex;"><span><span style="color:#bbb">    </span><span style="color:#a2f;font-weight:bold">pub</span><span style="color:#bbb"> </span>access_token: <span style="color:#00f">uuid</span>::Uuid,<span style="color:#bbb">
+</span></span></span><span style="display:flex;"><span><span style="color:#bbb"></span>}<span style="color:#bbb">
+</span></span></span><span style="display:flex;"><span><span style="color:#bbb">
+</span></span></span><span style="display:flex;"><span><span style="color:#bbb"></span><span style="color:#a2f;font-weight:bold">pub</span><span style="color:#bbb"> </span><span style="color:#a2f;font-weight:bold">fn</span> <span style="color:#00a000">register_user</span>(id: <span style="color:#0b0;font-weight:bold">i64</span>)<span style="color:#bbb"> </span>-&gt; <span style="color:#a2f">Result</span><span style="color:#666">&lt;</span>UserAccessToken<span style="color:#666">&gt;</span><span style="color:#bbb"> </span>{<span style="color:#bbb">
+</span></span></span><span style="display:flex;"><span><span style="color:#bbb">  </span>sqlx::query(<span style="color:#bbb">
+</span></span></span><span style="display:flex;"><span><span style="color:#bbb">  </span><span style="color:#b44">r#&#34;
+</span></span></span><span style="display:flex;"><span><span style="color:#b44">    INSERT INTO users (id) VALUES ($1)
+</span></span></span><span style="display:flex;"><span><span style="color:#b44">    RETURNING id, access_token
+</span></span></span><span style="display:flex;"><span><span style="color:#b44">  &#34;#,
+</span></span></span><span style="display:flex;"><span><span style="color:#b44">  )
+</span></span></span><span style="display:flex;"><span><span style="color:#b44">  .bind(some_id)
+</span></span></span><span style="display:flex;"><span><span style="color:#b44">  .map(|row: PgRow| UserAccessToken {
+</span></span></span><span style="display:flex;"><span><span style="color:#b44">      user_id: row.get(0),
+</span></span></span><span style="display:flex;"><span><span style="color:#b44">      access_token: uuid::Uuid::from_u128(row.get::&lt;sqlx::types::Uuid, _&gt;(1).as_u128()),
+</span></span></span><span style="display:flex;"><span><span style="color:#b44">  })
+</span></span></span><span style="display:flex;"><span><span style="color:#b44">  .fetch_one(pool)
+</span></span></span><span style="display:flex;"><span><span style="color:#b44">  .await
+</span></span></span><span style="display:flex;"><span><span style="color:#b44">  .context(&#34;Creating user&#34;</span>)<span style="color:#bbb">
+</span></span></span><span style="display:flex;"><span><span style="color:#bbb"></span>}<span style="color:#bbb">
+</span></span></span></code></pre></div><p>本来ならもっと上手いやり方がありそうな気もするのだが、今のところはこのような方法で乗り切っている。</p>
 
 
                 
@@ -387,9 +387,13 @@ the trait `sqlx::Decode&lt;'_, Postgres&gt;` is not implemented for `uuid::Uuid`
                         
                         
                         
+                        
+                        
                         <a href="/tags/kubernetes" title="kubernetes">
                             kubernetes
                         </a>
+                        
+                        
                         
                         
                         
@@ -408,6 +412,10 @@ the trait `sqlx::Decode&lt;'_, Postgres&gt;` is not implemented for `uuid::Uuid`
                         
                         
                         
+                        
+                        <a href="/tags/streets" title="streets">
+                            streets
+                        </a>
                         
                         
                         

@@ -233,161 +233,161 @@
 <p>Cloud SQLインスタンスを立てる際、パブリックIPを付与するかVPC内に立ててプライベートIPを付与するか、またはその両方を設定することができる。</p>
 <p>パブリックIPの場合は簡単にホスト名にIPを当てればいいのだが、プライベートIPの場合はVPC内に通信できるようVPCコネクタを用意する必要がある。</p>
 <p>Cloud RunはVPC内に立てるということができないので、このVPCコネクタを使うのが有効となる。</p>
-<div class="highlight"><pre tabindex="0" style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-terraform" data-lang="terraform"><span style="color:#a2f;font-weight:bold">resource</span> <span style="color:#b44">&#34;google_compute_network&#34;</span> <span style="color:#b44">&#34;vpc&#34;</span> {
-  <span style="color:#b44">name</span>                    = <span style="color:#b44">&#34;vpc&#34;</span>
-  <span style="color:#b44">auto_create_subnetworks</span> = <span style="color:#a2f;font-weight:bold">false</span>
-}
-<span style="color:#a2f;font-weight:bold">
-</span><span style="color:#a2f;font-weight:bold">resource</span> <span style="color:#b44">&#34;google_compute_subnetwork&#34;</span> <span style="color:#b44">&#34;vpc&#34;</span> {
-  <span style="color:#b44">name</span>                     = <span style="color:#b44">&#34;vpc&#34;</span>
-  <span style="color:#b44">ip_cidr_range</span>            = <span style="color:#b44">&#34;10.0.0.0/16&#34;</span>
-  <span style="color:#b44">network</span>                  = google_compute_network.vpc.self_link
-  <span style="color:#b44">region</span>                   = <span style="color:#a2f">var</span>.region
-  <span style="color:#b44">private_ip_google_access</span> = <span style="color:#a2f;font-weight:bold">true</span>
-}
-<span style="color:#a2f;font-weight:bold">
-</span><span style="color:#a2f;font-weight:bold">resource</span> <span style="color:#b44">&#34;google_vpc_access_connector&#34;</span> <span style="color:#b44">&#34;connector&#34;</span> {
-<span style="color:#a2f;font-weight:bold">  provider</span> <span style="color:#666">=</span> google<span style="color:#666">-</span>beta
-
-  <span style="color:#b44">name</span>   = <span style="color:#b44">&#34;vpc-connector&#34;</span>
-  <span style="color:#b44">region</span> = <span style="color:#a2f">var</span>.region
-  <span style="color:#b44">ip_cidr_range</span> = <span style="color:#b44">&#34;10.8.0.0/28&#34;</span>
-  <span style="color:#b44">network</span>       = google_compute_network.vpc.name
-}
-<span style="color:#a2f;font-weight:bold">
-</span><span style="color:#a2f;font-weight:bold">resource</span> <span style="color:#b44">&#34;google_compute_router&#34;</span> <span style="color:#b44">&#34;router&#34;</span> {
-<span style="color:#a2f;font-weight:bold">  provider</span> <span style="color:#666">=</span> google<span style="color:#666">-</span>beta
-
-  <span style="color:#b44">name</span>    = <span style="color:#b44">&#34;vpc-router&#34;</span>
-  <span style="color:#b44">region</span>  = <span style="color:#a2f">var</span>.region
-  <span style="color:#b44">network</span> = google_compute_network.vpc.id
-}
-<span style="color:#a2f;font-weight:bold">
-</span><span style="color:#a2f;font-weight:bold">resource</span> <span style="color:#b44">&#34;google_compute_router_nat&#34;</span> <span style="color:#b44">&#34;router_nat&#34;</span> {
-<span style="color:#a2f;font-weight:bold">  provider</span> <span style="color:#666">=</span> google<span style="color:#666">-</span>beta
-
-  <span style="color:#b44">name</span>                               = <span style="color:#b44">&#34;vpc-nat&#34;</span>
-  <span style="color:#b44">region</span>                             = <span style="color:#a2f">var</span>.region
-  <span style="color:#b44">router</span>                             = google_compute_router.router.name
-  <span style="color:#b44">source_subnetwork_ip_ranges_to_nat</span> = <span style="color:#b44">&#34;ALL_SUBNETWORKS_ALL_IP_RANGES&#34;</span>
-  <span style="color:#b44">nat_ip_allocate_option</span>             = <span style="color:#b44">&#34;AUTO_ONLY&#34;</span>
-}
-</code></pre></div><p>VPCコネクタは上記のような具合で作れる。</p>
+<div class="highlight"><pre tabindex="0" style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-terraform" data-lang="terraform"><span style="display:flex;"><span><span style="color:#a2f;font-weight:bold">resource</span> <span style="color:#b44">&#34;google_compute_network&#34;</span> <span style="color:#b44">&#34;vpc&#34;</span> {
+</span></span><span style="display:flex;"><span>  <span style="color:#b44">name</span>                    = <span style="color:#b44">&#34;vpc&#34;</span>
+</span></span><span style="display:flex;"><span>  <span style="color:#b44">auto_create_subnetworks</span> = <span style="color:#a2f;font-weight:bold">false</span>
+</span></span><span style="display:flex;"><span>}
+</span></span><span style="display:flex;"><span><span style="color:#a2f;font-weight:bold">
+</span></span></span><span style="display:flex;"><span><span style="color:#a2f;font-weight:bold">resource</span> <span style="color:#b44">&#34;google_compute_subnetwork&#34;</span> <span style="color:#b44">&#34;vpc&#34;</span> {
+</span></span><span style="display:flex;"><span>  <span style="color:#b44">name</span>                     = <span style="color:#b44">&#34;vpc&#34;</span>
+</span></span><span style="display:flex;"><span>  <span style="color:#b44">ip_cidr_range</span>            = <span style="color:#b44">&#34;10.0.0.0/16&#34;</span>
+</span></span><span style="display:flex;"><span>  <span style="color:#b44">network</span>                  = google_compute_network.vpc.self_link
+</span></span><span style="display:flex;"><span>  <span style="color:#b44">region</span>                   = <span style="color:#a2f">var</span>.region
+</span></span><span style="display:flex;"><span>  <span style="color:#b44">private_ip_google_access</span> = <span style="color:#a2f;font-weight:bold">true</span>
+</span></span><span style="display:flex;"><span>}
+</span></span><span style="display:flex;"><span><span style="color:#a2f;font-weight:bold">
+</span></span></span><span style="display:flex;"><span><span style="color:#a2f;font-weight:bold">resource</span> <span style="color:#b44">&#34;google_vpc_access_connector&#34;</span> <span style="color:#b44">&#34;connector&#34;</span> {
+</span></span><span style="display:flex;"><span><span style="color:#a2f;font-weight:bold">  provider</span> <span style="color:#666">=</span> google<span style="color:#666">-</span>beta
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>  <span style="color:#b44">name</span>   = <span style="color:#b44">&#34;vpc-connector&#34;</span>
+</span></span><span style="display:flex;"><span>  <span style="color:#b44">region</span> = <span style="color:#a2f">var</span>.region
+</span></span><span style="display:flex;"><span>  <span style="color:#b44">ip_cidr_range</span> = <span style="color:#b44">&#34;10.8.0.0/28&#34;</span>
+</span></span><span style="display:flex;"><span>  <span style="color:#b44">network</span>       = google_compute_network.vpc.name
+</span></span><span style="display:flex;"><span>}
+</span></span><span style="display:flex;"><span><span style="color:#a2f;font-weight:bold">
+</span></span></span><span style="display:flex;"><span><span style="color:#a2f;font-weight:bold">resource</span> <span style="color:#b44">&#34;google_compute_router&#34;</span> <span style="color:#b44">&#34;router&#34;</span> {
+</span></span><span style="display:flex;"><span><span style="color:#a2f;font-weight:bold">  provider</span> <span style="color:#666">=</span> google<span style="color:#666">-</span>beta
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>  <span style="color:#b44">name</span>    = <span style="color:#b44">&#34;vpc-router&#34;</span>
+</span></span><span style="display:flex;"><span>  <span style="color:#b44">region</span>  = <span style="color:#a2f">var</span>.region
+</span></span><span style="display:flex;"><span>  <span style="color:#b44">network</span> = google_compute_network.vpc.id
+</span></span><span style="display:flex;"><span>}
+</span></span><span style="display:flex;"><span><span style="color:#a2f;font-weight:bold">
+</span></span></span><span style="display:flex;"><span><span style="color:#a2f;font-weight:bold">resource</span> <span style="color:#b44">&#34;google_compute_router_nat&#34;</span> <span style="color:#b44">&#34;router_nat&#34;</span> {
+</span></span><span style="display:flex;"><span><span style="color:#a2f;font-weight:bold">  provider</span> <span style="color:#666">=</span> google<span style="color:#666">-</span>beta
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>  <span style="color:#b44">name</span>                               = <span style="color:#b44">&#34;vpc-nat&#34;</span>
+</span></span><span style="display:flex;"><span>  <span style="color:#b44">region</span>                             = <span style="color:#a2f">var</span>.region
+</span></span><span style="display:flex;"><span>  <span style="color:#b44">router</span>                             = google_compute_router.router.name
+</span></span><span style="display:flex;"><span>  <span style="color:#b44">source_subnetwork_ip_ranges_to_nat</span> = <span style="color:#b44">&#34;ALL_SUBNETWORKS_ALL_IP_RANGES&#34;</span>
+</span></span><span style="display:flex;"><span>  <span style="color:#b44">nat_ip_allocate_option</span>             = <span style="color:#b44">&#34;AUTO_ONLY&#34;</span>
+</span></span><span style="display:flex;"><span>}
+</span></span></code></pre></div><p>VPCコネクタは上記のような具合で作れる。</p>
 <p>CIDRの指定について、VPCコネクタが使用する内部IPは他のVPC内のリソースと被ってはいけないため、例えばCloud SQLの内部IPが<code>10.60.0.0</code>のときにVPCコネクタのCIDRに<code>10.60.0.0/28</code>などとするのは無理となる。</p>
 <p>VPCコネクションにあたって該当IPをサービスと連携させておく必要があるため、以下のようにIPを固定した上でそれを<code>servicenetworking.googleapis.com</code>と紐付ける。</p>
-<div class="highlight"><pre tabindex="0" style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-terraform" data-lang="terraform"><span style="color:#a2f;font-weight:bold">resource</span> <span style="color:#b44">&#34;google_compute_global_address&#34;</span> <span style="color:#b44">&#34;private_ip_address&#34;</span> {
-<span style="color:#a2f;font-weight:bold">  provider</span> <span style="color:#666">=</span> google<span style="color:#666">-</span>beta
-
-  <span style="color:#b44">name</span>          = <span style="color:#b44">&#34;vpc-private-ip-address&#34;</span>
-  <span style="color:#b44">purpose</span>       = <span style="color:#b44">&#34;VPC_PEERING&#34;</span>
-  <span style="color:#b44">address_type</span>  = <span style="color:#b44">&#34;INTERNAL&#34;</span>
-  <span style="color:#b44">prefix_length</span> = <span style="color:#666">16</span>
-  <span style="color:#b44">network</span>       = google_compute_network.vpc.id
-}
-<span style="color:#a2f;font-weight:bold">
-</span><span style="color:#a2f;font-weight:bold">resource</span> <span style="color:#b44">&#34;google_service_networking_connection&#34;</span> <span style="color:#b44">&#34;private_vpc_connection&#34;</span> {
-<span style="color:#a2f;font-weight:bold">  provider</span> <span style="color:#666">=</span> google<span style="color:#666">-</span>beta
-
-  <span style="color:#b44">network</span>                 = google_compute_network.vpc.id
-  <span style="color:#b44">service</span>                 = <span style="color:#b44">&#34;servicenetworking.googleapis.com&#34;</span>
-  <span style="color:#b44">reserved_peering_ranges</span> = [google_compute_global_address.private_ip_address.name]
-}
-</code></pre></div><p>あとはCloud SQLを立てる際にこのVPCを指定する。</p>
-<div class="highlight"><pre tabindex="0" style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-terraform" data-lang="terraform"><span style="color:#a2f;font-weight:bold">
-</span><span style="color:#a2f;font-weight:bold">resource</span> <span style="color:#b44">&#34;google_sql_database_instance&#34;</span> <span style="color:#b44">&#34;app&#34;</span> {
-  <span style="color:#b44">name</span>             = <span style="color:#b44">&#34;app-db&#34;</span>
-  <span style="color:#b44">database_version</span> = <span style="color:#b44">&#34;POSTGRES_14&#34;</span>
-  <span style="color:#b44">region</span>           = <span style="color:#a2f">var</span>.region
-
-  settings {
-    <span style="color:#b44">tier</span>              = <span style="color:#b44">&#34;db-f1-micro&#34;</span>
-    <span style="color:#b44">disk_autoresize</span>   = <span style="color:#a2f;font-weight:bold">true</span>
-    <span style="color:#b44">availability_type</span> = <span style="color:#b44">&#34;REGIONAL&#34;</span>
-
-    backup_configuration {
-      <span style="color:#b44">enabled</span>                        = <span style="color:#a2f;font-weight:bold">true</span>
-      <span style="color:#b44">point_in_time_recovery_enabled</span> = <span style="color:#a2f;font-weight:bold">true</span>
-    }
-
-    ip_configuration {
-      <span style="color:#b44">ipv4_enabled</span>    = <span style="color:#a2f;font-weight:bold">false</span>
-      <span style="color:#b44">private_network</span> = <span style="color:#a2f">var</span>.vpc_id<span style="color:#080;font-style:italic"> // Specify VPC name
-</span><span style="color:#080;font-style:italic"></span>
-    }
-  }
-
-  <span style="color:#b44">deletion_protection</span> = <span style="color:#a2f;font-weight:bold">false</span>
-}
-</code></pre></div><p>そして同様にCloud Runでマニフェスト内の<code>.metadata.annotations</code>内に<code>&quot;run.googleapis.com/vpc-access-connector</code>に値をセットしてVPCコネクタを使用するよう設定する。</p>
-<div class="highlight"><pre tabindex="0" style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-terraform" data-lang="terraform"><span style="color:#a2f;font-weight:bold">resource</span> <span style="color:#b44">&#34;google_cloud_run_service&#34;</span> <span style="color:#b44">&#34;api&#34;</span> {
-  <span style="color:#b44">name</span>     = <span style="color:#b44">&#34;my-service&#34;</span>
-  <span style="color:#b44">location</span> = <span style="color:#a2f">var</span>.location
-
-  template {
-    spec {
-      <span style="color:#b44">service_account_name</span> = <span style="color:#a2f">var</span>.service_account_name
-      containers {
-        <span style="color:#b44">image</span> = <span style="color:#a2f">var</span>.image
-        ports {
-          <span style="color:#b44">container_port</span> = <span style="color:#666">3000</span>
-        }
-        env {
-          <span style="color:#b44">name</span>  = <span style="color:#b44">&#34;DATABASE_USER&#34;</span>
-          <span style="color:#b44">value</span> = <span style="color:#a2f">var</span>.<span style="color:#a2f">data</span>base_user
-        }
-        env {
-          <span style="color:#b44">name</span> = <span style="color:#b44">&#34;DATABASE_PASS&#34;</span>
-          value_from {
-            secret_key_ref {
-              <span style="color:#b44">key</span>  = <span style="color:#b44">&#34;latest&#34;</span>
-              <span style="color:#b44">name</span> = google_secret_manager_secret.db_password.secret_id
-            }
-          }
-        }
-        env {
-          <span style="color:#b44">name</span>  = <span style="color:#b44">&#34;DATABASE_NAME&#34;</span>
-          <span style="color:#b44">value</span> = <span style="color:#a2f">var</span>.<span style="color:#a2f">data</span>base_name
-        }
-        env {
-          <span style="color:#b44">name</span>  = <span style="color:#b44">&#34;DATABASE_HOSTS&#34;</span>
-          <span style="color:#b44">value</span> = <span style="color:#b44">&#34;</span><span style="color:#b68;font-weight:bold">${</span><span style="color:#a2f">var</span>.db_ip_primary<span style="color:#b68;font-weight:bold">}</span><span style="color:#b44">,</span><span style="color:#b68;font-weight:bold">${</span><span style="color:#a2f">var</span>.db_ip_read<span style="color:#b68;font-weight:bold">}</span><span style="color:#b44">&#34;</span>
-        }
-        env {
-          <span style="color:#b44">name</span>  = <span style="color:#b44">&#34;DATABASE_PORT&#34;</span>
-          <span style="color:#b44">value</span> = <span style="color:#a2f">var</span>.<span style="color:#a2f">data</span>base_port
-        }
-      }
-    }
-
-    metadata {
-      <span style="color:#b44">annotations</span> = {<span style="color:#080;font-style:italic">
-</span><span style="color:#080;font-style:italic">        # Use the VPC Connector
-</span><span style="color:#080;font-style:italic"></span>        <span style="color:#b44">&#34;run.googleapis.com/vpc-access-connector&#34;</span> <span style="color:#666">=</span> <span style="color:#a2f">var</span>.vpc_connector_name<span style="color:#080;font-style:italic"> // Specify VPC connector
-</span><span style="color:#080;font-style:italic">        # all egress from the service should go through the VPC Connector
-</span><span style="color:#080;font-style:italic"></span>        <span style="color:#b44">&#34;run.googleapis.com/vpc-access-egress&#34;</span> <span style="color:#666">=</span> <span style="color:#b44">&#34;all&#34;</span><span style="color:#080;font-style:italic">
-</span><span style="color:#080;font-style:italic">        # If this resource is created by gcloud, this client-name will be gcloud
-</span><span style="color:#080;font-style:italic"></span>        <span style="color:#b44">&#34;run.googleapis.com/client-name&#34;</span> <span style="color:#666">=</span> <span style="color:#b44">&#34;terraform&#34;</span><span style="color:#080;font-style:italic">
-</span><span style="color:#080;font-style:italic">        # Disallow direct access from IP
-</span><span style="color:#080;font-style:italic"></span>        <span style="color:#b44">&#34;run.googleapis.com/ingress&#34;</span> <span style="color:#666">=</span> <span style="color:#b44">&#34;internal-and-cloud-load-balancing&#34;</span>
-      }
-    }
-  }
-
-  traffic {
-    <span style="color:#b44">percent</span>         = <span style="color:#666">100</span>
-    <span style="color:#b44">latest_revision</span> = <span style="color:#a2f;font-weight:bold">true</span>
-  }
-
-  lifecycle {
-    <span style="color:#b44">ignore_changes</span> = [<span style="color:#080;font-style:italic">
-</span><span style="color:#080;font-style:italic">      # For update of gcloud cli version
-</span><span style="color:#080;font-style:italic"></span>      template[<span style="color:#666">0</span>].metadata[<span style="color:#666">0</span>].annotations[<span style="color:#b44">&#34;run.googleapis.com/client-version&#34;</span>]
-    ]
-  }
-
-  <span style="color:#b44">autogenerate_revision_name</span> = <span style="color:#a2f;font-weight:bold">true</span>
-}
-</code></pre></div><p>これでCloud SQLに繋ぐ際はホスト名に内部IPを指定してあげれば通信が成立する。</p>
+<div class="highlight"><pre tabindex="0" style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-terraform" data-lang="terraform"><span style="display:flex;"><span><span style="color:#a2f;font-weight:bold">resource</span> <span style="color:#b44">&#34;google_compute_global_address&#34;</span> <span style="color:#b44">&#34;private_ip_address&#34;</span> {
+</span></span><span style="display:flex;"><span><span style="color:#a2f;font-weight:bold">  provider</span> <span style="color:#666">=</span> google<span style="color:#666">-</span>beta
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>  <span style="color:#b44">name</span>          = <span style="color:#b44">&#34;vpc-private-ip-address&#34;</span>
+</span></span><span style="display:flex;"><span>  <span style="color:#b44">purpose</span>       = <span style="color:#b44">&#34;VPC_PEERING&#34;</span>
+</span></span><span style="display:flex;"><span>  <span style="color:#b44">address_type</span>  = <span style="color:#b44">&#34;INTERNAL&#34;</span>
+</span></span><span style="display:flex;"><span>  <span style="color:#b44">prefix_length</span> = <span style="color:#666">16</span>
+</span></span><span style="display:flex;"><span>  <span style="color:#b44">network</span>       = google_compute_network.vpc.id
+</span></span><span style="display:flex;"><span>}
+</span></span><span style="display:flex;"><span><span style="color:#a2f;font-weight:bold">
+</span></span></span><span style="display:flex;"><span><span style="color:#a2f;font-weight:bold">resource</span> <span style="color:#b44">&#34;google_service_networking_connection&#34;</span> <span style="color:#b44">&#34;private_vpc_connection&#34;</span> {
+</span></span><span style="display:flex;"><span><span style="color:#a2f;font-weight:bold">  provider</span> <span style="color:#666">=</span> google<span style="color:#666">-</span>beta
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>  <span style="color:#b44">network</span>                 = google_compute_network.vpc.id
+</span></span><span style="display:flex;"><span>  <span style="color:#b44">service</span>                 = <span style="color:#b44">&#34;servicenetworking.googleapis.com&#34;</span>
+</span></span><span style="display:flex;"><span>  <span style="color:#b44">reserved_peering_ranges</span> = [google_compute_global_address.private_ip_address.name]
+</span></span><span style="display:flex;"><span>}
+</span></span></code></pre></div><p>あとはCloud SQLを立てる際にこのVPCを指定する。</p>
+<div class="highlight"><pre tabindex="0" style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-terraform" data-lang="terraform"><span style="display:flex;"><span><span style="color:#a2f;font-weight:bold">
+</span></span></span><span style="display:flex;"><span><span style="color:#a2f;font-weight:bold">resource</span> <span style="color:#b44">&#34;google_sql_database_instance&#34;</span> <span style="color:#b44">&#34;app&#34;</span> {
+</span></span><span style="display:flex;"><span>  <span style="color:#b44">name</span>             = <span style="color:#b44">&#34;app-db&#34;</span>
+</span></span><span style="display:flex;"><span>  <span style="color:#b44">database_version</span> = <span style="color:#b44">&#34;POSTGRES_14&#34;</span>
+</span></span><span style="display:flex;"><span>  <span style="color:#b44">region</span>           = <span style="color:#a2f">var</span>.region
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>  settings {
+</span></span><span style="display:flex;"><span>    <span style="color:#b44">tier</span>              = <span style="color:#b44">&#34;db-f1-micro&#34;</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#b44">disk_autoresize</span>   = <span style="color:#a2f;font-weight:bold">true</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#b44">availability_type</span> = <span style="color:#b44">&#34;REGIONAL&#34;</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    backup_configuration {
+</span></span><span style="display:flex;"><span>      <span style="color:#b44">enabled</span>                        = <span style="color:#a2f;font-weight:bold">true</span>
+</span></span><span style="display:flex;"><span>      <span style="color:#b44">point_in_time_recovery_enabled</span> = <span style="color:#a2f;font-weight:bold">true</span>
+</span></span><span style="display:flex;"><span>    }
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    ip_configuration {
+</span></span><span style="display:flex;"><span>      <span style="color:#b44">ipv4_enabled</span>    = <span style="color:#a2f;font-weight:bold">false</span>
+</span></span><span style="display:flex;"><span>      <span style="color:#b44">private_network</span> = <span style="color:#a2f">var</span>.vpc_id<span style="color:#080;font-style:italic"> // Specify VPC name
+</span></span></span><span style="display:flex;"><span><span style="color:#080;font-style:italic"></span>
+</span></span><span style="display:flex;"><span>    }
+</span></span><span style="display:flex;"><span>  }
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>  <span style="color:#b44">deletion_protection</span> = <span style="color:#a2f;font-weight:bold">false</span>
+</span></span><span style="display:flex;"><span>}
+</span></span></code></pre></div><p>そして同様にCloud Runでマニフェスト内の<code>.metadata.annotations</code>内に<code>&quot;run.googleapis.com/vpc-access-connector</code>に値をセットしてVPCコネクタを使用するよう設定する。</p>
+<div class="highlight"><pre tabindex="0" style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-terraform" data-lang="terraform"><span style="display:flex;"><span><span style="color:#a2f;font-weight:bold">resource</span> <span style="color:#b44">&#34;google_cloud_run_service&#34;</span> <span style="color:#b44">&#34;api&#34;</span> {
+</span></span><span style="display:flex;"><span>  <span style="color:#b44">name</span>     = <span style="color:#b44">&#34;my-service&#34;</span>
+</span></span><span style="display:flex;"><span>  <span style="color:#b44">location</span> = <span style="color:#a2f">var</span>.location
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>  template {
+</span></span><span style="display:flex;"><span>    spec {
+</span></span><span style="display:flex;"><span>      <span style="color:#b44">service_account_name</span> = <span style="color:#a2f">var</span>.service_account_name
+</span></span><span style="display:flex;"><span>      containers {
+</span></span><span style="display:flex;"><span>        <span style="color:#b44">image</span> = <span style="color:#a2f">var</span>.image
+</span></span><span style="display:flex;"><span>        ports {
+</span></span><span style="display:flex;"><span>          <span style="color:#b44">container_port</span> = <span style="color:#666">3000</span>
+</span></span><span style="display:flex;"><span>        }
+</span></span><span style="display:flex;"><span>        env {
+</span></span><span style="display:flex;"><span>          <span style="color:#b44">name</span>  = <span style="color:#b44">&#34;DATABASE_USER&#34;</span>
+</span></span><span style="display:flex;"><span>          <span style="color:#b44">value</span> = <span style="color:#a2f">var</span>.<span style="color:#a2f">data</span>base_user
+</span></span><span style="display:flex;"><span>        }
+</span></span><span style="display:flex;"><span>        env {
+</span></span><span style="display:flex;"><span>          <span style="color:#b44">name</span> = <span style="color:#b44">&#34;DATABASE_PASS&#34;</span>
+</span></span><span style="display:flex;"><span>          value_from {
+</span></span><span style="display:flex;"><span>            secret_key_ref {
+</span></span><span style="display:flex;"><span>              <span style="color:#b44">key</span>  = <span style="color:#b44">&#34;latest&#34;</span>
+</span></span><span style="display:flex;"><span>              <span style="color:#b44">name</span> = google_secret_manager_secret.db_password.secret_id
+</span></span><span style="display:flex;"><span>            }
+</span></span><span style="display:flex;"><span>          }
+</span></span><span style="display:flex;"><span>        }
+</span></span><span style="display:flex;"><span>        env {
+</span></span><span style="display:flex;"><span>          <span style="color:#b44">name</span>  = <span style="color:#b44">&#34;DATABASE_NAME&#34;</span>
+</span></span><span style="display:flex;"><span>          <span style="color:#b44">value</span> = <span style="color:#a2f">var</span>.<span style="color:#a2f">data</span>base_name
+</span></span><span style="display:flex;"><span>        }
+</span></span><span style="display:flex;"><span>        env {
+</span></span><span style="display:flex;"><span>          <span style="color:#b44">name</span>  = <span style="color:#b44">&#34;DATABASE_HOSTS&#34;</span>
+</span></span><span style="display:flex;"><span>          <span style="color:#b44">value</span> = <span style="color:#b44">&#34;</span><span style="color:#b68;font-weight:bold">${</span><span style="color:#a2f">var</span>.db_ip_primary<span style="color:#b68;font-weight:bold">}</span><span style="color:#b44">,</span><span style="color:#b68;font-weight:bold">${</span><span style="color:#a2f">var</span>.db_ip_read<span style="color:#b68;font-weight:bold">}</span><span style="color:#b44">&#34;</span>
+</span></span><span style="display:flex;"><span>        }
+</span></span><span style="display:flex;"><span>        env {
+</span></span><span style="display:flex;"><span>          <span style="color:#b44">name</span>  = <span style="color:#b44">&#34;DATABASE_PORT&#34;</span>
+</span></span><span style="display:flex;"><span>          <span style="color:#b44">value</span> = <span style="color:#a2f">var</span>.<span style="color:#a2f">data</span>base_port
+</span></span><span style="display:flex;"><span>        }
+</span></span><span style="display:flex;"><span>      }
+</span></span><span style="display:flex;"><span>    }
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    metadata {
+</span></span><span style="display:flex;"><span>      <span style="color:#b44">annotations</span> = {<span style="color:#080;font-style:italic">
+</span></span></span><span style="display:flex;"><span><span style="color:#080;font-style:italic">        # Use the VPC Connector
+</span></span></span><span style="display:flex;"><span><span style="color:#080;font-style:italic"></span>        <span style="color:#b44">&#34;run.googleapis.com/vpc-access-connector&#34;</span> <span style="color:#666">=</span> <span style="color:#a2f">var</span>.vpc_connector_name<span style="color:#080;font-style:italic"> // Specify VPC connector
+</span></span></span><span style="display:flex;"><span><span style="color:#080;font-style:italic">        # all egress from the service should go through the VPC Connector
+</span></span></span><span style="display:flex;"><span><span style="color:#080;font-style:italic"></span>        <span style="color:#b44">&#34;run.googleapis.com/vpc-access-egress&#34;</span> <span style="color:#666">=</span> <span style="color:#b44">&#34;all&#34;</span><span style="color:#080;font-style:italic">
+</span></span></span><span style="display:flex;"><span><span style="color:#080;font-style:italic">        # If this resource is created by gcloud, this client-name will be gcloud
+</span></span></span><span style="display:flex;"><span><span style="color:#080;font-style:italic"></span>        <span style="color:#b44">&#34;run.googleapis.com/client-name&#34;</span> <span style="color:#666">=</span> <span style="color:#b44">&#34;terraform&#34;</span><span style="color:#080;font-style:italic">
+</span></span></span><span style="display:flex;"><span><span style="color:#080;font-style:italic">        # Disallow direct access from IP
+</span></span></span><span style="display:flex;"><span><span style="color:#080;font-style:italic"></span>        <span style="color:#b44">&#34;run.googleapis.com/ingress&#34;</span> <span style="color:#666">=</span> <span style="color:#b44">&#34;internal-and-cloud-load-balancing&#34;</span>
+</span></span><span style="display:flex;"><span>      }
+</span></span><span style="display:flex;"><span>    }
+</span></span><span style="display:flex;"><span>  }
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>  traffic {
+</span></span><span style="display:flex;"><span>    <span style="color:#b44">percent</span>         = <span style="color:#666">100</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#b44">latest_revision</span> = <span style="color:#a2f;font-weight:bold">true</span>
+</span></span><span style="display:flex;"><span>  }
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>  lifecycle {
+</span></span><span style="display:flex;"><span>    <span style="color:#b44">ignore_changes</span> = [<span style="color:#080;font-style:italic">
+</span></span></span><span style="display:flex;"><span><span style="color:#080;font-style:italic">      # For update of gcloud cli version
+</span></span></span><span style="display:flex;"><span><span style="color:#080;font-style:italic"></span>      template[<span style="color:#666">0</span>].metadata[<span style="color:#666">0</span>].annotations[<span style="color:#b44">&#34;run.googleapis.com/client-version&#34;</span>]
+</span></span><span style="display:flex;"><span>    ]
+</span></span><span style="display:flex;"><span>  }
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>  <span style="color:#b44">autogenerate_revision_name</span> = <span style="color:#a2f;font-weight:bold">true</span>
+</span></span><span style="display:flex;"><span>}
+</span></span></code></pre></div><p>これでCloud SQLに繋ぐ際はホスト名に内部IPを指定してあげれば通信が成立する。</p>
 <p>このホスト名の指定で<a href="https://cloud.google.com/sql/docs/postgres/connect-run?hl=ja#python_1">GCPの公式ドキュメント</a>が本当に分かりにくくて苦労した。</p>
 <p>というのもサンプルコードにてホスト名の例が<code>127.0.0.1</code>としてあり、本来<code>127.0.0.1</code>はループバックアドレスで内部IPの定義外なのだが、本来<code>10.60.0.0</code>のような内部IPを指定すれば良いのにも関わらずここで例として内部IP以外の値が出てきているせいで結局ホスト名に何を指定すれば良いのか全くわからなかったのである。</p>
 <p>実際、現在組んでいるアプリケーションではAPIによってプライマリDBかリードレプリカかを使い分けており、<code>127.0.0.1</code>宛ての通信だとポート番号で通信先を変える必要があるのだが、Cloud Runではサイドカーパターンはサポートしていない(コンテナは1つしか指定できない)ためCloud SQL Auth Proxyが使えない。</p>
@@ -462,9 +462,13 @@
                         
                         
                         
+                        
+                        
                         <a href="/tags/kubernetes" title="kubernetes">
                             kubernetes
                         </a>
+                        
+                        
                         
                         
                         
@@ -483,6 +487,10 @@
                         
                         
                         
+                        
+                        <a href="/tags/streets" title="streets">
+                            streets
+                        </a>
                         
                         
                         

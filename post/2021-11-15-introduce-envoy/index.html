@@ -262,119 +262,119 @@
 <h1 id="実装する">実装する</h1>
 <p>ということでマニフェストを眺めていく。</p>
 <p>まずEnvoyはDeploymentにてサイドカーとして立てるので、以下のように並べてあげる必要がある。</p>
-<div class="highlight"><pre tabindex="0" style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-yaml" data-lang="yaml"><span style="color:#008000;font-weight:bold">apiVersion</span>:<span style="color:#bbb"> </span>apps/v1<span style="color:#bbb">
-</span><span style="color:#bbb"></span><span style="color:#008000;font-weight:bold">kind</span>:<span style="color:#bbb"> </span>Deployment<span style="color:#bbb">
-</span><span style="color:#bbb"></span><span style="color:#008000;font-weight:bold">metadata</span>:<span style="color:#bbb">
-</span><span style="color:#bbb">  </span><span style="color:#008000;font-weight:bold">name</span>:<span style="color:#bbb"> </span>my-server<span style="color:#bbb">
-</span><span style="color:#bbb"></span><span style="color:#008000;font-weight:bold">spec</span>:<span style="color:#bbb">
-</span><span style="color:#bbb">  </span><span style="color:#008000;font-weight:bold">selector</span>:<span style="color:#bbb">
-</span><span style="color:#bbb">    </span><span style="color:#008000;font-weight:bold">matchLabels</span>:<span style="color:#bbb">
-</span><span style="color:#bbb">      </span><span style="color:#008000;font-weight:bold">app</span>:<span style="color:#bbb"> </span>my-server<span style="color:#bbb">
-</span><span style="color:#bbb">  </span><span style="color:#008000;font-weight:bold">template</span>:<span style="color:#bbb">
-</span><span style="color:#bbb">    </span><span style="color:#008000;font-weight:bold">metadata</span>:<span style="color:#bbb">
-</span><span style="color:#bbb">      </span><span style="color:#008000;font-weight:bold">labels</span>:<span style="color:#bbb">
-</span><span style="color:#bbb">        </span><span style="color:#008000;font-weight:bold">app</span>:<span style="color:#bbb"> </span>my-server<span style="color:#bbb">
-</span><span style="color:#bbb">    </span><span style="color:#008000;font-weight:bold">spec</span>:<span style="color:#bbb">
-</span><span style="color:#bbb">      </span><span style="color:#008000;font-weight:bold">containers</span>:<span style="color:#bbb">
-</span><span style="color:#bbb">        </span>- <span style="color:#008000;font-weight:bold">name</span>:<span style="color:#bbb"> </span>my-server<span style="color:#bbb">
-</span><span style="color:#bbb">          </span><span style="color:#008000;font-weight:bold">image</span>:<span style="color:#bbb"> </span>gcr.io/my-app/some-image:latest<span style="color:#bbb">
-</span><span style="color:#bbb">          </span><span style="color:#008000;font-weight:bold">args</span>:<span style="color:#bbb">
-</span><span style="color:#bbb">            </span>- /bin/ls<span style="color:#bbb">
-</span><span style="color:#bbb">          </span><span style="color:#008000;font-weight:bold">ports</span>:<span style="color:#bbb">
-</span><span style="color:#bbb">            </span>- <span style="color:#008000;font-weight:bold">name</span>:<span style="color:#bbb"> </span>web<span style="color:#bbb">
-</span><span style="color:#bbb">              </span><span style="color:#008000;font-weight:bold">containerPort</span>:<span style="color:#bbb"> </span><span style="color:#666">8888</span><span style="color:#bbb">
-</span><span style="color:#bbb">          </span><span style="color:#008000;font-weight:bold">volumeMounts</span>:<span style="color:#bbb">
-</span><span style="color:#bbb">            </span>- <span style="color:#008000;font-weight:bold">mountPath</span>:<span style="color:#bbb"> </span>/tmp<span style="color:#bbb">
-</span><span style="color:#bbb">              </span><span style="color:#008000;font-weight:bold">name</span>:<span style="color:#bbb"> </span>tmp<span style="color:#bbb">
-</span><span style="color:#bbb">        </span>- <span style="color:#008000;font-weight:bold">name</span>:<span style="color:#bbb"> </span>envoy<span style="color:#bbb">
-</span><span style="color:#bbb">          </span><span style="color:#008000;font-weight:bold">image</span>:<span style="color:#bbb"> </span>envoyproxy/envoy:v1.20.0<span style="color:#bbb">
-</span><span style="color:#bbb">          </span><span style="color:#008000;font-weight:bold">command</span>:<span style="color:#bbb">
-</span><span style="color:#bbb">            </span>- <span style="color:#b44">&#34;/usr/local/bin/envoy&#34;</span><span style="color:#bbb">
-</span><span style="color:#bbb">          </span><span style="color:#008000;font-weight:bold">args</span>:<span style="color:#bbb">
-</span><span style="color:#bbb">            </span>- <span style="color:#b44">&#34;--config-path /etc/envoy/envoy.yaml&#34;</span><span style="color:#bbb">
-</span><span style="color:#bbb">          </span><span style="color:#008000;font-weight:bold">resources</span>:<span style="color:#bbb">
-</span><span style="color:#bbb">            </span><span style="color:#008000;font-weight:bold">limits</span>:<span style="color:#bbb">
-</span><span style="color:#bbb">              </span><span style="color:#008000;font-weight:bold">memory</span>:<span style="color:#bbb"> </span>512Mi<span style="color:#bbb">
-</span><span style="color:#bbb">          </span><span style="color:#008000;font-weight:bold">ports</span>:<span style="color:#bbb">
-</span><span style="color:#bbb">            </span>- <span style="color:#008000;font-weight:bold">containerPort</span>:<span style="color:#bbb"> </span><span style="color:#666">15001</span><span style="color:#bbb">
-</span><span style="color:#bbb">              </span><span style="color:#008000;font-weight:bold">name</span>:<span style="color:#bbb"> </span>app<span style="color:#bbb">
-</span><span style="color:#bbb">            </span>- <span style="color:#008000;font-weight:bold">containerPort</span>:<span style="color:#bbb"> </span><span style="color:#666">8001</span><span style="color:#bbb">
-</span><span style="color:#bbb">              </span><span style="color:#008000;font-weight:bold">name</span>:<span style="color:#bbb"> </span>envoy-admin<span style="color:#bbb">
-</span><span style="color:#bbb">          </span><span style="color:#008000;font-weight:bold">volumeMounts</span>:<span style="color:#bbb">
-</span><span style="color:#bbb">            </span>- <span style="color:#008000;font-weight:bold">name</span>:<span style="color:#bbb"> </span>envoy<span style="color:#bbb">
-</span><span style="color:#bbb">              </span><span style="color:#008000;font-weight:bold">mountPath</span>:<span style="color:#bbb"> </span>/etc/envoy<span style="color:#bbb">
-</span><span style="color:#bbb">      </span><span style="color:#008000;font-weight:bold">volumes</span>:<span style="color:#bbb">
-</span><span style="color:#bbb">        </span>- <span style="color:#008000;font-weight:bold">name</span>:<span style="color:#bbb"> </span>envoy<span style="color:#bbb">
-</span><span style="color:#bbb">          </span><span style="color:#008000;font-weight:bold">configMap</span>:<span style="color:#bbb">
-</span><span style="color:#bbb">            </span><span style="color:#008000;font-weight:bold">name</span>:<span style="color:#bbb"> </span>my-envoy-configmap<span style="color:#bbb">
-</span></code></pre></div><p>ポイントとしてEnvoyはAdmin用のポートとアプリケーションとしてのポートを別途開けておく必要がある。</p>
+<div class="highlight"><pre tabindex="0" style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-yaml" data-lang="yaml"><span style="display:flex;"><span><span style="color:#008000;font-weight:bold">apiVersion</span>:<span style="color:#bbb"> </span>apps/v1<span style="color:#bbb">
+</span></span></span><span style="display:flex;"><span><span style="color:#bbb"></span><span style="color:#008000;font-weight:bold">kind</span>:<span style="color:#bbb"> </span>Deployment<span style="color:#bbb">
+</span></span></span><span style="display:flex;"><span><span style="color:#bbb"></span><span style="color:#008000;font-weight:bold">metadata</span>:<span style="color:#bbb">
+</span></span></span><span style="display:flex;"><span><span style="color:#bbb">  </span><span style="color:#008000;font-weight:bold">name</span>:<span style="color:#bbb"> </span>my-server<span style="color:#bbb">
+</span></span></span><span style="display:flex;"><span><span style="color:#bbb"></span><span style="color:#008000;font-weight:bold">spec</span>:<span style="color:#bbb">
+</span></span></span><span style="display:flex;"><span><span style="color:#bbb">  </span><span style="color:#008000;font-weight:bold">selector</span>:<span style="color:#bbb">
+</span></span></span><span style="display:flex;"><span><span style="color:#bbb">    </span><span style="color:#008000;font-weight:bold">matchLabels</span>:<span style="color:#bbb">
+</span></span></span><span style="display:flex;"><span><span style="color:#bbb">      </span><span style="color:#008000;font-weight:bold">app</span>:<span style="color:#bbb"> </span>my-server<span style="color:#bbb">
+</span></span></span><span style="display:flex;"><span><span style="color:#bbb">  </span><span style="color:#008000;font-weight:bold">template</span>:<span style="color:#bbb">
+</span></span></span><span style="display:flex;"><span><span style="color:#bbb">    </span><span style="color:#008000;font-weight:bold">metadata</span>:<span style="color:#bbb">
+</span></span></span><span style="display:flex;"><span><span style="color:#bbb">      </span><span style="color:#008000;font-weight:bold">labels</span>:<span style="color:#bbb">
+</span></span></span><span style="display:flex;"><span><span style="color:#bbb">        </span><span style="color:#008000;font-weight:bold">app</span>:<span style="color:#bbb"> </span>my-server<span style="color:#bbb">
+</span></span></span><span style="display:flex;"><span><span style="color:#bbb">    </span><span style="color:#008000;font-weight:bold">spec</span>:<span style="color:#bbb">
+</span></span></span><span style="display:flex;"><span><span style="color:#bbb">      </span><span style="color:#008000;font-weight:bold">containers</span>:<span style="color:#bbb">
+</span></span></span><span style="display:flex;"><span><span style="color:#bbb">        </span>- <span style="color:#008000;font-weight:bold">name</span>:<span style="color:#bbb"> </span>my-server<span style="color:#bbb">
+</span></span></span><span style="display:flex;"><span><span style="color:#bbb">          </span><span style="color:#008000;font-weight:bold">image</span>:<span style="color:#bbb"> </span>gcr.io/my-app/some-image:latest<span style="color:#bbb">
+</span></span></span><span style="display:flex;"><span><span style="color:#bbb">          </span><span style="color:#008000;font-weight:bold">args</span>:<span style="color:#bbb">
+</span></span></span><span style="display:flex;"><span><span style="color:#bbb">            </span>- /bin/ls<span style="color:#bbb">
+</span></span></span><span style="display:flex;"><span><span style="color:#bbb">          </span><span style="color:#008000;font-weight:bold">ports</span>:<span style="color:#bbb">
+</span></span></span><span style="display:flex;"><span><span style="color:#bbb">            </span>- <span style="color:#008000;font-weight:bold">name</span>:<span style="color:#bbb"> </span>web<span style="color:#bbb">
+</span></span></span><span style="display:flex;"><span><span style="color:#bbb">              </span><span style="color:#008000;font-weight:bold">containerPort</span>:<span style="color:#bbb"> </span><span style="color:#666">8888</span><span style="color:#bbb">
+</span></span></span><span style="display:flex;"><span><span style="color:#bbb">          </span><span style="color:#008000;font-weight:bold">volumeMounts</span>:<span style="color:#bbb">
+</span></span></span><span style="display:flex;"><span><span style="color:#bbb">            </span>- <span style="color:#008000;font-weight:bold">mountPath</span>:<span style="color:#bbb"> </span>/tmp<span style="color:#bbb">
+</span></span></span><span style="display:flex;"><span><span style="color:#bbb">              </span><span style="color:#008000;font-weight:bold">name</span>:<span style="color:#bbb"> </span>tmp<span style="color:#bbb">
+</span></span></span><span style="display:flex;"><span><span style="color:#bbb">        </span>- <span style="color:#008000;font-weight:bold">name</span>:<span style="color:#bbb"> </span>envoy<span style="color:#bbb">
+</span></span></span><span style="display:flex;"><span><span style="color:#bbb">          </span><span style="color:#008000;font-weight:bold">image</span>:<span style="color:#bbb"> </span>envoyproxy/envoy:v1.20.0<span style="color:#bbb">
+</span></span></span><span style="display:flex;"><span><span style="color:#bbb">          </span><span style="color:#008000;font-weight:bold">command</span>:<span style="color:#bbb">
+</span></span></span><span style="display:flex;"><span><span style="color:#bbb">            </span>- <span style="color:#b44">&#34;/usr/local/bin/envoy&#34;</span><span style="color:#bbb">
+</span></span></span><span style="display:flex;"><span><span style="color:#bbb">          </span><span style="color:#008000;font-weight:bold">args</span>:<span style="color:#bbb">
+</span></span></span><span style="display:flex;"><span><span style="color:#bbb">            </span>- <span style="color:#b44">&#34;--config-path /etc/envoy/envoy.yaml&#34;</span><span style="color:#bbb">
+</span></span></span><span style="display:flex;"><span><span style="color:#bbb">          </span><span style="color:#008000;font-weight:bold">resources</span>:<span style="color:#bbb">
+</span></span></span><span style="display:flex;"><span><span style="color:#bbb">            </span><span style="color:#008000;font-weight:bold">limits</span>:<span style="color:#bbb">
+</span></span></span><span style="display:flex;"><span><span style="color:#bbb">              </span><span style="color:#008000;font-weight:bold">memory</span>:<span style="color:#bbb"> </span>512Mi<span style="color:#bbb">
+</span></span></span><span style="display:flex;"><span><span style="color:#bbb">          </span><span style="color:#008000;font-weight:bold">ports</span>:<span style="color:#bbb">
+</span></span></span><span style="display:flex;"><span><span style="color:#bbb">            </span>- <span style="color:#008000;font-weight:bold">containerPort</span>:<span style="color:#bbb"> </span><span style="color:#666">15001</span><span style="color:#bbb">
+</span></span></span><span style="display:flex;"><span><span style="color:#bbb">              </span><span style="color:#008000;font-weight:bold">name</span>:<span style="color:#bbb"> </span>app<span style="color:#bbb">
+</span></span></span><span style="display:flex;"><span><span style="color:#bbb">            </span>- <span style="color:#008000;font-weight:bold">containerPort</span>:<span style="color:#bbb"> </span><span style="color:#666">8001</span><span style="color:#bbb">
+</span></span></span><span style="display:flex;"><span><span style="color:#bbb">              </span><span style="color:#008000;font-weight:bold">name</span>:<span style="color:#bbb"> </span>envoy-admin<span style="color:#bbb">
+</span></span></span><span style="display:flex;"><span><span style="color:#bbb">          </span><span style="color:#008000;font-weight:bold">volumeMounts</span>:<span style="color:#bbb">
+</span></span></span><span style="display:flex;"><span><span style="color:#bbb">            </span>- <span style="color:#008000;font-weight:bold">name</span>:<span style="color:#bbb"> </span>envoy<span style="color:#bbb">
+</span></span></span><span style="display:flex;"><span><span style="color:#bbb">              </span><span style="color:#008000;font-weight:bold">mountPath</span>:<span style="color:#bbb"> </span>/etc/envoy<span style="color:#bbb">
+</span></span></span><span style="display:flex;"><span><span style="color:#bbb">      </span><span style="color:#008000;font-weight:bold">volumes</span>:<span style="color:#bbb">
+</span></span></span><span style="display:flex;"><span><span style="color:#bbb">        </span>- <span style="color:#008000;font-weight:bold">name</span>:<span style="color:#bbb"> </span>envoy<span style="color:#bbb">
+</span></span></span><span style="display:flex;"><span><span style="color:#bbb">          </span><span style="color:#008000;font-weight:bold">configMap</span>:<span style="color:#bbb">
+</span></span></span><span style="display:flex;"><span><span style="color:#bbb">            </span><span style="color:#008000;font-weight:bold">name</span>:<span style="color:#bbb"> </span>my-envoy-configmap<span style="color:#bbb">
+</span></span></span></code></pre></div><p>ポイントとしてEnvoyはAdmin用のポートとアプリケーションとしてのポートを別途開けておく必要がある。</p>
 <p>そしてEnvoyをどのように動作させるかはConfigMapに記述をする。</p>
 <p>以下がEnvoyのConfigMapとなる。</p>
 <p>ちなみに以下の文法はEnvoyのv3 APIで、v1やv2とはやや異なることに注意。</p>
-<div class="highlight"><pre tabindex="0" style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-yaml" data-lang="yaml"><span style="color:#008000;font-weight:bold">apiVersion</span>:<span style="color:#bbb"> </span>v1<span style="color:#bbb">
-</span><span style="color:#bbb"></span><span style="color:#008000;font-weight:bold">kind</span>:<span style="color:#bbb"> </span>ConfigMap<span style="color:#bbb">
-</span><span style="color:#bbb"></span><span style="color:#008000;font-weight:bold">metadata</span>:<span style="color:#bbb">
-</span><span style="color:#bbb">  </span><span style="color:#008000;font-weight:bold">name</span>:<span style="color:#bbb"> </span>my-envoy-configmap<span style="color:#bbb">
-</span><span style="color:#bbb"></span><span style="color:#008000;font-weight:bold">data</span>:<span style="color:#bbb">
-</span><span style="color:#bbb">  </span><span style="color:#080;font-style:italic"># Adding new entries here will make them appear as files in the deployment.</span><span style="color:#bbb">
-</span><span style="color:#bbb">  </span><span style="color:#080;font-style:italic"># Please update k8s.io/k8s.io/README.md when you update this file</span><span style="color:#bbb">
-</span><span style="color:#bbb">  </span><span style="color:#008000;font-weight:bold">envoy.yaml</span>:<span style="color:#bbb"> </span>|<span style="color:#b44;font-style:italic">
-</span><span style="color:#b44;font-style:italic">    static_resources:
-</span><span style="color:#b44;font-style:italic">      listeners:
-</span><span style="color:#b44;font-style:italic">      - address:
-</span><span style="color:#b44;font-style:italic">          socket_address:
-</span><span style="color:#b44;font-style:italic">            address: 0.0.0.0
-</span><span style="color:#b44;font-style:italic">            port_value: 15001
-</span><span style="color:#b44;font-style:italic">        filter_chains:
-</span><span style="color:#b44;font-style:italic">        - filters:
-</span><span style="color:#b44;font-style:italic">          - name: envoy.filters.network.http_connection_manager
-</span><span style="color:#b44;font-style:italic">            typed_config:
-</span><span style="color:#b44;font-style:italic">              &#34;@type&#34;: type.googleapis.com/envoy.extensions.filters.network.http_connection_manager.v3.HttpConnectionManager
-</span><span style="color:#b44;font-style:italic">              codec_type: AUTO
-</span><span style="color:#b44;font-style:italic">              stat_prefix: ingress_http
-</span><span style="color:#b44;font-style:italic">              route_config:
-</span><span style="color:#b44;font-style:italic">                name: local_route
-</span><span style="color:#b44;font-style:italic">                virtual_hosts:
-</span><span style="color:#b44;font-style:italic">                - name: backend
-</span><span style="color:#b44;font-style:italic">                  domains:
-</span><span style="color:#b44;font-style:italic">                  - &#34;*&#34;
-</span><span style="color:#b44;font-style:italic">                  routes:
-</span><span style="color:#b44;font-style:italic">                  - match:
-</span><span style="color:#b44;font-style:italic">                      prefix: &#34;/&#34;
-</span><span style="color:#b44;font-style:italic">                    route:
-</span><span style="color:#b44;font-style:italic">                      cluster: local_service
-</span><span style="color:#b44;font-style:italic">              http_filters:
-</span><span style="color:#b44;font-style:italic">              - name: envoy.filters.http.router
-</span><span style="color:#b44;font-style:italic">                typed_config: {}
-</span><span style="color:#b44;font-style:italic">      clusters:
-</span><span style="color:#b44;font-style:italic">      - name: local_service
-</span><span style="color:#b44;font-style:italic">        type: STRICT_DNS
-</span><span style="color:#b44;font-style:italic">        lb_policy: ROUND_ROBIN
-</span><span style="color:#b44;font-style:italic">        load_assignment:
-</span><span style="color:#b44;font-style:italic">          cluster_name: local_service
-</span><span style="color:#b44;font-style:italic">          endpoints:
-</span><span style="color:#b44;font-style:italic">          - lb_endpoints:
-</span><span style="color:#b44;font-style:italic">            - endpoint:
-</span><span style="color:#b44;font-style:italic">                address:
-</span><span style="color:#b44;font-style:italic">                  socket_address:
-</span><span style="color:#b44;font-style:italic">                    address: local_service
-</span><span style="color:#b44;font-style:italic">                    port_value: 2746
-</span><span style="color:#b44;font-style:italic">    admin:
-</span><span style="color:#b44;font-style:italic">      access_log_path: &#34;/dev/null&#34;
-</span><span style="color:#b44;font-style:italic">      address:
-</span><span style="color:#b44;font-style:italic">        socket_address:
-</span><span style="color:#b44;font-style:italic">          address: 0.0.0.0
-</span><span style="color:#b44;font-style:italic">          port_value: 8001
-</span><span style="color:#b44;font-style:italic">    layered_runtime:
-</span><span style="color:#b44;font-style:italic">      layers:
-</span><span style="color:#b44;font-style:italic">        - name: static_layer_0
-</span><span style="color:#b44;font-style:italic">          static_layer:
-</span><span style="color:#b44;font-style:italic">            envoy:
-</span><span style="color:#b44;font-style:italic">              resource_limits:
-</span><span style="color:#b44;font-style:italic">                listener:
-</span><span style="color:#b44;font-style:italic">                  example_listener_name:
-</span><span style="color:#b44;font-style:italic">                    connection_limit: 10000</span><span style="color:#bbb">    
-</span></code></pre></div><p>だいたいは引数名を見ればどういう設定をしてるかがわかるが、<code>listers</code>内のフィルタ周りのところでどのドメインから来たリクエストをどのクラスタへルーティングする記述があり、ここで送るクラスタは<code>clusters</code>と同じ名前を設定する必要がある。</p>
+<div class="highlight"><pre tabindex="0" style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-yaml" data-lang="yaml"><span style="display:flex;"><span><span style="color:#008000;font-weight:bold">apiVersion</span>:<span style="color:#bbb"> </span>v1<span style="color:#bbb">
+</span></span></span><span style="display:flex;"><span><span style="color:#bbb"></span><span style="color:#008000;font-weight:bold">kind</span>:<span style="color:#bbb"> </span>ConfigMap<span style="color:#bbb">
+</span></span></span><span style="display:flex;"><span><span style="color:#bbb"></span><span style="color:#008000;font-weight:bold">metadata</span>:<span style="color:#bbb">
+</span></span></span><span style="display:flex;"><span><span style="color:#bbb">  </span><span style="color:#008000;font-weight:bold">name</span>:<span style="color:#bbb"> </span>my-envoy-configmap<span style="color:#bbb">
+</span></span></span><span style="display:flex;"><span><span style="color:#bbb"></span><span style="color:#008000;font-weight:bold">data</span>:<span style="color:#bbb">
+</span></span></span><span style="display:flex;"><span><span style="color:#bbb">  </span><span style="color:#080;font-style:italic"># Adding new entries here will make them appear as files in the deployment.</span><span style="color:#bbb">
+</span></span></span><span style="display:flex;"><span><span style="color:#bbb">  </span><span style="color:#080;font-style:italic"># Please update k8s.io/k8s.io/README.md when you update this file</span><span style="color:#bbb">
+</span></span></span><span style="display:flex;"><span><span style="color:#bbb">  </span><span style="color:#008000;font-weight:bold">envoy.yaml</span>:<span style="color:#bbb"> </span>|<span style="color:#b44;font-style:italic">
+</span></span></span><span style="display:flex;"><span><span style="color:#b44;font-style:italic">    static_resources:
+</span></span></span><span style="display:flex;"><span><span style="color:#b44;font-style:italic">      listeners:
+</span></span></span><span style="display:flex;"><span><span style="color:#b44;font-style:italic">      - address:
+</span></span></span><span style="display:flex;"><span><span style="color:#b44;font-style:italic">          socket_address:
+</span></span></span><span style="display:flex;"><span><span style="color:#b44;font-style:italic">            address: 0.0.0.0
+</span></span></span><span style="display:flex;"><span><span style="color:#b44;font-style:italic">            port_value: 15001
+</span></span></span><span style="display:flex;"><span><span style="color:#b44;font-style:italic">        filter_chains:
+</span></span></span><span style="display:flex;"><span><span style="color:#b44;font-style:italic">        - filters:
+</span></span></span><span style="display:flex;"><span><span style="color:#b44;font-style:italic">          - name: envoy.filters.network.http_connection_manager
+</span></span></span><span style="display:flex;"><span><span style="color:#b44;font-style:italic">            typed_config:
+</span></span></span><span style="display:flex;"><span><span style="color:#b44;font-style:italic">              &#34;@type&#34;: type.googleapis.com/envoy.extensions.filters.network.http_connection_manager.v3.HttpConnectionManager
+</span></span></span><span style="display:flex;"><span><span style="color:#b44;font-style:italic">              codec_type: AUTO
+</span></span></span><span style="display:flex;"><span><span style="color:#b44;font-style:italic">              stat_prefix: ingress_http
+</span></span></span><span style="display:flex;"><span><span style="color:#b44;font-style:italic">              route_config:
+</span></span></span><span style="display:flex;"><span><span style="color:#b44;font-style:italic">                name: local_route
+</span></span></span><span style="display:flex;"><span><span style="color:#b44;font-style:italic">                virtual_hosts:
+</span></span></span><span style="display:flex;"><span><span style="color:#b44;font-style:italic">                - name: backend
+</span></span></span><span style="display:flex;"><span><span style="color:#b44;font-style:italic">                  domains:
+</span></span></span><span style="display:flex;"><span><span style="color:#b44;font-style:italic">                  - &#34;*&#34;
+</span></span></span><span style="display:flex;"><span><span style="color:#b44;font-style:italic">                  routes:
+</span></span></span><span style="display:flex;"><span><span style="color:#b44;font-style:italic">                  - match:
+</span></span></span><span style="display:flex;"><span><span style="color:#b44;font-style:italic">                      prefix: &#34;/&#34;
+</span></span></span><span style="display:flex;"><span><span style="color:#b44;font-style:italic">                    route:
+</span></span></span><span style="display:flex;"><span><span style="color:#b44;font-style:italic">                      cluster: local_service
+</span></span></span><span style="display:flex;"><span><span style="color:#b44;font-style:italic">              http_filters:
+</span></span></span><span style="display:flex;"><span><span style="color:#b44;font-style:italic">              - name: envoy.filters.http.router
+</span></span></span><span style="display:flex;"><span><span style="color:#b44;font-style:italic">                typed_config: {}
+</span></span></span><span style="display:flex;"><span><span style="color:#b44;font-style:italic">      clusters:
+</span></span></span><span style="display:flex;"><span><span style="color:#b44;font-style:italic">      - name: local_service
+</span></span></span><span style="display:flex;"><span><span style="color:#b44;font-style:italic">        type: STRICT_DNS
+</span></span></span><span style="display:flex;"><span><span style="color:#b44;font-style:italic">        lb_policy: ROUND_ROBIN
+</span></span></span><span style="display:flex;"><span><span style="color:#b44;font-style:italic">        load_assignment:
+</span></span></span><span style="display:flex;"><span><span style="color:#b44;font-style:italic">          cluster_name: local_service
+</span></span></span><span style="display:flex;"><span><span style="color:#b44;font-style:italic">          endpoints:
+</span></span></span><span style="display:flex;"><span><span style="color:#b44;font-style:italic">          - lb_endpoints:
+</span></span></span><span style="display:flex;"><span><span style="color:#b44;font-style:italic">            - endpoint:
+</span></span></span><span style="display:flex;"><span><span style="color:#b44;font-style:italic">                address:
+</span></span></span><span style="display:flex;"><span><span style="color:#b44;font-style:italic">                  socket_address:
+</span></span></span><span style="display:flex;"><span><span style="color:#b44;font-style:italic">                    address: local_service
+</span></span></span><span style="display:flex;"><span><span style="color:#b44;font-style:italic">                    port_value: 2746
+</span></span></span><span style="display:flex;"><span><span style="color:#b44;font-style:italic">    admin:
+</span></span></span><span style="display:flex;"><span><span style="color:#b44;font-style:italic">      access_log_path: &#34;/dev/null&#34;
+</span></span></span><span style="display:flex;"><span><span style="color:#b44;font-style:italic">      address:
+</span></span></span><span style="display:flex;"><span><span style="color:#b44;font-style:italic">        socket_address:
+</span></span></span><span style="display:flex;"><span><span style="color:#b44;font-style:italic">          address: 0.0.0.0
+</span></span></span><span style="display:flex;"><span><span style="color:#b44;font-style:italic">          port_value: 8001
+</span></span></span><span style="display:flex;"><span><span style="color:#b44;font-style:italic">    layered_runtime:
+</span></span></span><span style="display:flex;"><span><span style="color:#b44;font-style:italic">      layers:
+</span></span></span><span style="display:flex;"><span><span style="color:#b44;font-style:italic">        - name: static_layer_0
+</span></span></span><span style="display:flex;"><span><span style="color:#b44;font-style:italic">          static_layer:
+</span></span></span><span style="display:flex;"><span><span style="color:#b44;font-style:italic">            envoy:
+</span></span></span><span style="display:flex;"><span><span style="color:#b44;font-style:italic">              resource_limits:
+</span></span></span><span style="display:flex;"><span><span style="color:#b44;font-style:italic">                listener:
+</span></span></span><span style="display:flex;"><span><span style="color:#b44;font-style:italic">                  example_listener_name:
+</span></span></span><span style="display:flex;"><span><span style="color:#b44;font-style:italic">                    connection_limit: 10000</span><span style="color:#bbb">    
+</span></span></span></code></pre></div><p>だいたいは引数名を見ればどういう設定をしてるかがわかるが、<code>listers</code>内のフィルタ周りのところでどのドメインから来たリクエストをどのクラスタへルーティングする記述があり、ここで送るクラスタは<code>clusters</code>と同じ名前を設定する必要がある。</p>
 <h1 id="終わりに">終わりに</h1>
 <p>仕事でEnvoyを触る必要があり色々ググってみたところv3 APIの日本語記事が少なかったので書いてみた。</p>
 <p>ここらへんの実装を終えてから実は要件としてEnvoyは必要がなかったということが発覚したのだけど、今回色々調査しながらEnvoyを触ったのでメモ。</p>
@@ -445,9 +445,13 @@
                         
                         
                         
+                        
+                        
                         <a href="/tags/kubernetes" title="kubernetes">
                             kubernetes
                         </a>
+                        
+                        
                         
                         
                         
@@ -466,6 +470,10 @@
                         
                         
                         
+                        
+                        <a href="/tags/streets" title="streets">
+                            streets
+                        </a>
                         
                         
                         

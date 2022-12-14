@@ -288,43 +288,43 @@
 <p>NSがmacOS側のオブジェクトというのはわかったが、ググってみると<a href="https://qiita.com/496_/items/4ad166f4104d0bb24e80">NSTextInputClientプロトコルを実装すればIMEが機能するようになるらしい</a>。</p>
 <p>プロトコルを実装するというのはピンとこなかったが、NSTextInputClientプロトコル内で使われる<code>hasMarkedText</code>や<code>selectedRange</code>、<code>insertText</code>などの関数をアプリケーション内で動くように実装すればいいらしい。</p>
 <p>具体的に、例えば未確定文字列が存在するか確認する<code>hasMarkedText</code>は以下のように実装する。</p>
-<div class="highlight"><pre tabindex="0" style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-rust" data-lang="rust"><span style="color:#a2f;font-weight:bold">extern</span><span style="color:#bbb"> </span><span style="color:#b44">&#34;C&#34;</span><span style="color:#bbb"> </span><span style="color:#a2f;font-weight:bold">fn</span> <span style="color:#00a000">has_marked_text</span>(this: <span style="color:#a2f">&amp;</span><span style="color:#00f">Object</span>,<span style="color:#bbb"> </span>_sel: <span style="color:#00f">Sel</span>)<span style="color:#bbb"> </span>-&gt; <span style="color:#00f">BOOL</span><span style="color:#bbb"> </span>{<span style="color:#bbb">
-</span><span style="color:#bbb">    </span><span style="color:#a2f;font-weight:bold">unsafe</span><span style="color:#bbb"> </span>{<span style="color:#bbb">
-</span><span style="color:#bbb">        </span>trace<span style="color:#666">!</span>(<span style="color:#b44">&#34;Triggered `hasMarkedText`&#34;</span>);<span style="color:#bbb">
-</span><span style="color:#bbb">        </span><span style="color:#a2f;font-weight:bold">let</span><span style="color:#bbb"> </span>marked_text: <span style="color:#00f">id</span><span style="color:#bbb"> </span><span style="color:#666">=</span><span style="color:#bbb"> </span><span style="color:#666">*</span>this.get_ivar(<span style="color:#b44">&#34;markedText&#34;</span>);<span style="color:#bbb">
-</span><span style="color:#bbb">        </span>trace<span style="color:#666">!</span>(<span style="color:#b44">&#34;Completed `hasMarkedText`&#34;</span>);<span style="color:#bbb">
-</span><span style="color:#bbb">        </span>(marked_text.length()<span style="color:#bbb"> </span><span style="color:#666">&gt;</span><span style="color:#bbb"> </span><span style="color:#666">0</span>)<span style="color:#bbb"> </span><span style="color:#a2f;font-weight:bold">as</span><span style="color:#bbb"> </span>BOOL<span style="color:#bbb">
-</span><span style="color:#bbb">    </span>}<span style="color:#bbb">
-</span><span style="color:#bbb"></span>}<span style="color:#bbb">
-</span></code></pre></div><p>また、<code>setMarkedText</code>は以下のようになる。</p>
-<div class="highlight"><pre tabindex="0" style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-rust" data-lang="rust"><span style="color:#a2f;font-weight:bold">extern</span><span style="color:#bbb"> </span><span style="color:#b44">&#34;C&#34;</span><span style="color:#bbb"> </span><span style="color:#a2f;font-weight:bold">fn</span> <span style="color:#00a000">set_marked_text</span>(<span style="color:#bbb">
-</span><span style="color:#bbb">    </span>this: <span style="color:#a2f">&amp;</span><span style="color:#00f">mut</span><span style="color:#bbb"> </span>Object,<span style="color:#bbb">
-</span><span style="color:#bbb">    </span>_sel: <span style="color:#00f">Sel</span>,<span style="color:#bbb">
-</span><span style="color:#bbb">    </span>string: <span style="color:#00f">id</span>,<span style="color:#bbb">
-</span><span style="color:#bbb">    </span>_selected_range: <span style="color:#00f">NSRange</span>,<span style="color:#bbb">
-</span><span style="color:#bbb">    </span>_replacement_range: <span style="color:#00f">NSRange</span>,<span style="color:#bbb">
-</span><span style="color:#bbb"></span>)<span style="color:#bbb"> </span>{<span style="color:#bbb">
-</span><span style="color:#bbb">    </span>trace<span style="color:#666">!</span>(<span style="color:#b44">&#34;Triggered `setMarkedText`&#34;</span>);<span style="color:#bbb">
-</span><span style="color:#bbb">    </span><span style="color:#a2f;font-weight:bold">unsafe</span><span style="color:#bbb"> </span>{<span style="color:#bbb">
-</span><span style="color:#bbb">        </span><span style="color:#a2f;font-weight:bold">let</span><span style="color:#bbb"> </span>marked_text_ref: <span style="color:#a2f">&amp;</span><span style="color:#00f">mut</span><span style="color:#bbb"> </span>id<span style="color:#bbb"> </span><span style="color:#666">=</span><span style="color:#bbb"> </span>this.get_mut_ivar(<span style="color:#b44">&#34;markedText&#34;</span>);<span style="color:#bbb">
-</span><span style="color:#bbb">        </span><span style="color:#a2f;font-weight:bold">let</span><span style="color:#bbb"> </span>_: ()<span style="color:#bbb"> </span><span style="color:#666">=</span><span style="color:#bbb"> </span>msg_send<span style="color:#666">!</span>[(<span style="color:#666">*</span>marked_text_ref),<span style="color:#bbb"> </span>release];<span style="color:#bbb">
-</span><span style="color:#bbb">        </span><span style="color:#a2f;font-weight:bold">let</span><span style="color:#bbb"> </span>marked_text<span style="color:#bbb"> </span><span style="color:#666">=</span><span style="color:#bbb"> </span>NSMutableAttributedString::alloc(nil);<span style="color:#bbb">
-</span><span style="color:#bbb">        </span><span style="color:#a2f;font-weight:bold">let</span><span style="color:#bbb"> </span>has_attr<span style="color:#bbb"> </span><span style="color:#666">=</span><span style="color:#bbb"> </span>msg_send<span style="color:#666">!</span>[string,<span style="color:#bbb"> </span>isKindOfClass: <span style="color:#00f">class</span><span style="color:#666">!</span>(NSAttributedString)];<span style="color:#bbb">
-</span><span style="color:#bbb">        </span><span style="color:#a2f;font-weight:bold">if</span><span style="color:#bbb"> </span>has_attr<span style="color:#bbb"> </span>{<span style="color:#bbb">
-</span><span style="color:#bbb">            </span>marked_text.initWithAttributedString(string);<span style="color:#bbb">
-</span><span style="color:#bbb">        </span>}<span style="color:#bbb"> </span><span style="color:#a2f;font-weight:bold">else</span><span style="color:#bbb"> </span>{<span style="color:#bbb">
-</span><span style="color:#bbb">            </span>marked_text.initWithString(string);<span style="color:#bbb">
-</span><span style="color:#bbb">        </span>};<span style="color:#bbb">
-</span><span style="color:#bbb">        </span><span style="color:#666">*</span>marked_text_ref<span style="color:#bbb"> </span><span style="color:#666">=</span><span style="color:#bbb"> </span>marked_text;<span style="color:#bbb">
-</span><span style="color:#bbb">    </span>}<span style="color:#bbb">
-</span><span style="color:#bbb">    </span>trace<span style="color:#666">!</span>(<span style="color:#b44">&#34;Completed `setMarkedText`&#34;</span>);<span style="color:#bbb">
-</span><span style="color:#bbb"></span>}<span style="color:#bbb">
-</span></code></pre></div><p>この場合、事前に<code>NSView</code>オブジェクト内に<code>markedText</code>という変数を用意しておき、仮に日本語入力をしていて確定されてない文字列(未確定文字列、下線がついているやつ)があればOS側が<code>setMarkedText</code>を発火してこの<code>markedText</code>に値を当て、<code>hasMarkedText</code>はそれを参照する。</p>
+<div class="highlight"><pre tabindex="0" style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-rust" data-lang="rust"><span style="display:flex;"><span><span style="color:#a2f;font-weight:bold">extern</span><span style="color:#bbb"> </span><span style="color:#b44">&#34;C&#34;</span><span style="color:#bbb"> </span><span style="color:#a2f;font-weight:bold">fn</span> <span style="color:#00a000">has_marked_text</span>(this: <span style="color:#a2f">&amp;</span><span style="color:#00f">Object</span>,<span style="color:#bbb"> </span>_sel: <span style="color:#00f">Sel</span>)<span style="color:#bbb"> </span>-&gt; <span style="color:#00f">BOOL</span><span style="color:#bbb"> </span>{<span style="color:#bbb">
+</span></span></span><span style="display:flex;"><span><span style="color:#bbb">    </span><span style="color:#a2f;font-weight:bold">unsafe</span><span style="color:#bbb"> </span>{<span style="color:#bbb">
+</span></span></span><span style="display:flex;"><span><span style="color:#bbb">        </span>trace<span style="color:#666">!</span>(<span style="color:#b44">&#34;Triggered `hasMarkedText`&#34;</span>);<span style="color:#bbb">
+</span></span></span><span style="display:flex;"><span><span style="color:#bbb">        </span><span style="color:#a2f;font-weight:bold">let</span><span style="color:#bbb"> </span>marked_text: <span style="color:#00f">id</span><span style="color:#bbb"> </span><span style="color:#666">=</span><span style="color:#bbb"> </span><span style="color:#666">*</span>this.get_ivar(<span style="color:#b44">&#34;markedText&#34;</span>);<span style="color:#bbb">
+</span></span></span><span style="display:flex;"><span><span style="color:#bbb">        </span>trace<span style="color:#666">!</span>(<span style="color:#b44">&#34;Completed `hasMarkedText`&#34;</span>);<span style="color:#bbb">
+</span></span></span><span style="display:flex;"><span><span style="color:#bbb">        </span>(marked_text.length()<span style="color:#bbb"> </span><span style="color:#666">&gt;</span><span style="color:#bbb"> </span><span style="color:#666">0</span>)<span style="color:#bbb"> </span><span style="color:#a2f;font-weight:bold">as</span><span style="color:#bbb"> </span>BOOL<span style="color:#bbb">
+</span></span></span><span style="display:flex;"><span><span style="color:#bbb">    </span>}<span style="color:#bbb">
+</span></span></span><span style="display:flex;"><span><span style="color:#bbb"></span>}<span style="color:#bbb">
+</span></span></span></code></pre></div><p>また、<code>setMarkedText</code>は以下のようになる。</p>
+<div class="highlight"><pre tabindex="0" style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-rust" data-lang="rust"><span style="display:flex;"><span><span style="color:#a2f;font-weight:bold">extern</span><span style="color:#bbb"> </span><span style="color:#b44">&#34;C&#34;</span><span style="color:#bbb"> </span><span style="color:#a2f;font-weight:bold">fn</span> <span style="color:#00a000">set_marked_text</span>(<span style="color:#bbb">
+</span></span></span><span style="display:flex;"><span><span style="color:#bbb">    </span>this: <span style="color:#a2f">&amp;</span><span style="color:#00f">mut</span><span style="color:#bbb"> </span>Object,<span style="color:#bbb">
+</span></span></span><span style="display:flex;"><span><span style="color:#bbb">    </span>_sel: <span style="color:#00f">Sel</span>,<span style="color:#bbb">
+</span></span></span><span style="display:flex;"><span><span style="color:#bbb">    </span>string: <span style="color:#00f">id</span>,<span style="color:#bbb">
+</span></span></span><span style="display:flex;"><span><span style="color:#bbb">    </span>_selected_range: <span style="color:#00f">NSRange</span>,<span style="color:#bbb">
+</span></span></span><span style="display:flex;"><span><span style="color:#bbb">    </span>_replacement_range: <span style="color:#00f">NSRange</span>,<span style="color:#bbb">
+</span></span></span><span style="display:flex;"><span><span style="color:#bbb"></span>)<span style="color:#bbb"> </span>{<span style="color:#bbb">
+</span></span></span><span style="display:flex;"><span><span style="color:#bbb">    </span>trace<span style="color:#666">!</span>(<span style="color:#b44">&#34;Triggered `setMarkedText`&#34;</span>);<span style="color:#bbb">
+</span></span></span><span style="display:flex;"><span><span style="color:#bbb">    </span><span style="color:#a2f;font-weight:bold">unsafe</span><span style="color:#bbb"> </span>{<span style="color:#bbb">
+</span></span></span><span style="display:flex;"><span><span style="color:#bbb">        </span><span style="color:#a2f;font-weight:bold">let</span><span style="color:#bbb"> </span>marked_text_ref: <span style="color:#a2f">&amp;</span><span style="color:#00f">mut</span><span style="color:#bbb"> </span>id<span style="color:#bbb"> </span><span style="color:#666">=</span><span style="color:#bbb"> </span>this.get_mut_ivar(<span style="color:#b44">&#34;markedText&#34;</span>);<span style="color:#bbb">
+</span></span></span><span style="display:flex;"><span><span style="color:#bbb">        </span><span style="color:#a2f;font-weight:bold">let</span><span style="color:#bbb"> </span>_: ()<span style="color:#bbb"> </span><span style="color:#666">=</span><span style="color:#bbb"> </span>msg_send<span style="color:#666">!</span>[(<span style="color:#666">*</span>marked_text_ref),<span style="color:#bbb"> </span>release];<span style="color:#bbb">
+</span></span></span><span style="display:flex;"><span><span style="color:#bbb">        </span><span style="color:#a2f;font-weight:bold">let</span><span style="color:#bbb"> </span>marked_text<span style="color:#bbb"> </span><span style="color:#666">=</span><span style="color:#bbb"> </span>NSMutableAttributedString::alloc(nil);<span style="color:#bbb">
+</span></span></span><span style="display:flex;"><span><span style="color:#bbb">        </span><span style="color:#a2f;font-weight:bold">let</span><span style="color:#bbb"> </span>has_attr<span style="color:#bbb"> </span><span style="color:#666">=</span><span style="color:#bbb"> </span>msg_send<span style="color:#666">!</span>[string,<span style="color:#bbb"> </span>isKindOfClass: <span style="color:#00f">class</span><span style="color:#666">!</span>(NSAttributedString)];<span style="color:#bbb">
+</span></span></span><span style="display:flex;"><span><span style="color:#bbb">        </span><span style="color:#a2f;font-weight:bold">if</span><span style="color:#bbb"> </span>has_attr<span style="color:#bbb"> </span>{<span style="color:#bbb">
+</span></span></span><span style="display:flex;"><span><span style="color:#bbb">            </span>marked_text.initWithAttributedString(string);<span style="color:#bbb">
+</span></span></span><span style="display:flex;"><span><span style="color:#bbb">        </span>}<span style="color:#bbb"> </span><span style="color:#a2f;font-weight:bold">else</span><span style="color:#bbb"> </span>{<span style="color:#bbb">
+</span></span></span><span style="display:flex;"><span><span style="color:#bbb">            </span>marked_text.initWithString(string);<span style="color:#bbb">
+</span></span></span><span style="display:flex;"><span><span style="color:#bbb">        </span>};<span style="color:#bbb">
+</span></span></span><span style="display:flex;"><span><span style="color:#bbb">        </span><span style="color:#666">*</span>marked_text_ref<span style="color:#bbb"> </span><span style="color:#666">=</span><span style="color:#bbb"> </span>marked_text;<span style="color:#bbb">
+</span></span></span><span style="display:flex;"><span><span style="color:#bbb">    </span>}<span style="color:#bbb">
+</span></span></span><span style="display:flex;"><span><span style="color:#bbb">    </span>trace<span style="color:#666">!</span>(<span style="color:#b44">&#34;Completed `setMarkedText`&#34;</span>);<span style="color:#bbb">
+</span></span></span><span style="display:flex;"><span><span style="color:#bbb"></span>}<span style="color:#bbb">
+</span></span></span></code></pre></div><p>この場合、事前に<code>NSView</code>オブジェクト内に<code>markedText</code>という変数を用意しておき、仮に日本語入力をしていて確定されてない文字列(未確定文字列、下線がついているやつ)があればOS側が<code>setMarkedText</code>を発火してこの<code>markedText</code>に値を当て、<code>hasMarkedText</code>はそれを参照する。</p>
 <p>NSTextInputClientとはこのようにキーを押したイベントに際して文字列入力の際の一連の処理を行ってくれる規則であり関数の発火を行ってくれるもので、プロトコルを実装するとは実際のアプリケーションでIMEを叩くために各関数の具体的な動作を定義する必要があるのである。</p>
 <h1 id="試験的に動かす">試験的に動かす</h1>
 <p>今回Alacrittyを直すためだったが、修正に際して登場するクレートが3つもあるため、それぞれcloneしてくる。</p>
 <p>ディレクトリの位置関係としては以下のようになる。</p>
-<pre><code>.
+<pre tabindex="0"><code>.
 ├── alacritty/
 │   ├── alacritty/
 │   ├── alacritty_config_derive
@@ -344,11 +344,11 @@
     ├── src
     └── tests
 </code></pre><p>そしてAlacrittyをローカルで叩くが、依存するクレートをcrates.ioからとってくるのではなくローカルのものをとってきて欲しいので<code>Cargo.toml</code>の依存クレートを以下のように直す。</p>
-<pre><code>glutin = { version = &quot;0.27.0&quot;, default-features = false, features = [&quot;serde&quot;] }
+<pre tabindex="0"><code>glutin = { version = &#34;0.27.0&#34;, default-features = false, features = [&#34;serde&#34;] }
 
 ↓
 
-glutin = { path = &quot;../../glutin/glutin&quot;, version = &quot;0.27.0&quot;, default-features = false, features = [&quot;serde&quot;] }
+glutin = { path = &#34;../../glutin/glutin&#34;, version = &#34;0.27.0&#34;, default-features = false, features = [&#34;serde&#34;] }
 </code></pre><p>これでローカルのものを参照してくれる。
 Glutinでも同様にローカルのWinitを参照するように直す。</p>
 <p>これらをやった上でAlacrittyのリポジトリで<code>cargo run</code>をすればターミナルが立ち上がる。</p>
@@ -358,16 +358,16 @@ Glutinでも同様にローカルのWinitを参照するように直す。</p>
 <p>WinitではIMEの挙動を直すために色々structの仕様変更が入ったりしていたが、現在ではKeyboardInputというstructで未確定文字列の有無を格納するフィールドがある。
 AlacrittyもWinitもIMEの修正に真っ最中らしく、Alacritty本体でもまだ未確定文字列の処理についてのハンドリングはfixされていない。(Alacrittyの中に<code>skip_events</code>という関数があり、その中に<code>KeyboardInput { is_synthetic: true, ..}</code>がある)</p>
 <p>今回動作確認するためにはまずAlacrittyがハンドリングするWindowEventで未確定文字列が存在する場合もキャッチして処理するよう<a href="https://github.com/alacritty/alacritty/blob/4c9ecd3479b6cce0493532561ef78ba410c3b51a/alacritty/src/event.rs#L1250">パターンマッチングの分岐条件</a>を変更する。</p>
-<div class="highlight"><pre tabindex="0" style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-rust" data-lang="rust">WindowEvent::KeyboardInput<span style="color:#bbb"> </span>{<span style="color:#bbb"> </span>input,<span style="color:#bbb"> </span>is_synthetic: <span style="color:#00f">false</span>,<span style="color:#bbb"> </span>..<span style="color:#bbb"> </span>}<span style="color:#bbb"> </span><span style="color:#666">=&gt;</span><span style="color:#bbb"> </span>{<span style="color:#bbb">
-</span><span style="color:#bbb">    </span>processor.key_input(input);<span style="color:#bbb">
-</span><span style="color:#bbb"></span>},<span style="color:#bbb">
-</span><span style="color:#bbb">
-</span><span style="color:#bbb"></span><span style="">↓</span><span style="color:#bbb">
-</span><span style="color:#bbb">
-</span><span style="color:#bbb"></span>WindowEvent::KeyboardInput<span style="color:#bbb"> </span>{<span style="color:#bbb"> </span>input,<span style="color:#bbb"> </span>..<span style="color:#bbb"> </span>}<span style="color:#bbb"> </span><span style="color:#666">=&gt;</span><span style="color:#bbb"> </span>{<span style="color:#bbb">
-</span><span style="color:#bbb">    </span>processor.key_input(input);<span style="color:#bbb">
-</span><span style="color:#bbb"></span>},<span style="color:#bbb">
-</span></code></pre></div><p>次にWinitにて適切に<code>KeyboardInput</code>というstruct内に<code>is_synthetic</code>のboolが適切に入っているか確認する。</p>
+<div class="highlight"><pre tabindex="0" style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-rust" data-lang="rust"><span style="display:flex;"><span>WindowEvent::KeyboardInput<span style="color:#bbb"> </span>{<span style="color:#bbb"> </span>input,<span style="color:#bbb"> </span>is_synthetic: <span style="color:#00f">false</span>,<span style="color:#bbb"> </span><span style="color:#666">..</span><span style="color:#bbb"> </span>}<span style="color:#bbb"> </span><span style="color:#666">=&gt;</span><span style="color:#bbb"> </span>{<span style="color:#bbb">
+</span></span></span><span style="display:flex;"><span><span style="color:#bbb">    </span>processor.key_input(input);<span style="color:#bbb">
+</span></span></span><span style="display:flex;"><span><span style="color:#bbb"></span>},<span style="color:#bbb">
+</span></span></span><span style="display:flex;"><span><span style="color:#bbb">
+</span></span></span><span style="display:flex;"><span><span style="color:#bbb"></span><span style="">↓</span><span style="color:#bbb">
+</span></span></span><span style="display:flex;"><span><span style="color:#bbb">
+</span></span></span><span style="display:flex;"><span><span style="color:#bbb"></span>WindowEvent::KeyboardInput<span style="color:#bbb"> </span>{<span style="color:#bbb"> </span>input,<span style="color:#bbb"> </span><span style="color:#666">..</span><span style="color:#bbb"> </span>}<span style="color:#bbb"> </span><span style="color:#666">=&gt;</span><span style="color:#bbb"> </span>{<span style="color:#bbb">
+</span></span></span><span style="display:flex;"><span><span style="color:#bbb">    </span>processor.key_input(input);<span style="color:#bbb">
+</span></span></span><span style="display:flex;"><span><span style="color:#bbb"></span>},<span style="color:#bbb">
+</span></span></span></code></pre></div><p>次にWinitにて適切に<code>KeyboardInput</code>というstruct内に<code>is_synthetic</code>のboolが適切に入っているか確認する。</p>
 <p>が、見てみるとmacOSについてはまだ暫定的に全てfalseでは入るようになっている。
 macOSについてはまだIME対応が完了していない中でstructの仕様を変更が入った経緯ということで、このようなコードになっていた。</p>
 <p>一旦これをいじって直して、早速実際のIMEのコードの修正に取り掛かる。</p>
@@ -402,20 +402,20 @@ macOSについてはまだIME対応が完了していない中でstructの仕様
 文字列をフロントエンドに渡す操作は<code>setMarkedText</code>と<code>insertText</code>が担っている。</p>
 <h2 id="setmarkedtextでフロントに都度入力する"><code>setMarkedText</code>でフロントに都度入力する</h2>
 <p>フロントエンドに文字列を渡す方法として、以下のようにイベント情報のキューにpushしていく。</p>
-<div class="highlight"><pre tabindex="0" style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-rust" data-lang="rust"><span style="color:#a2f;font-weight:bold">let</span><span style="color:#bbb"> </span><span style="color:#a2f;font-weight:bold">mut</span><span style="color:#bbb"> </span>events<span style="color:#bbb"> </span><span style="color:#666">=</span><span style="color:#bbb"> </span>VecDeque::with_capacity(characters.len());<span style="color:#bbb">
-</span><span style="color:#bbb"></span>events.push_back(EventWrapper::StaticEvent(Event::WindowEvent<span style="color:#bbb"> </span>{<span style="color:#bbb">
-</span><span style="color:#bbb">    </span>window_id: <span style="color:#00f">WindowId</span>(get_window_id(state.ns_window)),<span style="color:#bbb">
-</span><span style="color:#bbb">    </span>event: <span style="color:#00f">WindowEvent</span>::ReceivedCharacter(character),<span style="color:#bbb">
-</span><span style="color:#bbb"></span>}));<span style="color:#bbb">
-</span><span style="color:#bbb">
-</span><span style="color:#bbb"></span>AppState::queue_events(events);<span style="color:#bbb">
-</span></code></pre></div><p>この中の<code>event: WindowEvent::ReceivedCharacter(character)</code>が肝で、<code>insertText</code>ではこのような操作を行なってくれているのだが<code>setMarkedText</code>はこの実装が行われていなかった。過去のログを探ってみたところ、どうやら実装者が英語圏の人で<code>setMarkedText</code>が何のためにあるのか知らなかったらしい。</p>
+<div class="highlight"><pre tabindex="0" style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-rust" data-lang="rust"><span style="display:flex;"><span><span style="color:#a2f;font-weight:bold">let</span><span style="color:#bbb"> </span><span style="color:#a2f;font-weight:bold">mut</span><span style="color:#bbb"> </span>events<span style="color:#bbb"> </span><span style="color:#666">=</span><span style="color:#bbb"> </span>VecDeque::with_capacity(characters.len());<span style="color:#bbb">
+</span></span></span><span style="display:flex;"><span><span style="color:#bbb"></span>events.push_back(EventWrapper::StaticEvent(Event::WindowEvent<span style="color:#bbb"> </span>{<span style="color:#bbb">
+</span></span></span><span style="display:flex;"><span><span style="color:#bbb">    </span>window_id: <span style="color:#00f">WindowId</span>(get_window_id(state.ns_window)),<span style="color:#bbb">
+</span></span></span><span style="display:flex;"><span><span style="color:#bbb">    </span>event: <span style="color:#00f">WindowEvent</span>::ReceivedCharacter(character),<span style="color:#bbb">
+</span></span></span><span style="display:flex;"><span><span style="color:#bbb"></span>}));<span style="color:#bbb">
+</span></span></span><span style="display:flex;"><span><span style="color:#bbb">
+</span></span></span><span style="display:flex;"><span><span style="color:#bbb"></span>AppState::queue_events(events);<span style="color:#bbb">
+</span></span></span></code></pre></div><p>この中の<code>event: WindowEvent::ReceivedCharacter(character)</code>が肝で、<code>insertText</code>ではこのような操作を行なってくれているのだが<code>setMarkedText</code>はこの実装が行われていなかった。過去のログを探ってみたところ、どうやら実装者が英語圏の人で<code>setMarkedText</code>が何のためにあるのか知らなかったらしい。</p>
 <p>そんなわけで<code>setMarkedText</code>にも毎度フロントに文字列をpushするように変更。
 <code>setmarkedText</code>は各キー入力に対して毎回発火するので、全部入力するようにしていると<code>ねこ</code>と入力したら<code>nねねkねこ</code>と何度も入力されまくることになる。
 そのため毎回<code>setMarkedText</code>が起動すると同時に直前の未確定文字列分だけDeleteキーを押す操作を擬似的に行わせる。</p>
 <p>この操作として直前のカーソル位置の分だけまず全部削除して、その後新規の未確定文字列を全部入力させるという方針を取る。
 つまり</p>
-<pre><code>こんにちh
+<pre tabindex="0"><code>こんにちh
 ↓
 (全部削除)
 ↓
@@ -506,9 +506,13 @@ macOSについてはまだIME対応が完了していない中でstructの仕様
                         
                         
                         
+                        
+                        
                         <a href="/tags/kubernetes" title="kubernetes">
                             kubernetes
                         </a>
+                        
+                        
                         
                         
                         
@@ -527,6 +531,10 @@ macOSについてはまだIME対応が完了していない中でstructの仕様
                         
                         
                         
+                        
+                        <a href="/tags/streets" title="streets">
+                            streets
+                        </a>
                         
                         
                         
