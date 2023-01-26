@@ -1,0 +1,596 @@
+<!DOCTYPE html>
+<html lang="en-us">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    
+    <meta property="og:site_name" content="Launch Today" />
+    <meta property="og:type" content="article" />
+    <meta property="og:url" content="https://komi.dev/" />
+    <meta property="og:locale" content="ja_JP" />
+
+    <meta name="twitter:site" content="@komi_edtr_1230" />
+
+    
+    <meta property="og:image" content="http://komi.dev/img/home.jpg" />
+    <meta property="twitter:image" content="http://komi.dev/img/home.jpg" />
+    
+
+    
+    <meta name="title" content="2023年は何をしていくか" />
+    <meta property="og:title" content="2023年は何をしていくか" />
+    <meta property="twitter:title" content="2023年は何をしていくか" />
+    
+
+    
+    <meta name="description" content="新年に入ってから色々イベントが起きているのでそのまとめと今後の抱負" />
+    <meta property="og:description" content="新年に入ってから色々イベントが起きているのでそのまとめと今後の抱負" />
+    <meta property="twitter:description" content="新年に入ってから色々イベントが起きているのでそのまとめと今後の抱負" />
+    
+
+    
+    <meta property="twitter:card" content="summary" />
+    
+    
+
+    <meta name="keyword"  content="Yusuke Kominami, 小南佑介, 小南 佑介, Rust, Emacs, Lisp, Web, Machine Learning, 機械学習">
+    <link rel="shortcut icon" href="/img/favicon.ico">
+
+    <title>2023年は何をしていくか</title>
+
+    <link rel="canonical" href="/post/2023-01-26-start-new-year/">
+
+    <link rel="stylesheet" href="/css/iDisqus.min.css"/>
+	
+    
+    <link rel="stylesheet" href="/css/bootstrap.min.css">
+
+    
+    <link rel="stylesheet" href="/css/hux-blog.min.css">
+
+    
+    <link rel="stylesheet" href="/css/zanshang.css">
+    
+    
+    <link href="//cdnjs.cloudflare.com/ajax/libs/font-awesome/4.6.3/css/font-awesome.min.css" rel="stylesheet" type="text/css">
+
+    
+    <link rel="stylesheet" href="http://komi.dev/css/custom-font.css">
+
+    
+    
+    <script src="/js/jquery.min.js"></script>
+    
+    
+    <script src="/js/bootstrap.min.js"></script>
+    
+    
+    <script src="/js/hux-blog.min.js"></script>
+
+    
+    
+
+    
+    <script async src="https://www.googletagmanager.com/gtag/js?id=UA-177061519-1"></script>
+    <script>
+        window.dataLayer = window.dataLayer || [];
+        function gtag(){dataLayer.push(arguments);}
+        gtag('js', new Date());
+
+        gtag('config', 'UA-177061519-1');
+    </script>
+
+
+</head>
+
+
+
+<nav class="navbar navbar-default navbar-custom navbar-fixed-top">
+    <div class="container-fluid">
+        
+        <div class="navbar-header page-scroll">
+            <button type="button" class="navbar-toggle">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+            <a class="navbar-brand" href="/">Launch Today</a>
+        </div>
+
+        
+        
+        <div id="huxblog_navbar">
+            <div class="navbar-collapse">
+                <ul class="nav navbar-nav navbar-right">
+                    <li>
+                        <a href="/">Home</a>
+                    </li>
+                    
+                    
+                    <li>
+                        <a href="/categories/career">career</a>
+                    </li>
+                    
+                    <li>
+                        <a href="/categories/tech">tech</a>
+                    </li>
+                    
+                    
+
+                    
+                    <li><a href="/about/">ABOUT</a></li>
+                    
+
+                    
+                    <li>
+                        <a href="/search">SEARCH <img src="/img/search.png"
+                                height="15" style="cursor: pointer;" alt="Search"></a>
+                    </li>
+                    
+                </ul>
+            </div>
+        </div>
+        
+    </div>
+    
+</nav>
+<script>
+    
+    
+    
+    var $body = document.body;
+    var $toggle = document.querySelector('.navbar-toggle');
+    var $navbar = document.querySelector('#huxblog_navbar');
+    var $collapse = document.querySelector('.navbar-collapse');
+
+    $toggle.addEventListener('click', handleMagic)
+    function handleMagic(e) {
+        if ($navbar.className.indexOf('in') > 0) {
+            
+            $navbar.className = " ";
+            
+            setTimeout(function () {
+                
+                if ($navbar.className.indexOf('in') < 0) {
+                    $collapse.style.height = "0px"
+                }
+            }, 400)
+        } else {
+            
+            $collapse.style.height = "auto"
+            $navbar.className += " in";
+        }
+    }
+</script>
+
+
+
+<style type="text/css">
+    header.intro-header {
+        background-image: url('https://richka.co/wp-content/uploads/2020/09/anders-jilden-uwbajDCODj4-unsplash.jpg')
+    }
+</style>
+<header class="intro-header">
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+                <div class="post-heading">
+                    <div class="tags">
+                        
+                        <a class="tag" href="/tags/life" title="life">
+                            life
+                        </a>
+                        
+                        <a class="tag" href="/tags/streets" title="streets">
+                            streets
+                        </a>
+                        
+                        <a class="tag" href="/tags/ksquad" title="ksquad">
+                            ksquad
+                        </a>
+                        
+                    </div>
+                    <h1>2023年は何をしていくか</h1>
+                    <h2 class="subheading">個人の目標とK Squadの今後について</h2>
+                    <span class="meta">
+                        Posted 
+                        on 
+                        Thursday, January 26, 2023
+                        
+                        
+                        
+                    </span>
+                </div>
+            </div>
+        </div>
+    </div>
+</header>
+
+
+
+
+<article>
+    <div class="container">
+        <div class="row">
+
+            
+            <div class="
+                col-lg-11 col-lg-offset-1
+                col-md-10 col-md-offset-1
+                post-container">
+
+                
+                <header>
+                    <h2>TOC</h2>
+                </header>
+                <nav id="TableOfContents">
+  <ul>
+    <li><a href="#新年早々めっちゃ忙しかった">新年早々めっちゃ忙しかった</a></li>
+    <li><a href="#streetsの取締役ctoを退任">Streetsの取締役CTOを退任</a></li>
+    <li><a href="#k-squadを育てることにした">K Squadを育てることにした</a></li>
+    <li><a href="#今後京都に定期的に通うことになった">今後京都に定期的に通うことになった</a></li>
+    <li><a href="#終わりに">終わりに</a></li>
+  </ul>
+</nav>
+                
+                <h1 id="新年早々めっちゃ忙しかった">新年早々めっちゃ忙しかった</h1>
+<p>もう2023年が始まってから1ヶ月経とうとしているが、今になってようやく今後どうするかみたいなのがフワッと見えてきたので今回文章に起こしておこうと思う。</p>
+<p>とにかく今年入ってからやばいくらいに忙しかった。</p>
+<p>背景として、去年の12月くらいにかなり悩んでいた(病んでいた)のもありながらK Squadを今後どう活動させていくかというのを考えており、その中でK Squadを育てていこうと思って去年のうちに結構種まきしていたのがかなり芽が出てきたのである。</p>
+<p>また、病んでいた原因を断ったというのもあり今はめちゃくちゃ元気。</p>
+<p>ひとまずそこらへんについてざっとまとめておこうと思う。</p>
+<h1 id="streetsの取締役ctoを退任">Streetsの取締役CTOを退任</h1>
+<p>前回のエントリーでStreetsのモチベーションがなかなかにしんどいという話を書いたが、結果としてメンバーと話して取締役CTOを降りることにした。
+2023年1月31日で退任となる。</p>
+<p>理由は前回のエントリーでだいぶ匂わせていたが、やはり自分として愛が持てるドメインでないと収益性の担保されない仕事はモチベーションが湧かなかった。</p>
+<p>自分が仕事に求めることは何かというと</p>
+<ul>
+<li>お金が稼げて自身の生活が満たされること</li>
+<li>自分の周りの人間が満たされること</li>
+</ul>
+<p>の2点。</p>
+<p>スタートアップがうまくいくためには初期で <strong>(エクイティやデットで)資金調達がうまくいく</strong> か <strong>売上が立つ(利益が出る)</strong> のどちらかが必須で、つまり金がないとスタートアップというのは生き永らえることができない。
+そして同時にこの上でチームメンバーのモチベーションをどこまで高くキープできているかというのが重要だと個人的に考えている。</p>
+<p>自分は上記の自身の生活が満たされることが極めて重要な人間なので、Streetsにフルコミットする状況は金銭的、精神的な観点で正直とても厳しいものがあった。</p>
+<p>あまりここで詳細なことを書くと怒られそうなのでこれから言及することはそのうち消えるかもしれないが、Streetsメンバーは皆何かしら本業を持っていて副業っぽいノリでStreets事業を手伝うという形をとっている。
+これはビジネスメンバーもエンジニアも等しくそういう形となっている。</p>
+<p>もちろんこの部分は非常に理解ができる部分で、スタートアップというのはとにかく金がないのでその事業だけで食っていくことはかなり無理がある。
+さもなくば貧しい生活を覚悟しなければいけない。</p>
+<p>今になってようやく言語化できるが、自分が一番モヤモヤしていた(去年病んでいた)のがこの副業スタイルという点で、ビジネスメンバーとエンジニアの間に非対称性が存在していること。</p>
+<p>ソフトウェアエンジニアという職務はどうしても人月商売であるという本質を持っていて、費やした時間の分だけ成果は出てくる。
+一方でビジネスサイドにおいてはぶっちゃけ時間を費やさなくともステークホルダーの人物に狙いを定めて数時間ミーティングをしたりメール、会食するだけで成果というのは出てくる。</p>
+<p>つまり何が言いたいかというと、数人のメンバーの中で自分が一番割を食っていて、自分が最も自身の本業を犠牲にする必要があった。
+自分が稼働しないとこの事業は進展がないというのは事実だが、これは自分にとっては極めて大きなプレッシャーで、結論としてとても大きな時間を割かなければいけなかった。</p>
+<p>ピーク時は1週間で100時間くらい稼働していたが、これで役員報酬が月額40万というのはあまりにも安すぎた。
+時給に直すと都内のコンビニバイトと同じくらいだろうか。</p>
+<p>ただ金銭的なインセンティブが全てでもなくて、これで事業が進展するなら良かったのだが、ピボットほどではないもののコア機能がどんどん移り変わっていった。
+PMFしてないので仕方ないが、ここまで時間を費やしてその上で度重なる方針転換はメンタル的に結構しんどかった。
+生株をビジネスメンバーに比べて多少多めにもらってはいたが、スタートアップの株なんてのはただの紙切れ同然で、株式を多少多めに配分されてるとはいえかなりの忍耐が必要だった。</p>
+<p>まあ長々と書いたが、要するにシンプルに疲れた。
+もうしばらくはガチのスタートアップで自社サービスやりたくない。やるとしてもシリーズA, B以降のPMFが見えて1→10フェーズのところでいい。</p>
+<p>別に事業が悪いというわけではないし、メンバーに誰か嫌な感情を持ったというわけではない。
+構造としてただただNot For Meだった。</p>
+<p>数ヶ月前にエンジニア出身の経営者の友人と鳥貴族で飲んできたとき<strong>もしCTOやるんだったら最初期から入らずにある程度事業に芽が出てるシリーズA, BあたりのところにCTOとして入るのがマジでコスパ良い</strong>という話になったのだが、改めて身をもってこれを痛感した。</p>
+<p>専業でプロダクトがPMFしてないスタートアップに入り、自分がオーナーじゃない場合は本当に疲弊する。
+そしてその事業ドメインに自分が愛を持っていないと憂き目に遭う。</p>
+<p>ただ、今回の1年ばかりで得られたこの経験はなかなか貴重なので、今後起業を志すエンジニアの友人にはしっかりフィードバックしていこうと思う。
+また、ビジネスサイドにスペシャリティを持つ起業家へのメッセージとして<strong>最初期にエンジニアを抱えて安心したいのは理解できるが、同時にそのエンジニアをケアすることも大切だよ</strong>というのは伝えておきたい。</p>
+<p>Streetsの取締役CTOは退任となるが、流石に自分がいきなり消えるとプロダクトとしてかなりマズいので今後は技術アドバイザーという形で保守メインでちょっとだけ開発するという方針。</p>
+<h1 id="k-squadを育てることにした">K Squadを育てることにした</h1>
+<p>Streetsの進退を考えていながらK Squadを今後どうするかというのを考えていたが、色々な人と会っていく中で仕事をいくつかいただけることとなった。
+そんなこんなで年初にして数千万円の売上が確約されたので、せっかくだしK Squadを育てていこうと思っている。</p>
+<p>先日某大企業の社長と食事に行ってきたのだが、<strong>現在K Squadはコンサルティングとか技術支援がメインだが何も自社プロダクトを持っておらず、それで良いのだろうか</strong>と相談してみたところ、<strong>コミちゃんの強みはコミュニケーション能力が高くて人に相談してもらえる空気感を持っているところだから変にビジョナリーになる必要はない</strong>とアドバイスしてもらった。</p>
+<p>自分自身のスペシャリティはソフトウェアエンジニアリングではなく技術に理解がありながら人とコミュニケーションが取れることだと最近は認識し始めていたので、これは結構目から鱗だった。
+人が喜ぶ仕事ができればそのアプローチは何でも良いとも思っていたので、今後K Squadはコンサルティングをメイン軸としてやっていこうかなと考えている。
+変に自社プロダクトを持つと地獄を見るのは薄々感じていたので、確かにこれで良い気がしている。</p>
+<p>そんなこんなで仕事をいただいたのだが、今回の仕事の発注は自分が昔から関わらせていただいているところだったので、やはり縁というのは大切にしなければいけないと思った。</p>
+<p>自分がK Squad作ったのはつい最近で、自分自身まだ26歳という若さでゴリゴリのZ世代なわけだが、縁を大切にしているのであえて昭和スタイルで営業しようと考えている。
+IT系の人間なので効率化とかスマートにやるのはいくらでもできるが、やはり最後は営業力で、IT系の技術わかる人間がちゃんと営業すればしっかり仕事は取れる。</p>
+<p>ただこのやり方をK Squadメンバー全員に強要する訳にはいかないので、一応職責としてパートナーとソフトウェアエンジニアで分けることにした。
+ソフトウェアエンジニアはエンジニアリングに本職を持つ人で、パートナーは開発の知識を持ちながら積極的にお客さんとの折衝に出てもらう人という方針にしている。</p>
+<p>最近は後輩を積極的にお客さんとのミーティングの場に連れていっているが、良い感じに経験を積んでもらっているので徐々にメンバーに成長してもらいながらK Squadを大きくしていければ良いかなと考えている。
+K Squadは無借金経営なので特に焦ることもないので、今は着実にやっていこうと思う。</p>
+<p>最近は京大にアルバイト募集の広告も出したので、今後の動きに乞うご期待といったところ。</p>
+<h1 id="今後京都に定期的に通うことになった">今後京都に定期的に通うことになった</h1>
+<p>K Squadの仕事の都合だが、3月から週2,3日京都に滞在することになった。</p>
+<p>現在は東京に住んでいるので当然京都に毎週行くことになるのだが、結構滞在するのでビジネスホテルではなく京都で家を借りようと考えている。
+ビジネスホテルより家を用意した方が荷物の管理も楽で、あと気が休まる。</p>
+<p>大学の頃は京都については <strong>なんて退屈な街なんだ&hellip;早く東京行きたい&hellip;</strong> なんて考えていたのだけれど、いざ東京に住み始めた現在は <strong>街が騒がしすぎる&hellip;京都っていい街だったな&hellip;</strong> と思っている。</p>
+<p>多分一生隣の芝生は青いので今回デュアルライフを実現することになり結構ウキウキしている。
+元々2拠点生活には憧れていて、かつ東京と京都は移動が極めて楽(新幹線で2時間くらい)なのでお金が許す限り本当に最高の組み合わせだと思っている。</p>
+<p>今回はちゃんと仕事が理由なのでしっかり経費で落とせるし、ワンルームではなく1LDKくらいの物件を取ろうと考えている。
+ただ、早くしないと受験生のブームに巻き込まれて引っ越し周りが大変なことになってしまうので2月はバタバタする予感。</p>
+<p>奥さんに聞いてみたところ<strong>合法的に京都旅行行けるし関西エリアのラーメン食べに行こう</strong>と割とノリノリなので、毎回京都についてくるわけではなさそうだが奥さんのGoサインも出ていて安心。</p>
+<h1 id="終わりに">終わりに</h1>
+<p>2022年は会社を辞めるという大きなイベントがありそこから色々あったが、今年もすでに予定がたくさん詰まっているので引き続き頑張っていきたい。</p>
+<p>K Squadは今年の売上は5,000万円あたりだと読んでいる。
+設立から2期目にしてこれはだいぶ頑張っている方だと思う。
+ひょっとしたらどこかで確変が起きて1億を超えるかもしれないので、採用やマーケティングを頑張りつつ日々誠実にビジネスをやっていこうと思う。(絶対に情報商材には手を出さないよ)</p>
+<p>K Squadはめっちゃ人材募集しているので是非とも。</p>
+<p>それでは。</p>
+
+
+                
+
+                <hr>
+                <ul class="pager">
+                    
+                    <li class="previous">
+                        <a href="http://komi.dev/post/2022-12-14-summary/" data-toggle="tooltip" data-placement="top" title="2022年のまとめ">&larr;
+                            Previous Post</a>
+                    </li>
+                    
+                    
+                </ul>
+
+                
+<div id="disqus-comment"></div>
+
+
+
+            </div>
+            
+            <div class="
+                col-lg-11 col-lg-offset-1
+                col-md-10 col-md-offset-1
+                sidebar-container">
+
+                
+                
+                <section>
+                    <hr class="hidden-sm hidden-xs">
+                    <h5><a href="/tags/">FEATURED TAGS</a></h5>
+                    <div class="tags">
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        <a href="/tags/gcp" title="gcp">
+                            gcp
+                        </a>
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        <a href="/tags/ksquad" title="ksquad">
+                            ksquad
+                        </a>
+                        
+                        
+                        
+                        <a href="/tags/kubernetes" title="kubernetes">
+                            kubernetes
+                        </a>
+                        
+                        
+                        
+                        <a href="/tags/life" title="life">
+                            life
+                        </a>
+                        
+                        
+                        
+                        <a href="/tags/macos" title="macos">
+                            macos
+                        </a>
+                        
+                        
+                        
+                        <a href="/tags/rust" title="rust">
+                            rust
+                        </a>
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        <a href="/tags/streets" title="streets">
+                            streets
+                        </a>
+                        
+                        
+                        
+                        <a href="/tags/terraform" title="terraform">
+                            terraform
+                        </a>
+                        
+                        
+                        
+                        
+                    </div>
+                </section>
+                
+
+                
+                
+            </div>
+        </div>
+    </div>
+</article>
+
+
+
+
+<footer>
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+                <ul class="list-inline text-center">
+                   
+                   <li>
+                       <a href='' rel="alternate" type="application/rss+xml" title="Launch Today" >
+                           <span class="fa-stack fa-lg">
+                               <i class="fa fa-circle fa-stack-2x"></i>
+                               <i class="fa fa-rss fa-stack-1x fa-inverse"></i>
+                           </span>
+                       </a>
+                   </li>
+                   
+                    
+                    <li>
+                        <a href="mailto:yusuke.kominami@gmail.com">
+                            <span class="fa-stack fa-lg">
+                                <i class="fa fa-circle fa-stack-2x"></i>
+                                <i class="fa fa-envelope fa-stack-1x fa-inverse"></i>
+                            </span>
+                        </a>
+                    </li>
+		    
+                    
+                    
+                    <li>
+                        <a href="https://twitter.com/komi_edtr_1230">
+                            <span class="fa-stack fa-lg">
+                                <i class="fa fa-circle fa-stack-2x"></i>
+                                <i class="fa fa-twitter fa-stack-1x fa-inverse"></i>
+                            </span>
+                        </a>
+                    </li>
+                    
+                    
+                    
+
+                    
+                    <li>
+                        <a target="_blank" href="https://www.facebook.com/1230komi/">
+                            <span class="fa-stack fa-lg">
+                                <i class="fa fa-circle fa-stack-2x"></i>
+                                <i class="fa fa-facebook fa-stack-1x fa-inverse"></i>
+                            </span>
+                        </a>
+                    </li>
+		    
+
+		    
+                    
+                    
+                    <li>
+                        <a target="_blank" href="https://github.com/komi1230">
+                            <span class="fa-stack fa-lg">
+                                <i class="fa fa-circle fa-stack-2x"></i>
+                                <i class="fa fa-github fa-stack-1x fa-inverse"></i>
+                            </span>
+                        </a>
+                    </li>
+		    
+                    
+                    
+                    
+                    <li>
+                        <a target="_blank" href="https://www.linkedin.com/in/yusuke-kominami-0419b1157/">
+                            <span class="fa-stack fa-lg">
+                                <i class="fa fa-circle fa-stack-2x"></i>
+                                <i class="fa fa-linkedin fa-stack-1x fa-inverse"></i>
+                            </span>
+                        </a>
+                    </li>
+		    
+                    
+                    
+                    <li>
+                        <a target="_blank" href="https://stackoverflow.com/users/12464570">
+                            <span class="fa-stack fa-lg">
+                                <i class="fa fa-circle fa-stack-2x"></i>
+                                <i class="fa fa-stack-overflow fa-stack-1x fa-inverse"></i>
+                            </span>
+                        </a>
+                    </li>
+            
+                    
+                    
+                    
+            
+            
+            
+                </ul>
+		<p class="copyright text-muted">
+                    Copyright &copy; Launch Today 2023
+                </p>
+            </div>
+        </div>
+    </div>
+</footer>
+
+
+
+
+<script>
+    function async(u, c) {
+      var d = document, t = 'script',
+          o = d.createElement(t),
+          s = d.getElementsByTagName(t)[0];
+      o.src = u;
+      if (c) { o.addEventListener('load', function (e) { c(null, e); }, false); }
+      s.parentNode.insertBefore(o, s);
+    }
+</script>
+
+
+
+
+
+
+<script>
+    
+    if($('#tag_cloud').length !== 0){
+        async("/js/jquery.tagcloud.js",function(){
+            $.fn.tagcloud.defaults = {
+                
+                color: {start: '#bbbbee', end: '#0085a1'},
+            };
+            $('#tag_cloud a').tagcloud();
+        })
+    }
+</script>
+
+
+<script>
+    async("https://cdnjs.cloudflare.com/ajax/libs/fastclick/1.0.6/fastclick.js", function(){
+        var $nav = document.querySelector("nav");
+        if($nav) FastClick.attach($nav);
+    })
+</script>
+
+
+
+
+
+
+<script type="application/javascript">
+var doNotTrack = false;
+if (!doNotTrack) {
+	window.ga=window.ga||function(){(ga.q=ga.q||[]).push(arguments)};ga.l=+new Date;
+	ga('create', 'UA-177061519-1', 'auto');
+	
+	ga('send', 'pageview');
+}
+</script>
+<script async src='https://www.google-analytics.com/analytics.js'></script>
+
+
+
+</body>
+</html>
