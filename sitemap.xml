@@ -32,9 +32,6 @@
     <loc>http://komi.dev/post/2022-12-14-summary/</loc>
     <lastmod>2022-12-14T00:00:00+00:00</lastmod>
   </url><url>
-    <loc>http://komi.dev/categories/tech/</loc>
-    <lastmod>2022-08-04T00:00:00+00:00</lastmod>
-  </url><url>
     <loc>http://komi.dev/post/2022-08-04-launch-product/</loc>
     <lastmod>2022-08-04T00:00:00+00:00</lastmod>
   </url><url>
@@ -42,6 +39,9 @@
     <lastmod>2022-05-17T00:00:00+00:00</lastmod>
   </url><url>
     <loc>http://komi.dev/post/2022-05-17-uuid-in-sqlx/</loc>
+    <lastmod>2022-05-17T00:00:00+00:00</lastmod>
+  </url><url>
+    <loc>http://komi.dev/categories/tech/</loc>
     <lastmod>2022-05-17T00:00:00+00:00</lastmod>
   </url><url>
     <loc>http://komi.dev/tags/gcp/</loc>
