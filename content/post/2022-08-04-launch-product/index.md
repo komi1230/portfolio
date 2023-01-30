@@ -9,7 +9,7 @@ image: "https://www.akamai.com/site/im-demo/perceptual-standard.jpg?imbypass=tru
 tags:
   - streets
 categories:
-  - tech
+  - career
 ---
 
 # プロダクトをリリースした
