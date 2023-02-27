@@ -2,31 +2,34 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"
   xmlns:xhtml="http://www.w3.org/1999/xhtml">
   <url>
+    <loc>http://komi.dev/categories/career/</loc>
+    <lastmod>2023-02-27T00:00:00+00:00</lastmod>
+  </url><url>
+    <loc>http://komi.dev/categories/</loc>
+    <lastmod>2023-02-27T00:00:00+00:00</lastmod>
+  </url><url>
+    <loc>http://komi.dev/tags/ksquad/</loc>
+    <lastmod>2023-02-27T00:00:00+00:00</lastmod>
+  </url><url>
+    <loc>http://komi.dev/</loc>
+    <lastmod>2023-02-27T00:00:00+00:00</lastmod>
+  </url><url>
+    <loc>http://komi.dev/tags/life/</loc>
+    <lastmod>2023-02-27T00:00:00+00:00</lastmod>
+  </url><url>
+    <loc>http://komi.dev/post/</loc>
+    <lastmod>2023-02-27T00:00:00+00:00</lastmod>
+  </url><url>
+    <loc>http://komi.dev/tags/</loc>
+    <lastmod>2023-02-27T00:00:00+00:00</lastmod>
+  </url><url>
+    <loc>http://komi.dev/post/2023-02-27-cash-flow/</loc>
+    <lastmod>2023-02-27T00:00:00+00:00</lastmod>
+  </url><url>
     <loc>http://komi.dev/post/2023-01-26-start-new-year/</loc>
     <lastmod>2023-01-26T00:00:00+00:00</lastmod>
   </url><url>
-    <loc>http://komi.dev/categories/career/</loc>
-    <lastmod>2023-01-26T00:00:00+00:00</lastmod>
-  </url><url>
-    <loc>http://komi.dev/categories/</loc>
-    <lastmod>2023-01-26T00:00:00+00:00</lastmod>
-  </url><url>
-    <loc>http://komi.dev/tags/ksquad/</loc>
-    <lastmod>2023-01-26T00:00:00+00:00</lastmod>
-  </url><url>
-    <loc>http://komi.dev/</loc>
-    <lastmod>2023-01-26T00:00:00+00:00</lastmod>
-  </url><url>
-    <loc>http://komi.dev/tags/life/</loc>
-    <lastmod>2023-01-26T00:00:00+00:00</lastmod>
-  </url><url>
-    <loc>http://komi.dev/post/</loc>
-    <lastmod>2023-01-26T00:00:00+00:00</lastmod>
-  </url><url>
     <loc>http://komi.dev/tags/streets/</loc>
-    <lastmod>2023-01-26T00:00:00+00:00</lastmod>
-  </url><url>
-    <loc>http://komi.dev/tags/</loc>
     <lastmod>2023-01-26T00:00:00+00:00</lastmod>
   </url><url>
     <loc>http://komi.dev/post/2022-12-14-summary/</loc>
