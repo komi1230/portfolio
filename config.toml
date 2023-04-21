@@ -34,7 +34,7 @@ sidebar_avatar = "img/me.jpg"
 featured_tags = true
 featured_condition_size = 1
 
-about_me = true
+# about_me = true
 
 [params.social]
 rss = true
@@ -45,9 +45,9 @@ facebook = "https://www.facebook.com/1230komi/"
 linkedin = "https://www.linkedin.com/in/yusuke-kominami-0419b1157/"
 stackoverflow = "https://stackoverflow.com/users/12464570"
 
-[[params.addtional_menus]]
-title = "ABOUT"
-href = "/about/"
+# [[params.addtional_menus]]
+# title = "ABOUT"
+# href = "/about/"
 
 [markup]
 [markup.tableOfContents]
